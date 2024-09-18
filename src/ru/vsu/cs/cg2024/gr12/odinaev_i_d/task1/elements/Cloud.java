@@ -8,13 +8,24 @@ public class Cloud {
     private int width;
     private int height;
     private Color color;
+    private int speed;
 
-    public Cloud(int x, int y, int width, int height, Color color) {
+    /**
+     * Конструктор облака
+     * @param x абсцисса левого верхнего угла
+     * @param y ордината левого верхнего угла
+     * @param width ширина облака
+     * @param height высота облака
+     * @param speed скорость движения облака
+     * @param color цвет облака
+     */
+    public Cloud(int x, int y, int width, int height, int speed, Color color) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.color = color;
+        this.speed = speed;
     }
 
     public int getX() {
@@ -56,6 +67,19 @@ public class Cloud {
     public void setColor(Color color) {
         this.color = color;
     }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    /**
+     * Нарисовать облако
+     * @param g ГРАФИКА
+     */
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.BLACK);
@@ -68,6 +92,5 @@ public class Cloud {
         g2d.fillOval(x + width / 4, y - height / 4, width, height);
         g2d.fillOval(x + width / 2, y, width, height);
         g2d.fillOval(x + width / 4, y + height / 4, width, height);
-        
     }
 }

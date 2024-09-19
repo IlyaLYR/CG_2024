@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 
-
-
 public class Sky {
     private int x;
     private int y;
@@ -35,7 +33,15 @@ public class Sky {
         this.countCloud = countCloud;
         this.color = color;
 
-        createClouds();
+        for (int i = 0; i < countCloud; i++) {
+            int cloudX = x + random.nextInt(width - 50);
+            int cloudY = y + random.nextInt(height - 50);
+            int cloudWidth = 50 + random.nextInt(50);
+            int cloudHeight = 20 + random.nextInt(20);
+            int cloudSpeed = random.nextInt(1, 10);
+
+            cloudsList.add(new Cloud(cloudX, cloudY, cloudWidth, cloudHeight, cloudSpeed, color));
+        }
     }
 
     public int getX() {
@@ -97,16 +103,14 @@ public class Sky {
     /**
      * Рандомная генерация параметров облака
      */
-    private void createClouds() {
-        for (int i = 0; i < countCloud; i++) {
-            int cloudX = x + random.nextInt(width - 50);
-            int cloudY = y + random.nextInt(height - 50);
-            int cloudWidth = 50 + random.nextInt(50);
-            int cloudHeight = 20 + random.nextInt(20);
-            int cloudSpeed = random.nextInt(10);
+    private Cloud recreateCloud() {
+        int cloudWidth = 50 + random.nextInt(50);
+        int cloudHeight = 20 + random.nextInt(20);
+        int cloudSpeed = random.nextInt(1, 10);
+        int cloudX = -cloudWidth - 50 + cloudSpeed;
+        int cloudY = y + random.nextInt(height - 50);
 
-            cloudsList.add(new Cloud(cloudX, cloudY, cloudWidth, cloudHeight, cloudSpeed, color));
-        }
+        return new Cloud(cloudX, cloudY, cloudWidth, cloudHeight, cloudSpeed, color);
     }
 
     /**
@@ -114,14 +118,13 @@ public class Sky {
      * @param g - переменная ГРАФИК
      */
     public void draw(Graphics2D g) {
-        for (Cloud cloud : cloudsList) {
+        for (int i =0; i<countCloud; i++) {
+            Cloud cloud = cloudsList.get(i);
             cloud.setX(cloud.getX() + cloud.getSpeed());
             if (cloud.getX() >= width) {
-                cloud.setX(-cloud.getWidth() - 50);
-                cloud.setY(random.nextInt(height - 50));
+                cloudsList.set(i,recreateCloud());
             }
-            cloud.draw(g); // TODO "Доработать передвижение облачков!!!"
-
+            cloud.draw(g);
         }
     }
 }

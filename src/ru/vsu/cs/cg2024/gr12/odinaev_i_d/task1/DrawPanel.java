@@ -9,9 +9,8 @@ import java.awt.event.ActionListener;
 
 public class DrawPanel extends JPanel implements ActionListener {
     Timer timer;
-    private int ticksFromStart = 0;
 
-    private Sky sky;
+    private final Sky sky;
     //Поля
 
     public DrawPanel(int timerDelay) {
@@ -28,7 +27,6 @@ public class DrawPanel extends JPanel implements ActionListener {
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == timer) {
             repaint();
-            ++ticksFromStart;
         }
     }
 

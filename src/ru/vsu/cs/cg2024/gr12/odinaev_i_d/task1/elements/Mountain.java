@@ -82,11 +82,10 @@ public class Mountain {
         int[] xPoints = {x, x + width / 2, x + width};
         int[] yPoints = {y, y - height, y};
 
+        //Контур горы
         g2d.fillPolygon(xPoints, yPoints, 3);
 
-        g2d.setColor(Color.BLACK);
-
-        int startX = (int) (((y - height / 3.0) - l1[1]) / l1[0]); //ОКРУГЛЕНИЕ!
+        int startX = (int) (((y - height / 3.0) - l1[1]) / l1[0]);
         int endX = (int) (((y - height / 3.0) - l2[1]) / l2[0]);
         int SIZE = (endX - startX) / 6;
         int[] xCord = new int[SIZE + 2];

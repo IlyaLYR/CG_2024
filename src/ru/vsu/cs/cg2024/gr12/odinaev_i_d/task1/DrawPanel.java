@@ -20,10 +20,11 @@ public class DrawPanel extends JPanel implements ActionListener {
     public DrawPanel(int timerDelay) {
         timer = new Timer(timerDelay, this);
         timer.start();
-        sky = new Sky(0,0,600,300,5, Color.WHITE);
+        sky = new Sky(0, 0, 600, 300, 5, Color.WHITE);
         mountain = new Mountain(-150, 800, 850, 500);//new Montain(-150, 800, 850, 500);
-        sun = new Sun(270, 325, 135,0, 1, Color.decode("#BA3E3E"));
+        sun = new Sun(270, 325, 135, 0, 1, Color.decode("#BA3E3E"));
     }
+
     @Override
     public void paint(Graphics g) {
         setBackground(Color.decode("#E38756"));
@@ -35,6 +36,7 @@ public class DrawPanel extends JPanel implements ActionListener {
         mountain.draw(g2d);
 
     }
+
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == timer) {
             repaint();

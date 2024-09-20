@@ -11,7 +11,7 @@ public class MainFrame extends JDialog {
     private JPanel panelArea;
     DrawPanel dp = new DrawPanel(100);
 
-    public MainFrame()  {
+    public MainFrame() {
         setContentPane(contentPanel);
         setTitle("Task 1");
         setModal(true);

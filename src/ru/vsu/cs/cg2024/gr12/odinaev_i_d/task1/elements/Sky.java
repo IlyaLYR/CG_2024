@@ -118,11 +118,11 @@ public class Sky {
      * @param g - переменная ГРАФИК
      */
     public void draw(Graphics2D g) {
-        for (int i =0; i<countCloud; i++) {
+        for (int i = 0; i < countCloud; i++) {
             Cloud cloud = cloudsList.get(i);
             cloud.setX(cloud.getX() + cloud.getSpeed());
             if (cloud.getX() >= width) {
-                cloudsList.set(i,recreateCloud());
+                cloudsList.set(i, recreateCloud());
             }
             cloud.draw(g);
         }

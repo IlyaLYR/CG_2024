@@ -79,11 +79,14 @@ public class Mountain {
 
         g2d.setColor(Color.GRAY);
 
-        int[] xPoints = {x, x + width / 2, x + width};
-        int[] yPoints = {y, y - height, y};
+//        int[] xPoints = {x, x + width / 2, x + width};
+//        int[] yPoints = {y, y - height, y};
 
+        int upBoard = (int)(y - height*0.9);
+        int[] yPoints = {y, upBoard, upBoard, y};
+        int[] xPoints = {x, (int) ((upBoard - l1[1]) / l1[0]), (int) ((upBoard - l2[1]) / l2[0]), x + width};
         //Контур горы
-        g2d.fillPolygon(xPoints, yPoints, 3);
+        g2d.fillPolygon(xPoints, yPoints, 4);
 
         int startX = (int) (((y - height / 3.0) - l1[1]) / l1[0]);
         int endX = (int) (((y - height / 3.0) - l2[1]) / l2[0]);
@@ -100,6 +103,10 @@ public class Mountain {
         yCord[0] = y;
         g2d.setColor(Color.decode("#3B4582"));
         g2d.fillPolygon(xCord, yCord, SIZE + 2);
+
+        //TODO Снег
+
+
     }
 
     protected double[] linEquation(int x1, int y1, int x2, int y2) {

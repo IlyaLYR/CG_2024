@@ -48,9 +48,10 @@ public class RasterizationController {
 
         Rasterization.drawOval(canvas.getGraphicsContext2D(), 400, 200, 30, 40, Color.RED);
 
-        Rasterization.fillOval(canvas.getGraphicsContext2D(), 500, 200, 30, 40, Color.RED);
+        Rasterization.fillOval(canvas.getGraphicsContext2D(), 500, 200, 50, 40, Color.RED);
 
-        Rasterization.fillOval(canvas.getGraphicsContext2D(), 500, 200, 30, 40, Color.RED, Color.BLUE);
+
+        Rasterization.fillOval(canvas.getGraphicsContext2D(), 600, 200, 50, 30, Color.RED, Color.BLUE);
 
     }
 
@@ -64,8 +65,7 @@ public class RasterizationController {
             double y2 = y1 + (l) * Math.sin(angle);
             Rasterization.drawLine(graphicsContext, (int) x1 + x, (int) y1 + y, (int) x2 + x, (int) y2 + y, Color.BLUE);
             Rasterization.drawLinePreBresenham(graphicsContext, (int) x1 + x + 100, (int) y1 + y, (int) x2 + x + 100, (int) y2 + y, Color.RED);
-            Rasterization.BresenhamAlgorithm(graphicsContext, (int) x1 + x + 200, (int) y1 + y, (int) x2 + x + 200, (int) y2 + y, Color.GREEN);
-            Rasterization.BresenhamAlgorithmV2(graphicsContext, (int) x1 + x + 300, (int) y1 + y, (int) x2 + x + 300, (int) y2 + y, Color.BLACK);
+            Rasterization.BresenhamAlgorithmV2(graphicsContext, (int) x1 + x + 200, (int) y1 + y, (int) x2 + x + 200, (int) y2 + y, Color.BLACK);
         }
     }
 }

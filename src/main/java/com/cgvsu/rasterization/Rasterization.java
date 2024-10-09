@@ -75,43 +75,6 @@ public class Rasterization {
         }
     }
 
-    public static void BresenhamAlgorithm(final GraphicsContext graphicsContext, int x1, int y1, int x2, int y2, final Color color) {
-        final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
-
-        int dx = x2 - x1;
-        int dy = y2 - y1;
-        int absDx = Math.abs(dx);
-        int absDy = Math.abs(dy);
-
-        int accretion = 0;
-
-        if (absDx > absDy) {
-            int y = y1;
-            int direction = dy != 0 ? (dy > 0 ? 1 : -1) : 0;
-            for (int x = x1; dx > 0 ? x <= x2 : x >= x2; x += (dx > 0 ? 1 : -1)) {
-                pixelWriter.setColor(x, y, color);
-                accretion += absDy;
-
-                if (accretion >= absDx) {
-                    accretion -= absDx;
-                    y += direction;
-                }
-            }
-        } else {
-            int x = x1;
-            int direction = dx != 0 ? (dx > 0 ? 1 : -1) : 0;
-            for (int y = y1; dy > 0 ? y <= y2 : y >= y2; y += (dy > 0 ? 1 : -1)) {
-                pixelWriter.setColor(x, y, color);
-                accretion += (float) absDx / absDy;
-
-                if (accretion >= absDy) {
-                    accretion -= absDy;
-                    x += direction;
-                }
-            }
-        }
-    }
-
     public static void BresenhamAlgorithmV2(final GraphicsContext graphicsContext, int x1, int y1, int x2, int y2, final Color color) {
         final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
         int dx = Math.abs(x2 - x1);
@@ -206,7 +169,6 @@ public class Rasterization {
                 pixelWriter.setColor(i, y0 - x, color);
             }
 
-            // Update the error and coordinates
             if (error < 0) {
                 error = error + 4 * x + 6;
             } else {
@@ -279,24 +241,20 @@ public class Rasterization {
         }
     }
 
-    public static void fillOval(final GraphicsContext graphicsContext, int x0, int y0, int a, int b, Color centerColor, Color edgeColor) {
+    public static void fillOval(final GraphicsContext graphicsContext, int x0, int y0, int a, int b, Color startColor, Color endColor) {
         final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
 
         int x = 0;
         int y = b;
         int error = 0;
 
-        // Максимальное расстояние от центра до края эллипса для интерполяции цвета
-        double maxDistance = Math.sqrt(a * a + b * b);
-
-        // Первая часть алгоритма
         while (b * b * x < a * a * y) {
             for (int i = x0 - x; i <= x0 + x; i++) {
-                // Вычисляем расстояние от текущей точки до центра
-                double distance = Math.sqrt((i - x0) * (i - x0) + y * y);
-                // Интерполируем цвет
-                Color color = interpolateColor(centerColor, edgeColor, distance / maxDistance);
-                // Устанавливаем цвет для точек на эллипсе
+                double dist  = Math.sqrt(Math.pow(i - x0, 2) + Math.pow(y, 2));
+                double max = (a*b)/ Math.sqrt(a*a*Math.pow(y/dist, 2) + b*b*Math.pow((i-x0)/dist, 2));
+
+                Color color = interpolateColor(startColor, endColor, dist/max);
+                System.out.printf("X: %s Y: %s dist %f  max %f \n", i, y0 + y, dist, max);
                 pixelWriter.setColor(i, y0 + y, color);
                 pixelWriter.setColor(i, y0 - y, color);
             }
@@ -306,12 +264,12 @@ public class Rasterization {
                 y = y - 1;
             }
         }
-
-        // Вторая часть алгоритма
         while (y >= 0) {
             for (int i = x0 - x; i <= x0 + x; i++) {
-                double distance = Math.sqrt((i - x0) * (i - x0) + y * y);
-                Color color = interpolateColor(centerColor, edgeColor, distance / maxDistance);
+                double dist  = Math.sqrt(Math.pow(i - x0, 2) + Math.pow(y, 2));
+                double max = (a*b)/ Math.sqrt(a*a*Math.pow(y/dist, 2) + b*b*Math.pow((i-x0)/dist, 2));
+
+                Color color = interpolateColor(startColor, endColor, dist/max);
                 pixelWriter.setColor(i, y0 + y, color);
                 pixelWriter.setColor(i, y0 - y, color);
             }
@@ -329,6 +287,25 @@ public class Rasterization {
         double green = startColor.getGreen() + (endColor.getGreen() - startColor.getGreen()) * fraction;
         double blue = startColor.getBlue() + (endColor.getBlue() - startColor.getBlue()) * fraction;
         double opacity = startColor.getOpacity() + (endColor.getOpacity() - startColor.getOpacity()) * fraction;
+
+        if (red < 0) {
+            red = 0;
+        }
+        if (green < 0) {
+            green = 0;
+        }
+        if (blue < 0) {
+            blue = 0;
+        }
+        if (red > 1) {
+            red = 1;
+        }
+        if (green > 1) {
+            green = 1;
+        }
+        if (blue > 1) {
+            blue = 1;
+        }
         return new Color(red, green, blue, opacity);
     }
 }

@@ -18,4 +18,33 @@ public class Rasterization {
             for (int col = x; col < x + width; ++col)
                 pixelWriter.setColor(col, row, color);
     }
+
+    public static void drawLine(
+            final GraphicsContext graphicsContext,
+            int x1, int y1, int x2, int y2,
+            final Color color
+    ){
+        final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
+
+
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+
+        if(Math.abs(dx) >= Math.abs(dy)){
+            double k = (double)dy /(double)dx;
+            for(int i = 0; dx > 0 ? i<dx: i>=dx; i += (dx > 0 ? 1 : -1)){
+                int x = i + x1;
+                int y = (int)(i*k + y1);
+                pixelWriter.setColor(x, y, color);
+            }
+        } else {
+            double k = (double)dx /(double)dy;
+            for(int i = 0; dy > 0 ? i<=dy: i>=dy; i += (dy > 0 ? 1 : -1)){
+                int x = (int)(i*k + x1);
+                int y = i + y1;
+                pixelWriter.setColor(x, y, color);
+            }
+        }
+
+    }
 }

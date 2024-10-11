@@ -23,7 +23,11 @@ public class RasterizationController {
 //        Rasterization.drawRectangle(canvas.getGraphicsContext2D(), 200, 300, 200, 100, Color.CHOCOLATE);
 //        Rasterization.drawRectangle(canvas.getGraphicsContext2D(), 250, 250, 50, 200, Color.AQUA);
 
-        Rasterization.drawLine(canvas.getGraphicsContext2D(), 23,100,56,0, Color.CHOCOLATE);
+//        Rasterization.drawLine(canvas.getGraphicsContext2D(), 23,100,600,0, Color.CHOCOLATE);
+//        Rasterization.drawLinePreBresenham(canvas.getGraphicsContext2D(), 23,100,600,0, Color.CHOCOLATE);
+
+
+        Rasterization.BresenhamAlgorithmV2(canvas.getGraphicsContext2D(), 0,0,10,10, Color.CHOCOLATE);
     }
 
 }

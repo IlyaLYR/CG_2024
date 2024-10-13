@@ -59,8 +59,6 @@ public class Home {
 
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        int x1;
-        int y1;
         int xCurr;
         int yCurr;
 
@@ -75,6 +73,7 @@ public class Home {
 
         int length = (int) (width * 0.52) / 7;
         g2d.setColor(Color.WHITE);
+        g2d.setStroke(new BasicStroke(1));
         for (int i = 0; i < 8; i++) {
             g2d.drawLine(xCurr, yCurr, (int) (xCurr - width * 0.26) + i * length, (int) (yCurr + height * 0.27));
         }

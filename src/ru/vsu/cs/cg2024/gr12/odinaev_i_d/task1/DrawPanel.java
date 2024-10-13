@@ -1,5 +1,6 @@
 package ru.vsu.cs.cg2024.gr12.odinaev_i_d.task1;
 
+import ru.vsu.cs.cg2024.gr12.odinaev_i_d.task1.elements.Home;
 import ru.vsu.cs.cg2024.gr12.odinaev_i_d.task1.elements.Mountain;
 import ru.vsu.cs.cg2024.gr12.odinaev_i_d.task1.elements.Sky;
 import ru.vsu.cs.cg2024.gr12.odinaev_i_d.task1.elements.Sun;
@@ -11,17 +12,19 @@ import java.awt.event.ActionListener;
 
 public class DrawPanel extends JPanel implements ActionListener {
     Timer timer;
-
+    //Поля - объекты на рисунке
     private final Sky sky;
     private final Sun sun;
     private final Mountain mountain;
-    //Поля
+    private final Home home;
+
 
     public DrawPanel(int timerDelay) {
         timer = new Timer(timerDelay, this);
+        home = new Home(950,10,500,500, Color.RED);
         timer.start();
         sky = new Sky(0, 0, 600, 300, 5, Color.WHITE);
-        mountain = new Mountain(-150, 800, 850, 500);//new Montain(-150, 800, 850, 500);
+        mountain = new Mountain(500, 950, 1500, 500);//new Montain(-150, 800, 850, 500);
         sun = new Sun(270, 325, 135, 0, 1, Color.decode("#BA3E3E"));
     }
 
@@ -34,6 +37,7 @@ public class DrawPanel extends JPanel implements ActionListener {
         sky.draw(g2d);
         sun.draw(g2d);
         mountain.draw(g2d);
+        home.draw(g2d);
 
     }
 
@@ -42,5 +46,4 @@ public class DrawPanel extends JPanel implements ActionListener {
             repaint();
         }
     }
-
 }

@@ -1,0 +1,4 @@
+(int) (40 * Math.sin(14 * i) * Math.cos(67 * i)) + getY()-height/3;
+
+e^-x*x*4
+-e^x*x*4

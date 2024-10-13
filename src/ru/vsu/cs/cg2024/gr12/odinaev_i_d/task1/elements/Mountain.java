@@ -1,6 +1,7 @@
 package ru.vsu.cs.cg2024.gr12.odinaev_i_d.task1.elements;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Mountain {
     private int x;
@@ -23,6 +24,7 @@ public class Mountain {
         this.y = y;
         this.width = width;
         this.height = height;
+        Random random = new Random();
 
         l1 = linEquation(x, y, x + width / 2, y - height);
         l2 = linEquation(x + width / 2, y - height, x + width, y);

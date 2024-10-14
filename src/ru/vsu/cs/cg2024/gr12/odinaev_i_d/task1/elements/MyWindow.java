@@ -1,5 +1,6 @@
 package ru.vsu.cs.cg2024.gr12.odinaev_i_d.task1.elements;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class MyWindow {
@@ -7,7 +8,7 @@ public class MyWindow {
     private int y;
     private int width;
     private int height;
-    private int radius;
+    private final int radius;
 
     public MyWindow(int x, int y, int width, int height, int radius) {
         this.x = x;
@@ -67,6 +68,11 @@ public class MyWindow {
 
         g2d.setColor(Color.decode("#A99e81"));
         g2d.fillPolygon(new int[]{x-radius,(int)(x-0.8*radius), (int)(x+0.8*radius),x+ radius}, new int[]{1000,800,800,1000}, 4);
+
+        Image img1 = new ImageIcon("./electro.png").getImage();
+        Image img2 = new ImageIcon("./Inadzuma.png").getImage();
+        g.drawImage(img1, 25, 25, 75, 75, null);
+        g.drawImage(img2, 125, 25, 100, 100, null);
 
 
     }

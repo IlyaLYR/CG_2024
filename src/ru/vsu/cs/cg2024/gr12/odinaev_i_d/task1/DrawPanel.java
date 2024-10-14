@@ -23,18 +23,11 @@ public class DrawPanel extends JPanel implements ActionListener {
         timer.start();
         this.nature = new Nature(new Mountain(550, 800, 800, 400),
                 new Sun(950, 300, 135, 0, 1, Color.decode("#BA3E3E")),
-                new Sky(650, 200, 1300, 300, 5, Color.WHITE),
+                new Sky(600, 200, 1350, 300, 5, Color.WHITE),
                 new Sakura(500,300,900,500,10),
-                new City(650,650,600,100,5,new ArrayList<>(Arrays.asList(new Color[]{Color.blue, Color.CYAN, Color.RED}))),
+                new City(650,650,600,100,10,new ArrayList<>(Arrays.asList(new Color[]{Color.blue, Color.CYAN, Color.RED}))),
                 950,500,400);
-//        home = new Home(950,10,500,500, Color.RED);
-//        sky = new Sky(0, 0, 600, 300, 5, Color.WHITE);
-//        mountain = new Mountain(500, 950, 1500, 500);//new Montain(-150, 800, 850, 500);
-//        sun = new Sun(270, 325, 135, 0, 1, Color.decode("#BA3E3E"));
         window = new MyWindow(950,500,1900,500,400);
-//        city = new City(60,60,500,500,6,new ArrayList<>(Arrays.asList(new Color[]{Color.BLACK,Color.blue, Color.CYAN, Color.RED, Color.RED})));
-
-        this.sakura = new SakuraBranch(50, 50 ,100, Color.PINK, 45, 15);
 
     }
 
@@ -43,11 +36,6 @@ public class DrawPanel extends JPanel implements ActionListener {
         setBackground(Color.decode("#65594B"));
         Graphics2D g2d = (Graphics2D) g;
         super.paint(g2d);
-//        sky.setWidth(getWidth());
-//        sky.draw(g2d);
-//        sun.draw(g2d);
-//        mountain.draw(g2d);
-//        home.draw(g2d);
         nature.draw(g2d);
         window.draw(g2d);
 

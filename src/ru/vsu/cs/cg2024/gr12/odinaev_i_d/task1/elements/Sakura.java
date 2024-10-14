@@ -24,10 +24,10 @@ public class Sakura {
 
             int X = i % 2 == 0 ? x + 50 : x + width - 50;
             int Y = random.nextInt(y, height);
-            int branchLength = random.nextInt(80, 145);
+            int branchLength = random.nextInt(80, 100);
             Color color = Color.PINK;
-            int rotationAngle = i % 2 == 0 ? -random.nextInt(30, 45) : 90+random.nextInt(30, 45);
-            int branchAngle = random.nextInt(10, 25);
+            int rotationAngle = i % 2 == 0 ? -random.nextInt(30, 45) : 180-random.nextInt(30, 45);
+            int branchAngle = random.nextInt(45);
             branchList.add(new SakuraBranch(X, Y, branchLength, color, rotationAngle, branchAngle));
         }
     }

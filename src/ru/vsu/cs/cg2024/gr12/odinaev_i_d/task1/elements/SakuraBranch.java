@@ -41,7 +41,7 @@ public class SakuraBranch {
         // цветок
         // Рекурсивное создание основного ответвления
         drawBranch(g2d, x2, y2, length - 15, angle + branchAngle);
-        drawFlower(g2d, x2, y2, 8); // Правое ответвление
+        drawFlower(g2d, x2, y2, 12); // Правое ответвление
     }
 
     private void drawSmallBranchWithFlowers(Graphics2D g2d, int x1, int y1, int length, double angle) {
@@ -55,7 +55,7 @@ public class SakuraBranch {
         g2d.drawLine(x1, y1, x2, y2);
 
         // Рисуем цветок на конце маленькой веточки
-        drawFlower(g2d, x2, y2, 5);
+        drawFlower(g2d, x2, y2, 12);
     }
 
     private void drawFlower(Graphics2D g2d, int x, int y, int size) {

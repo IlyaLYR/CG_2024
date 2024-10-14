@@ -26,8 +26,8 @@ public class City {
         for (int i = 0; i <houseCount ; i++) {
             int X = x + random.nextInt(width - 50);
             int Y = y + random.nextInt(height - 50);
-            int Width = 100 + random.nextInt(10);
-            int Height = 100+ random.nextInt(10);
+            int Width = 50 + random.nextInt(50);
+            int Height = 50+ random.nextInt(50);
             homeList.add(new Home(X,Y,Width,Height,colorList.get(random.nextInt(colorList.size()))));
         }
     }

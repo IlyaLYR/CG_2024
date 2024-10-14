@@ -51,6 +51,11 @@ public class MyWindow {
 
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+
+        g2d.setStroke(new BasicStroke(200));
+        g2d.setColor(Color.decode("#65594B"));
+        g2d.drawOval(x-radius-100,y-radius-100,radius*2+200,radius*2+200);
+
         g2d.setColor(Color.BLACK);
         g2d.setStroke(new BasicStroke(4));
         g2d.drawOval(x-radius,y-radius,radius*2,radius*2);
@@ -62,5 +67,7 @@ public class MyWindow {
 
         g2d.setColor(Color.decode("#A99e81"));
         g2d.fillPolygon(new int[]{x-radius,(int)(x-0.8*radius), (int)(x+0.8*radius),x+ radius}, new int[]{1000,800,800,1000}, 4);
+
+
     }
 }

@@ -6,12 +6,13 @@ public class Nature {
     final private Mountain mountain;
     final private Sun sun;
     final private Sky sky;
+    final private Sakura sakura;
     final private City city;
     private int x;
     private int y;
     private int radius;
 
-    public Nature(Mountain mountain, Sun sun, Sky sky, City city, int x, int y, int radius) {
+    public Nature(Mountain mountain, Sun sun, Sky sky, Sakura sakura, City city, int x, int y, int radius) {
         this.mountain = mountain;
         this.sun = sun;
         this.sky = sky;
@@ -19,6 +20,7 @@ public class Nature {
         this.x = x;
         this.y = y;
         this.radius = radius;
+        this.sakura = sakura;
     }
 
     public Mountain getMountain() {
@@ -61,13 +63,19 @@ public class Nature {
         this.radius = radius;
     }
 
+    public Sakura getSakura() {
+        return sakura;
+    }
+
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.decode("#E38756"));
         g2d.fillOval(x - radius,y - radius,2*radius,2*radius);
-        sky.draw(g2d);
         sun.draw(g2d);
+        sky.draw(g2d);
         mountain.draw(g2d);
         city.draw(g2d);
+        sakura.draw(g2d);
+
     }
 }

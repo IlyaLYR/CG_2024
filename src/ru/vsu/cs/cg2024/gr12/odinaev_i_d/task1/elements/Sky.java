@@ -38,7 +38,7 @@ public class Sky {
             int cloudY = y + random.nextInt(height - 50);
             int cloudWidth = 50 + random.nextInt(50);
             int cloudHeight = 20 + random.nextInt(20);
-            int cloudSpeed = random.nextInt(1, 10);
+            int cloudSpeed = random.nextInt(1, 3);
 
             cloudsList.add(new Cloud(cloudX, cloudY, cloudWidth, cloudHeight, cloudSpeed, color));
         }
@@ -106,7 +106,7 @@ public class Sky {
     private Cloud recreateCloud() {
         int cloudWidth = 50 + random.nextInt(50);
         int cloudHeight = 20 + random.nextInt(20);
-        int cloudSpeed = random.nextInt(1, 10);
+        int cloudSpeed = random.nextInt(1, 3);
         int cloudX = -cloudWidth - 50+ x + cloudSpeed;
         int cloudY = y + random.nextInt(height - 50);
 

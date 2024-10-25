@@ -134,4 +134,87 @@ public class Rasterization {
             }
         }
     }
+
+    public static void drawCircle(final GraphicsContext graphicsContext, int x0, int y0, int radius, Color color) {
+        final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
+        int x = 0;
+        int y = radius;
+        int delta = 1 - 2 * radius;
+        int error = 0;
+
+        while (y >= 0) {
+            pixelWriter.setColor(x0 + x, y0 + y, color);
+            pixelWriter.setColor(x0 + x, y0 - y, color);
+            pixelWriter.setColor(x0 - x, y0 + y, color);
+            pixelWriter.setColor(x0 - x, y0 - y, color);
+            error = 2 * (delta + y) - 1;
+            if (delta < 0 && error <= 0) {
+                ++x;
+                delta += 2 * x + 1;
+                continue;
+            }
+            if (delta > 0 && error > 0) {
+                --y;
+                delta += 1 - 2 * y;
+                continue;
+            }
+            ++x;
+            delta += 2 * (x - y);
+            --y;
+        }
+    }
+
+    public static void drawCircleMitcher(final GraphicsContext graphicsContext, int x0, int y0, int radius, Color color) {
+        final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
+        int x = 0;
+        int y = radius;
+        int error = 3 - 2 * y;
+        while (x <= y) {
+            pixelWriter.setColor(x0 + x, y0 + y, color);
+            pixelWriter.setColor(x0 + x, y0 - y, color);
+            pixelWriter.setColor(x0 - x, y0 - y, color);
+            pixelWriter.setColor(x0 - x, y0 + y, color);
+            pixelWriter.setColor(x0 + y, y0 + x, color);
+            pixelWriter.setColor(x0 + y, y0 - x, color);
+            pixelWriter.setColor(x0 - y, y0 - x, color);
+            pixelWriter.setColor(x0 - y, y0 + x, color);
+
+            if (error < 0) {
+                error = error + 4 * x + 6;
+            } else {
+                error = error + 4 * (x - y) + 10;
+                y--;
+            }
+            x++;
+        }
+
+    }
+
+    public static void fillCircleMitcher(final GraphicsContext graphicsContext, int x0, int y0, int radius, Color color) {
+        final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
+        int x = 0;
+        int y = radius;
+        int error = 3 - 2 * radius;
+
+        while (x <= y) {
+            for (int i = x0 - x; i <= x0 + x; i++) {
+                pixelWriter.setColor(i, y0 + y, color);
+                pixelWriter.setColor(i, y0 - y, color);
+            }
+            for (int i = x0 - y; i <= x0 + y; i++) {
+                pixelWriter.setColor(i, y0 + x, color);
+                pixelWriter.setColor(i, y0 - x, color);
+            }
+
+            // Update the error and coordinates
+            if (error < 0) {
+                error = error + 4 * x + 6;
+            } else {
+                error = error + 4 * (x - y) + 10;
+                y--;
+            }
+            x++;
+        }
+    }
+
 }

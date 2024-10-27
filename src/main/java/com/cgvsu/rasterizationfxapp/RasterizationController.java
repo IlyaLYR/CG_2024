@@ -27,14 +27,16 @@ public class RasterizationController {
 //        Rasterization.drawLinePreBresenham(canvas.getGraphicsContext2D(), 23,100,600,0, Color.CHOCOLATE);
 
 
-        Rasterization.BresenhamAlgorithmV2(canvas.getGraphicsContext2D(), 0,0,10,10, Color.CHOCOLATE);
+//        Rasterization.BresenhamAlgorithmV2(canvas.getGraphicsContext2D(), 0,0,10,10, Color.CHOCOLATE);
+//
+//        Rasterization.drawCircle(canvas.getGraphicsContext2D(), 50, 50, 50, Color.CHOCOLATE);
+//
+//
+//        Rasterization.drawCircleMitcher(canvas.getGraphicsContext2D(), 100, 100, 100, Color.BLACK);
+//
+//        Rasterization.fillCircleMitcher(canvas.getGraphicsContext2D(), 100, 100, 100, Color.BLACK);
 
-        Rasterization.drawCircle(canvas.getGraphicsContext2D(), 50, 50, 50, Color.CHOCOLATE);
-
-
-        Rasterization.drawCircleMitcher(canvas.getGraphicsContext2D(), 100, 100, 100, Color.BLACK);
-
-        Rasterization.fillCircleMitcher(canvas.getGraphicsContext2D(), 100, 100, 100, Color.BLACK);
+       Rasterization.drawOval(canvas.getGraphicsContext2D(), 500,500,400,200, Color.BLACK);
     }
 
 }

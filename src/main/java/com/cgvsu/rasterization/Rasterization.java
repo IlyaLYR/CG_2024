@@ -225,14 +225,41 @@ public class Rasterization {
         int error = 0;
 
         while (b * b * x < a * a * y) {
+            pixelWriter.setColor(x0 + x, y0 + y, color);
+            pixelWriter.setColor(x0 - x, y0 + y, color);
+            pixelWriter.setColor(x0 + x, y0 - y, color);
+            pixelWriter.setColor(x0 - x, y0 - y, color);
+            error = b * b * (x + 1) * (x + 1) + a * a * y * (y - 1) - a * a * b * b;
+            x = x + 1;
+            if (error >= 0) {
+                y = y - 1;
+            }
+        }
+        while (y >= 0) {
+            pixelWriter.setColor(x0 + x, y0 + y, color);
+            pixelWriter.setColor(x0 - x, y0 + y, color);
+            pixelWriter.setColor(x0 + x, y0 - y, color);
+            pixelWriter.setColor(x0 - x, y0 - y, color);
+            error = b * b * x * (x + 1) + a * a * (y - 1) * (y - 1) - a * a * b * b;
+            if (error < 0) {
+                x = x + 1;
+            }
+            y = y - 1;
+        }
+    }
+
+    public static void fillOval(final GraphicsContext graphicsContext, int x0, int y0, int a, int b, Color color) {
+        final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
+
+        int x = 0;
+        int y = b;
+        int error = 0;
+
+        while (b * b * x < a * a * y) {
             for (int i = x0 - x; i <= x0 + x; i++) {
                 pixelWriter.setColor(i, y0 + y, color);
                 pixelWriter.setColor(i, y0 - y, color);
             }
-//            pixelWriter.setColor(x0 + x, y0 + y, color);
-//            pixelWriter.setColor(x0 - x, y0 + y, color);
-//            pixelWriter.setColor(x0 + x, y0 - y, color);
-//            pixelWriter.setColor(x0 - x, y0 - y, color);
             error = b * b * (x + 1) * (x + 1) + a * a * y * (y - 1) - a * a * b * b;
             x = x + 1;
             if (error >= 0) {
@@ -244,15 +271,64 @@ public class Rasterization {
                 pixelWriter.setColor(i, y0 + y, color);
                 pixelWriter.setColor(i, y0 - y, color);
             }
-//            pixelWriter.setColor(x0 + x, y0 + y, color);
-//            pixelWriter.setColor(x0 - x, y0 + y, color);
-//            pixelWriter.setColor(x0 + x, y0 - y, color);
-//            pixelWriter.setColor(x0 - x, y0 - y, color);
             error = b * b * x * (x + 1) + a * a * (y - 1) * (y - 1) - a * a * b * b;
             if (error < 0) {
                 x = x + 1;
             }
             y = y - 1;
         }
+    }
+
+    public static void fillOval(final GraphicsContext graphicsContext, int x0, int y0, int a, int b, Color centerColor, Color edgeColor) {
+        final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
+
+        int x = 0;
+        int y = b;
+        int error = 0;
+
+        // Максимальное расстояние от центра до края эллипса для интерполяции цвета
+        double maxDistance = Math.sqrt(a * a + b * b);
+
+        // Первая часть алгоритма
+        while (b * b * x < a * a * y) {
+            for (int i = x0 - x; i <= x0 + x; i++) {
+                // Вычисляем расстояние от текущей точки до центра
+                double distance = Math.sqrt((i - x0) * (i - x0) + y * y);
+                // Интерполируем цвет
+                Color color = interpolateColor(centerColor, edgeColor, distance / maxDistance);
+                // Устанавливаем цвет для точек на эллипсе
+                pixelWriter.setColor(i, y0 + y, color);
+                pixelWriter.setColor(i, y0 - y, color);
+            }
+            error = b * b * (x + 1) * (x + 1) + a * a * y * (y - 1) - a * a * b * b;
+            x = x + 1;
+            if (error >= 0) {
+                y = y - 1;
+            }
+        }
+
+        // Вторая часть алгоритма
+        while (y >= 0) {
+            for (int i = x0 - x; i <= x0 + x; i++) {
+                double distance = Math.sqrt((i - x0) * (i - x0) + y * y);
+                Color color = interpolateColor(centerColor, edgeColor, distance / maxDistance);
+                pixelWriter.setColor(i, y0 + y, color);
+                pixelWriter.setColor(i, y0 - y, color);
+            }
+            error = b * b * x * (x + 1) + a * a * (y - 1) * (y - 1) - a * a * b * b;
+            if (error < 0) {
+                x = x + 1;
+            }
+            y = y - 1;
+        }
+    }
+
+    // Метод для линейной интерполяции между двумя цветами
+    private static Color interpolateColor(Color startColor, Color endColor, double fraction) {
+        double red = startColor.getRed() + (endColor.getRed() - startColor.getRed()) * fraction;
+        double green = startColor.getGreen() + (endColor.getGreen() - startColor.getGreen()) * fraction;
+        double blue = startColor.getBlue() + (endColor.getBlue() - startColor.getBlue()) * fraction;
+        double opacity = startColor.getOpacity() + (endColor.getOpacity() - startColor.getOpacity()) * fraction;
+        return new Color(red, green, blue, opacity);
     }
 }

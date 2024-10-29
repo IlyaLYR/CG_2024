@@ -20,24 +20,6 @@ public class RasterizationController {
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
-//        Rasterization.drawRectangle(canvas.getGraphicsContext2D(), 200, 300, 200, 100, Color.CHOCOLATE);
-//        Rasterization.drawRectangle(canvas.getGraphicsContext2D(), 250, 250, 50, 200, Color.AQUA);
-
-//        Rasterization.drawLine(canvas.getGraphicsContext2D(), 23,100,600,0, Color.CHOCOLATE);
-//        Rasterization.drawLinePreBresenham(canvas.getGraphicsContext2D(), 23,100,600,0, Color.CHOCOLATE);
-
-
-//        Rasterization.BresenhamAlgorithmV2(canvas.getGraphicsContext2D(), 0,0,10,10, Color.CHOCOLATE);
-//
-//        Rasterization.drawCircle(canvas.getGraphicsContext2D(), 50, 50, 50, Color.CHOCOLATE);
-//
-//
-//        Rasterization.drawCircleMitcher(canvas.getGraphicsContext2D(), 100, 100, 100, Color.BLACK);
-//
-//        Rasterization.fillCircleMitcher(canvas.getGraphicsContext2D(), 100, 100, 100, Color.BLACK);
-
-//       Rasterization.fillOval(canvas.getGraphicsContext2D(), 500,500,400,200, Color.BLACK);
-
         test1(canvas.getGraphicsContext2D(), 60, 60, 20, 20);
 
         Rasterization.drawCircle(canvas.getGraphicsContext2D(), 60, 200, 40, Color.AQUA);
@@ -51,8 +33,9 @@ public class RasterizationController {
         Rasterization.fillOval(canvas.getGraphicsContext2D(), 500, 200, 50, 40, Color.RED);
 
 
-        Rasterization.fillOval(canvas.getGraphicsContext2D(), 600, 200, 50, 30, Color.RED, Color.BLUE);
-
+        Rasterization.fillOval(canvas.getGraphicsContext2D(), 700, 200, 50, 30,
+                new Color[]{Color.RED, Color.BLUE},
+                new float[]{0.5f, 0.5f});
     }
 
     public void test1(final GraphicsContext graphicsContext, int x, int y, int n, int l) {

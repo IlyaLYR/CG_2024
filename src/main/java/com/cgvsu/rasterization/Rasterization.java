@@ -4,6 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
+import java.awt.*;
+
 public class Rasterization {
 
     public static void drawRectangle(final GraphicsContext graphicsContext, final int x, final int y, final int width, final int height, final Color color) {
@@ -244,6 +246,7 @@ public class Rasterization {
     }
 
     private static void fillingOval2V(PixelWriter pixelWriter, int x0, int y0, int x, int y, int a, int b, Color[] colors, float[] interval) {
+
         for (int i = x0 - x; i <= x0 + x; i++) {
             double dist = Math.sqrt(Math.pow(i - x0, 2) + Math.pow(y, 2));
             double max = (a * b) / Math.sqrt(a * a * Math.pow(y / dist, 2) + b * b * Math.pow((i - x0) / dist, 2));
@@ -252,16 +255,7 @@ public class Rasterization {
             // Проверяем интервал, в который попадает fraction, и используем соответствующие цвета
             Color color = colors[colors.length - 1]; // Цвет по умолчанию, если fraction выходит за пределы
 
-//            for (int j = 1; j < interval.length; j++) {
-//                if (fraction <= interval[j]) {
-//                    // Расчет нормализованной доли для текущего интервала
-//                    double distInInterval = fraction - interval[j - 1];
-//                    double maxInInterval = interval[j] - interval[j - 1];
-//                    double normalizedFraction = distInInterval / maxInInterval;
-//                    color = interpolateColor(colors[j - 1], colors[j], normalizedFraction);
-//                    break;
-//                }
-//            }
+
             for (int j = 1; j < interval.length; j++) {
                 if (fraction <= interval[j]) {
                     // Проверка на равные интервалы, чтобы избежать переходов

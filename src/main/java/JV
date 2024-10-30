@@ -25,3 +25,15 @@
 //                pixelWriter.setColor(i, y0 + y, color);
 //                pixelWriter.setColor(i, y0 - y, color);
 //            }
+
+
+//            for (int j = 1; j < interval.length; j++) {
+//                if (fraction <= interval[j]) {
+//                    // Расчет нормализованной доли для текущего интервала
+//                    double distInInterval = fraction - interval[j - 1];
+//                    double maxInInterval = interval[j] - interval[j - 1];
+//                    double normalizedFraction = distInInterval / maxInInterval;
+//                    color = interpolateColor(colors[j - 1], colors[j], normalizedFraction);
+//                    break;
+//                }
+//            }

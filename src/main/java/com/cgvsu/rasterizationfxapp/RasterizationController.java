@@ -34,8 +34,8 @@ public class RasterizationController {
 
 
         Rasterization.fillOval(canvas.getGraphicsContext2D(), 700, 200, 50, 30,
-                new Color[]{Color.RED, Color.BLUE},
-                new float[]{0.5f, 0.5f});
+                new Color[]{Color.RED, Color.BLUE, Color.GREEN},
+                new float[]{0.2f,0.5f, 0.8f});
     }
 
     public void test1(final GraphicsContext graphicsContext, int x, int y, int n, int l) {

@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
+import java.util.HashMap;
 import javax.vecmath.Vector3f;
 
 import com.cgvsu.model.Model;
@@ -84,6 +85,11 @@ public class GuiController {
         } catch (IOException exception) {
 
         }
+    }
+
+    @FXML
+    public void clearScene() {
+       mesh = null;
     }
 
     @FXML

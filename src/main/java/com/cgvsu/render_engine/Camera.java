@@ -1,16 +1,25 @@
 package com.cgvsu.render_engine;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Matrix4f;
+
+
+import ru.cs.vsu.cg2024.matrix.typesMatrix.Matrix4D;
+import ru.cs.vsu.cg2024.matrix.typesVectors.Vector3C;
 
 public class Camera {
 
-    public Camera(
-            final Vector3f position,
-            final Vector3f target,
-            final float fov,
-            final float aspectRatio,
-            final float nearPlane,
-            final float farPlane) {
+    private Vector3C position;
+    private Vector3C target;
+    private double fov;
+    private double aspectRatio;
+    private double nearPlane;
+    private double farPlane;
+
+    public Camera(Vector3C position,
+                  Vector3C target,
+                  double fov,
+                  double aspectRatio,
+                  double nearPlane,
+                  double farPlane
+    ) {
         this.position = position;
         this.target = target;
         this.fov = fov;
@@ -19,46 +28,39 @@ public class Camera {
         this.farPlane = farPlane;
     }
 
-    public void setPosition(final Vector3f position) {
+    public void setPosition(final Vector3C position) {
         this.position = position;
     }
 
-    public void setTarget(final Vector3f target) {
+    public void setTarget(final Vector3C target) {
         this.target = target;
     }
 
-    public void setAspectRatio(final float aspectRatio) {
+    public void setAspectRatio(final double aspectRatio) {
         this.aspectRatio = aspectRatio;
     }
 
-    public Vector3f getPosition() {
+    public Vector3C getPosition() {
         return position;
     }
 
-    public Vector3f getTarget() {
+    public Vector3C getTarget() {
         return target;
     }
 
-    public void movePosition(final Vector3f translation) {
+    public void movePosition(final Vector3C translation) {
         this.position.add(translation);
     }
 
-    public void moveTarget(final Vector3f translation) {
-        this.target.add(target);
+    public void moveTarget(final Vector3C translation) {
+        this.target = this.target.added(translation);
     }
 
-    Matrix4f getViewMatrix() {
+    public Matrix4D getViewMatrix() {
         return GraphicConveyor.lookAt(position, target);
     }
 
-    Matrix4f getProjectionMatrix() {
+    public Matrix4D getProjectionMatrix() {
         return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
     }
-
-    private Vector3f position;
-    private Vector3f target;
-    private float fov;
-    private float aspectRatio;
-    private float nearPlane;
-    private float farPlane;
 }

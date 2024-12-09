@@ -5,11 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a5b639dd-209e-4df6-a7b7-b5ade0ac58d0" name="Changes" comment="Импорт библиотеки">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/MatrixLibrary_1_1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/Simple3DViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/Simple3DViewer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/GraphicConveyor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/GraphicConveyor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/RenderEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/RenderEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/GuiController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/Simple3DViewer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/Simple3DViewer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReader.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/Camera.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/Camera.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/GraphicConveyor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/GraphicConveyor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/RenderEngine.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/render_engine/RenderEngine.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,16 +42,24 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "IlyaLYR"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/9anchik/cg-software-rendering.git",
+    "accountId": "bae23419-42bc-4df8-bd25-f66037510b8e"
+  }
+}]]></component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="useMavenConfig" value="true" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
   <component name="ProjectId" id="2pfch2MrKlScKfAsCsnL8pJEykY" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -46,14 +67,46 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Start.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "math",
     "last_opened_file_path": "D:/cg-task-4/3DViewer/MatrixLibrary-1.0.jar",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.54022986"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="Start" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.cgvsu.Main" />
+      <module name="cgvsu" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -79,6 +132,9 @@
     </task>
     <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

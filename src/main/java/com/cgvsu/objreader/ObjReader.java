@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class ObjReader {
-
 	private static final String OBJ_VERTEX_TOKEN = "v";
 	private static final String OBJ_TEXTURE_TOKEN = "vt";
 	private static final String OBJ_NORMAL_TOKEN = "vn";
@@ -50,7 +49,6 @@ public class ObjReader {
 				default -> {}
 			}
 		}
-
 		return result;
 	}
 

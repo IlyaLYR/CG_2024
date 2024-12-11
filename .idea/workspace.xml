@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a5b639dd-209e-4df6-a7b7-b5ade0ac58d0" name="Changes" comment="Импорт библиотеки">
+    <list default="true" id="a5b639dd-209e-4df6-a7b7-b5ade0ac58d0" name="Changes" comment="Добавил обработку исключений в ObjReader, добавил тест ObjReader">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/Simple3DViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/Simple3DViewer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +26,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="SOFT" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -48,12 +47,74 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/cg-task-4/3DViewer/MatrixLibrary-1.0.jar",
+    "last_opened_file_path": "D:/CG2024/task-3/CG-task3",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\cg-task-4\3DViewer\tests\ObjReaderTest" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.ObjReaderTest.testParseVertex05">
+    <configuration name="ObjReaderTest.read" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="cgvsu" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ObjReaderTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ObjReaderTest" />
+      <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
+      <option name="METHOD_NAME" value="read" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ObjReaderTest.testParseVertex01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="cgvsu" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ObjReaderTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ObjReaderTest" />
+      <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
+      <option name="METHOD_NAME" value="testParseVertex01" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ObjReaderTest.testParseVertex05" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="cgvsu" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ObjReaderTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ObjReaderTest" />
+      <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
+      <option name="METHOD_NAME" value="testParseVertex05" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.ObjReaderTest.testParseVertex05" />
+        <item itemvalue="JUnit.ObjReaderTest.testParseVertex01" />
+        <item itemvalue="JUnit.ObjReaderTest.read" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -77,7 +138,21 @@
       <option name="project" value="LOCAL" />
       <updated>1733727942800</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Добавил обработку исключений в ObjReader, добавил тест ObjReader">
+      <created>1733917797490</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1733917797490</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Добавил обработку исключений в ObjReader, добавил тест ObjReader">
+      <created>1733919014096</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1733919014096</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -106,6 +181,17 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="добавил очистку сцены" />
     <MESSAGE value="Импорт библиотеки" />
-    <option name="LAST_COMMIT_MESSAGE" value="Импорт библиотеки" />
+    <MESSAGE value="Добавил обработку исключений в ObjReader, добавил тест ObjReader" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавил обработку исключений в ObjReader, добавил тест ObjReader" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.RuntimeException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

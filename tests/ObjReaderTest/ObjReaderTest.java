@@ -1,13 +1,31 @@
-package com.cgvsu.objreader;
+package ObjReaderTest;
 
 import com.cgvsu.math.Vector3f;
+import com.cgvsu.objreader.ObjReader;
+import com.cgvsu.objreader.ObjReaderException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class ObjReaderTest {
+class ObjReaderTest extends ObjReader {
+    @Test
+    void read() {
+        File file = new File("tests/ObjReaderTest/objectReaderTest.obj");
+        Path fileName = Path.of(file.getAbsolutePath());
+        String fileContent;
+        try {
+            fileContent = Files.readString(fileName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ObjReader.read(fileContent);
+    }
 
     @Test
     public void testParseVertex01() {

@@ -1,11 +1,12 @@
 package com.cgvsu.render_engine;
 
-import ru.cs.vsu.cg2024.matrix.typesMatrix.Matrix4D;
-import ru.cs.vsu.cg2024.matrix.typesVectors.Vector3C;
-import ru.cs.vsu.cg2024.matrix.typesVectors.Vector4C;
+
+
+import com.cgvsu.matrix.typesMatrix.Matrix4D;
+import com.cgvsu.matrix.typesVectors.Vector3C;
+import com.cgvsu.matrix.typesVectors.Vector4C;
 
 import javax.vecmath.Point2f;
-import javax.vecmath.Vector3f;
 
 public class GraphicConveyor {
 

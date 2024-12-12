@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="MatrixLibrary:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a5b639dd-209e-4df6-a7b7-b5ade0ac58d0" name="Changes" comment="Импорт библиотеки">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MatrixLibrary-1.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/MatrixLibrary_jar/MatrixLibrary.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/GuiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/Camera.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/GraphicConveyor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/GraphicConveyor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/RenderEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/render_engine/RenderEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/TEST.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/TEST.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/core/AbstractMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/core/AbstractMatrix.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/core/MatrixUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/core/MatrixUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/core/MatrixWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/core/MatrixWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/core/VectorWrapperC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/core/VectorWrapperC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/core/VectorWrapperR.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/core/VectorWrapperR.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/types/RecMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/types/RecMatrix.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/types/SquareMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/types/SquareMatrix.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/types/VectorC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/types/VectorC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/types/VectorR.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/types/VectorR.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/typesMatrix/Matrix2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/typesMatrix/Matrix2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/typesMatrix/Matrix3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/typesMatrix/Matrix3D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/typesMatrix/Matrix4D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/typesMatrix/Matrix4D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/typesVectors/Vector2C.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/typesVectors/Vector2C.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/typesVectors/Vector3C.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/typesVectors/Vector3C.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/matrix/typesVectors/Vector4C.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/matrix/typesVectors/Vector4C.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,17 +49,21 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="GUI" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;IlyaLYR&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "history": [
+    {
+      "state": "OPEN"
+    }
+  ],
+  "lastFilter": {
+    "state": "OPEN"
   }
-}</component>
+}]]></component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/9anchik/cg-software-rendering.git&quot;,
@@ -61,13 +93,19 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
     "Application.Start.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "JUnit.RecMatrixTest.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "true",
+    "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "math",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/ilya/Рабочий стол/ВГУ/2 курс/Геометрия и графика",
+    "last_opened_file_path": "/home/ilya/Рабочий стол/ВГУ/2 курс/Геометрия и графика/Task_4/src/matrix",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -75,11 +113,19 @@
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.54022986",
+    "settings.editor.selected.configurable": "editor.reader.mode",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Start" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-23" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.cgvsu.Main" />
       <module name="cgvsu" />
       <method v="2">
@@ -116,6 +162,12 @@
       <updated>1733160687253</updated>
       <workItem from="1733738473204" duration="360000" />
       <workItem from="1733740484278" duration="1750000" />
+      <workItem from="1733745980870" duration="1188000" />
+      <workItem from="1733756199021" duration="4319000" />
+      <workItem from="1733763351070" duration="8000" />
+      <workItem from="1734023984505" duration="76000" />
+      <workItem from="1734024067595" duration="1401000" />
+      <workItem from="1734025481993" duration="1770000" />
     </task>
     <task id="LOCAL-00001" summary="добавил очистку сцены">
       <created>1733691178430</created>
@@ -148,12 +200,13 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="GUI" />
+                        <option value="main" />
                       </list>
                     </value>
                   </entry>
                 </map>
               </option>
+              <option name="SHOW_ROOT_NAMES" value="true" />
             </State>
           </value>
         </entry>

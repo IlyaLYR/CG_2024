@@ -54,8 +54,8 @@ public class ObjReader {
 
 	// Всем методам кроме основного я поставил модификатор доступа protected, чтобы обращаться к ним в тестах
 	protected static Vector3f parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
-		if (wordsInLineWithoutToken.size() != 3) {
-			throw new ObjReaderException("Too many vertex arguments", lineInd);
+		if (wordsInLineWithoutToken.size() > 3) {
+			throw new ObjReaderException("Too many vertex arguments.", lineInd);
 		}
 		try {
 			return new Vector3f(
@@ -72,8 +72,8 @@ public class ObjReader {
 	}
 
 	protected static Vector2f parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
-		if (wordsInLineWithoutToken.size() != 2) {
-			throw new ObjReaderException("Too many texture vertex arguments", lineInd);
+		if (wordsInLineWithoutToken.size() > 2) {
+			throw new ObjReaderException("Too many texture vertex arguments.", lineInd);
 		}
 		try {
 			return new Vector2f(
@@ -90,8 +90,8 @@ public class ObjReader {
 
 
 	protected static Vector3f parseNormal(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
-		if (wordsInLineWithoutToken.size() != 3) {
-			throw new ObjReaderException("Too many normal arguments", lineInd);
+		if (wordsInLineWithoutToken.size() > 3) {
+			throw new ObjReaderException("Too many normal arguments.", lineInd);
 		}
 		try {
 			return new Vector3f(

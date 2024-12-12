@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a5b639dd-209e-4df6-a7b7-b5ade0ac58d0" name="Changes" comment="Добавил обработку исключений в ObjReader, добавил тест ObjReader">
+    <list default="true" id="a5b639dd-209e-4df6-a7b7-b5ade0ac58d0" name="Changes" comment="добавил пару тестовых случаев parseVertex">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReader.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/ObjReaderTest/ObjReaderTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/ObjReaderTest/ObjReaderTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/ObjReaderTest/ObjReaderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ObjReaderTest/ObjReaderTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,22 +45,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/cg-task-4/3DViewer",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/cg-task-4/3DViewer&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\cg-task-4\3DViewer\tests\ObjReaderTest" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ObjReaderTest.testParseVertex02">
+  <component name="RunManager" selected="JUnit.ObjReaderTest.testParseVertex01">
+    <configuration name="ObjReaderTest.testParseVertex01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="cgvsu" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ObjReaderTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ObjReaderTest" />
+      <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
+      <option name="METHOD_NAME" value="testParseVertex01" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ObjReaderTest.testParseVertex02" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="cgvsu" />
       <extension name="coverage">
@@ -124,29 +141,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ObjReaderTest.testParseVertex06" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="cgvsu" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ObjReaderTest.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ObjReaderTest" />
-      <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
-      <option name="METHOD_NAME" value="testParseVertex06" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ObjReaderTest.testParseVertex01" />
         <item itemvalue="JUnit.ObjReaderTest.testParseVertex02" />
-        <item itemvalue="JUnit.ObjReaderTest.testParseVertex06" />
-        <item itemvalue="JUnit.ObjReaderTest.testParseVertex05" />
-        <item itemvalue="JUnit.ObjReaderTest.testParseVertex04" />
         <item itemvalue="JUnit.ObjReaderTest.testParseVertex03" />
+        <item itemvalue="JUnit.ObjReaderTest.testParseVertex04" />
+        <item itemvalue="JUnit.ObjReaderTest.testParseVertex05" />
       </list>
     </recent_temporary>
   </component>
@@ -194,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1733919455944</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="добавил пару тестовых случаев parseVertex">
+      <created>1733996583923</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1733996583923</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -224,7 +232,8 @@
     <MESSAGE value="добавил очистку сцены" />
     <MESSAGE value="Импорт библиотеки" />
     <MESSAGE value="Добавил обработку исключений в ObjReader, добавил пакет ObjReaderTest с тестом" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавил обработку исключений в ObjReader, добавил пакет ObjReaderTest с тестом" />
+    <MESSAGE value="добавил пару тестовых случаев parseVertex" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавил пару тестовых случаев parseVertex" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

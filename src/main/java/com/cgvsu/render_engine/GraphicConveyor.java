@@ -1,8 +1,10 @@
 package com.cgvsu.render_engine;
 
-import ru.cs.vsu.cg2024.matrix.typesMatrix.Matrix4D;
-import ru.cs.vsu.cg2024.matrix.typesVectors.Vector3C;
-import ru.cs.vsu.cg2024.matrix.typesVectors.Vector4C;
+
+
+import com.cgvsu.matrix.typesMatrix.Matrix4D;
+import com.cgvsu.matrix.typesVectors.Vector3C;
+import com.cgvsu.matrix.typesVectors.Vector4C;
 
 import javax.vecmath.Point2f;
 
@@ -38,10 +40,10 @@ public class GraphicConveyor {
     }
 
     public static Matrix4D perspective(double fov, double aspectRatio, double nearPlane, double farPlane) {
-        double tangent = 1.0 / Math.tan(Math.toRadians(fov / 2));
+        float tangentMinusOnDegree = (float) (1.0F / (Math.tan(fov * 0.5F)));
         double[] matrix = new double[]{
-                tangent / aspectRatio, 0, 0, 0,
-                0, tangent, 0, 0,
+                tangentMinusOnDegree / aspectRatio, 0, 0, 0,
+                0, tangentMinusOnDegree, 0, 0,
                 0, 0, (farPlane + nearPlane) / (farPlane - nearPlane), (2 * nearPlane * farPlane) / (nearPlane - farPlane),
                 0, 0, 1, 0
         };
@@ -65,8 +67,6 @@ public class GraphicConveyor {
     }
 
     public static Point2f vertexToPoint(final Vector3C vertex, final int width, final int height) {
-        float x = (float) ((vertex.get(0) + 1) * 0.5 * width);
-        float y = (float) ((1 - vertex.get(1)) * 0.5 * height); // Y-координата перевёрнута
-        return new Point2f(x, y);
+        return new Point2f((float) (vertex.get(0) * width + width / 2.0F), (float) (-vertex.get(1) * height + height / 2.0F));
     }
 }

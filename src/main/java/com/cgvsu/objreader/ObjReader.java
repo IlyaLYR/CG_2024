@@ -1,8 +1,9 @@
 package com.cgvsu.objreader;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
-import ru.cs.vsu.cg2024.matrix.typesVectors.Vector2C;
-import ru.cs.vsu.cg2024.matrix.typesVectors.Vector3C;
+import com.cgvsu.matrix.typesVectors.Vector2C;
+import com.cgvsu.matrix.typesVectors.Vector3C;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,8 +1,9 @@
 package com.cgvsu.model;
-import com.cgvsu.math.Vector2f;
-import com.cgvsu.math.Vector3f;
-import ru.cs.vsu.cg2024.matrix.typesVectors.Vector2C;
-import ru.cs.vsu.cg2024.matrix.typesVectors.Vector3C;
+
+
+
+import com.cgvsu.matrix.typesVectors.Vector2C;
+import com.cgvsu.matrix.typesVectors.Vector3C;
 
 import java.util.*;
 

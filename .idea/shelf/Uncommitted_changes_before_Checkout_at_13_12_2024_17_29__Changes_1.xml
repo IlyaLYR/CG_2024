@@ -1,0 +1,24 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_13_12_2024_17_29_[Changes]1" date="1734100191113" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_12_2024_17_29_[Changes]1/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 13.12.2024 17:29 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/Main.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/Main.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_12_2024_17_29_[Changes]1/Main.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/test-classes/ObjReaderTest/ObjReaderTest.class" />
+    <option name="AFTER_PATH" value="target/test-classes/ObjReaderTest/ObjReaderTest.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_12_2024_17_29_[Changes]1/ObjReaderTest.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/objreader/ObjReader.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/objreader/ObjReader.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_12_2024_17_29_[Changes]1/ObjReader.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/com/cgvsu/model/Model.class" />
+    <option name="AFTER_PATH" value="target/classes/com/cgvsu/model/Model.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_13_12_2024_17_29_[Changes]1/Model.class" />
+  </binary>
+</changelist>

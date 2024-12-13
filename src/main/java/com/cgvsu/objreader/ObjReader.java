@@ -1,23 +1,23 @@
 package com.cgvsu.objreader;
+
+import com.cgvsu.math.Vector2f;
+import com.cgvsu.math.Vector3f;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
-import com.cgvsu.matrix.typesVectors.Vector2C;
-import com.cgvsu.matrix.typesVectors.Vector3C;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class ObjReader {
-
 	private static final String OBJ_VERTEX_TOKEN = "v";
 	private static final String OBJ_TEXTURE_TOKEN = "vt";
 	private static final String OBJ_NORMAL_TOKEN = "vn";
 	private static final String OBJ_FACE_TOKEN = "f";
+	private static Model result = new Model();
 
 	public static Model read(String fileContent) {
-		Model result = new Model();
+		result = new Model();
 
 		int lineInd = 0;
 		Scanner scanner = new Scanner(fileContent);
@@ -50,14 +50,16 @@ public class ObjReader {
 				default -> {}
 			}
 		}
-
 		return result;
 	}
 
 	// Всем методам кроме основного я поставил модификатор доступа protected, чтобы обращаться к ним в тестах
-	protected static Vector3C parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+	protected static Vector3f parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+		if (wordsInLineWithoutToken.size() > 3) {
+			throw new ObjReaderException("Too many vertex arguments.", lineInd);
+		}
 		try {
-			return new Vector3C(
+			return new Vector3f(
 					Float.parseFloat(wordsInLineWithoutToken.get(0)),
 					Float.parseFloat(wordsInLineWithoutToken.get(1)),
 					Float.parseFloat(wordsInLineWithoutToken.get(2)));
@@ -70,9 +72,12 @@ public class ObjReader {
 		}
 	}
 
-	protected static Vector2C parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+	protected static Vector2f parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+		if (wordsInLineWithoutToken.size() > 2) {
+			throw new ObjReaderException("Too many texture vertex arguments.", lineInd);
+		}
 		try {
-			return new Vector2C(
+			return new Vector2f(
 					Float.parseFloat(wordsInLineWithoutToken.get(0)),
 					Float.parseFloat(wordsInLineWithoutToken.get(1)));
 
@@ -84,9 +89,13 @@ public class ObjReader {
 		}
 	}
 
-	protected static Vector3C parseNormal(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+
+	protected static Vector3f parseNormal(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+		if (wordsInLineWithoutToken.size() > 3) {
+			throw new ObjReaderException("Too many normal arguments.", lineInd);
+		}
 		try {
-			return new Vector3C(
+			return new Vector3f(
 					Float.parseFloat(wordsInLineWithoutToken.get(0)),
 					Float.parseFloat(wordsInLineWithoutToken.get(1)),
 					Float.parseFloat(wordsInLineWithoutToken.get(2)));
@@ -109,9 +118,13 @@ public class ObjReader {
 		}
 
 		Polygon result = new Polygon();
-		result.setVertexIndices(onePolygonVertexIndices);
-		result.setTextureVertexIndices(onePolygonTextureVertexIndices);
-		result.setNormalIndices(onePolygonNormalIndices);
+
+		if (equalsCorrectFaceFormat(onePolygonVertexIndices, onePolygonTextureVertexIndices, onePolygonNormalIndices)) {
+			result.setVertexIndices(onePolygonVertexIndices);
+			result.setTextureVertexIndices(onePolygonTextureVertexIndices);
+			result.setNormalIndices(onePolygonNormalIndices);
+		} else throw new ObjReaderException("Incorrect face format.", lineInd);
+
 		return result;
 	}
 
@@ -128,18 +141,37 @@ public class ObjReader {
 			String[] wordIndices = wordInLine.split("/");
 			switch (wordIndices.length) {
 				case 1 -> {
+					if (Integer.parseInt(wordIndices[0]) - 1 > result.getVertices().size()) {
+						throw new ObjReaderException("Vertex index is too much", lineInd);
+					}
 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
 				}
 				case 2 -> {
+					if (Integer.parseInt(wordIndices[0]) - 1 > result.getVertices().size()
+							|| Integer.parseInt(wordIndices[1]) - 1 > result.getTextureVertices().size()) {
+						throw new ObjReaderException("Index is too much.", lineInd);
+					} else if (onePolygonVertexIndices.size() != onePolygonTextureVertexIndices.size()) {
+						throw new ObjReaderException("Incorrect face format.", lineInd);
+					}
 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
 					onePolygonTextureVertexIndices.add(Integer.parseInt(wordIndices[1]) - 1);
 				}
 				case 3 -> {
+					if (isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[0]), result.getVertices().size())
+							|| isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[2]), result.getNormals().size())) {
+						throw new ObjReaderException("Index is too much.", lineInd);
+					} else if (onePolygonVertexIndices.size() != onePolygonNormalIndices.size()) {
+						throw new ObjReaderException("Incorrect face format.", lineInd);
+					}
 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
 					onePolygonNormalIndices.add(Integer.parseInt(wordIndices[2]) - 1);
-					if (!wordIndices[1].equals("")) {
+					if (!wordIndices[1].isEmpty() && !isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[1]), result.getTextureVertices().size())) {
 						onePolygonTextureVertexIndices.add(Integer.parseInt(wordIndices[1]) - 1);
-					}
+						if (onePolygonVertexIndices.size() != onePolygonTextureVertexIndices.size()) {
+							throw new ObjReaderException("Incorrect face format.", lineInd);
+						}
+					} else if (!wordIndices[1].isEmpty() && isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[1]), result.getTextureVertices().size()))
+						throw new ObjReaderException("Index of normal is too much.", lineInd);
 				}
 				default -> {
 					throw new ObjReaderException("Invalid element size.", lineInd);
@@ -152,5 +184,25 @@ public class ObjReader {
 		} catch(IndexOutOfBoundsException e) {
 			throw new ObjReaderException("Too few arguments.", lineInd);
 		}
+	}
+
+	private static boolean isIndexOutOfBoundInFace(int index, int size) {
+		return index - 1 >= size;
+	}
+
+	public static boolean equalsCorrectFaceFormat(
+			ArrayList<Integer> onePolygonVertexIndices,
+			ArrayList<Integer> onePolygonTextureVertexIndices,
+			ArrayList<Integer> onePolygonNormalIndices) {
+		if (onePolygonVertexIndices.size() < 3) {
+			return false;
+		}
+		if (!onePolygonTextureVertexIndices.isEmpty() && onePolygonTextureVertexIndices.size() < 3) {
+			return false;
+		}
+		if (!onePolygonNormalIndices.isEmpty() && onePolygonNormalIndices.size() < 3) {
+			return false;
+		}
+		return true;
 	}
 }

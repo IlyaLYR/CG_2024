@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class ObjReaderTest extends ObjReader {
     @Test
     void read() {
@@ -161,56 +163,155 @@ class ObjReaderTest extends ObjReader {
 
     @Test
     void testParseFace01() {
-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1//2", "3/2/1"));
-        try {
-            ObjReader.parseFace(wordsInLineWithoutToken, 8);
-        } catch (ObjReaderException exception) {
-            String expectedError = "Error parsing OBJ file on line: 8. Incorrect face format.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
-        }
+        String fileContent =
+                """
+                        v 1 2 3
+                        v 2 3 4
+                        v 3 4 5
+                        vt 1 2
+                        vt 1 2
+                        vt 1 2
+                        vn 1 2 3
+                        vn 2 4 1
+                        f 1//2 2/3/1""";
+        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
     }
+
     @Test
     void testParseFace02() {
-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1//2", "2//1"));
-        try {
-            ObjReader.parseFace(wordsInLineWithoutToken, 8);
-        } catch (ObjReaderException exception) {
-            String expectedError = "Error parsing OBJ file on line: 8. Incorrect face format.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
-        }
+        String fileContent =
+                """
+                        v 1 2 3
+                        v 2 3 4
+                        v 3 4 5
+                        vt 1 2
+                        vt 1 2
+                        vt 1 2
+                        vn 1 2 3
+                        vn 2 4 1
+                        f 1//2 2//1""";
+        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
     }
 
     @Test
     void testParseFace03() {
-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1", "3"));
-        try {
-            ObjReader.parseFace(wordsInLineWithoutToken, 8);
-        } catch (ObjReaderException exception) {
-            String expectedError = "Error parsing OBJ file on line: 8. Incorrect face format.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
-        }
+        String fileContent =
+                """
+                        v 1 2 3
+                        v 2 3 4
+                        v 3 4 5
+                        vt 1 2
+                        vt 1 2
+                        vt 1 2
+                        vn 1 2 3
+                        vn 2 4 1
+                        f 1 2""";
+        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
     }
 
     @Test
     void testParseFace04() {
-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1//2", "3"));
-        try {
-            ObjReader.parseFace(wordsInLineWithoutToken, 8);
-        } catch (ObjReaderException exception) {
-            String expectedError = "Error parsing OBJ file on line: 8. Incorrect face format.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
-        }
+        String fileContent =
+                """
+                        v 1 2 3
+                        v 2 3 4
+                        v 3 4 5
+                        vt 1 2
+                        vt 1 2
+                        vt 1 2
+                        vn 1 2 3
+                        vn 2 4 1
+                        f 1//3 2""";
+        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
     }
 
     @Test
     void testParseFace05() {
-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1//2", "3/2/1", "3/4/2"));
-        try {
-            ObjReader.parseFace(wordsInLineWithoutToken, 8);
-        } catch (ObjReaderException exception) {
-            String expectedError = "Error parsing OBJ file on line: 8. Incorrect face format.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
-        }
+        String fileContent =
+                """
+                        v 1 2 3
+                        v 2 3 4
+                        v 3 4 5
+                        vt 1 2
+                        vt 1 2
+                        vt 1 2
+                        vn 1 2 3
+                        vn 2 4 1
+                        f 1//2 3/2/1 4/4/2""";
+        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
+    }
+
+    @Test
+    void testParseFace06() {
+        String fileContent =
+                """
+                        v 1 2 3
+                        v 2 3 4
+                        v 3 4 5
+                        vt 1 2
+                        vt 1 2
+                        vt 1 2
+                        vn 1 2 3
+                        vn 2 4 1
+                        f 1/2/3 3/2/1 a/b/c""";
+        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Failed to parse int value."));
+    }
+
+    @Test
+    void testParseFace07() {
+        String fileContent =
+                """
+                        v 1 2 3
+                        v 2 3 4
+                        v 3 4 5
+                        vt 1 2
+                        vt 1 2
+                        vt 1 2
+                        vn 1 2 3
+                        vn 2 4 1
+                        f 3/2/1 a/b/c god""";
+        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Failed to parse int value."));
+    }
+
+    @Test
+    void testParseFace08(){
+        String fileContent =
+                """
+                        v 1 2 3
+                        v 2 3 4
+                        v 3 4 5
+                        vt 1 2
+                        vt 1 2
+                        vt 1 2
+                        vn 1 2 3
+                        vn 2 4 1
+                        f 1/1/1 2/2/2 3/3/""";
+        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
+    }
+
+    @Test
+    void testParseFace09() {
+        String fileContent =
+                """
+                        v 1 2 3
+                        v 2 3 4
+                        v 3 4 5
+                        vt 1 2
+                        vt 1 2
+                        vt 1 2
+                        vn 1 2 3
+                        vn 2 4 1
+                        f 1/2/3 4/5/6 7/8/9""";
+        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Index is too much."));
     }
 
 }

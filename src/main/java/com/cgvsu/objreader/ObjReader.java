@@ -14,9 +14,10 @@ public class ObjReader {
 	private static final String OBJ_TEXTURE_TOKEN = "vt";
 	private static final String OBJ_NORMAL_TOKEN = "vn";
 	private static final String OBJ_FACE_TOKEN = "f";
+	private static Model result = new Model();
 
 	public static Model read(String fileContent) {
-		Model result = new Model();
+		result = new Model();
 
 		int lineInd = 0;
 		Scanner scanner = new Scanner(fileContent);
@@ -140,18 +141,37 @@ public class ObjReader {
 			String[] wordIndices = wordInLine.split("/");
 			switch (wordIndices.length) {
 				case 1 -> {
+					if (Integer.parseInt(wordIndices[0]) - 1 > result.getVertices().size()) {
+						throw new ObjReaderException("Vertex index is too much", lineInd);
+					}
 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
 				}
 				case 2 -> {
+					if (Integer.parseInt(wordIndices[0]) - 1 > result.getVertices().size()
+							|| Integer.parseInt(wordIndices[1]) - 1 > result.getTextureVertices().size()) {
+						throw new ObjReaderException("Index is too much.", lineInd);
+					} else if (onePolygonVertexIndices.size() != onePolygonTextureVertexIndices.size()) {
+						throw new ObjReaderException("Incorrect face format.", lineInd);
+					}
 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
 					onePolygonTextureVertexIndices.add(Integer.parseInt(wordIndices[1]) - 1);
 				}
 				case 3 -> {
+					if (isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[0]), result.getVertices().size())
+							|| isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[2]), result.getNormals().size())) {
+						throw new ObjReaderException("Index is too much.", lineInd);
+					} else if (onePolygonVertexIndices.size() != onePolygonNormalIndices.size()) {
+						throw new ObjReaderException("Incorrect face format.", lineInd);
+					}
 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
 					onePolygonNormalIndices.add(Integer.parseInt(wordIndices[2]) - 1);
-					if (!wordIndices[1].equals("")) {
+					if (!wordIndices[1].isEmpty() && !isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[1]), result.getTextureVertices().size())) {
 						onePolygonTextureVertexIndices.add(Integer.parseInt(wordIndices[1]) - 1);
-					}
+						if (onePolygonVertexIndices.size() != onePolygonTextureVertexIndices.size()) {
+							throw new ObjReaderException("Incorrect face format.", lineInd);
+						}
+					} else if (!wordIndices[1].isEmpty() && isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[1]), result.getTextureVertices().size()))
+						throw new ObjReaderException("Index of normal is too much.", lineInd);
 				}
 				default -> {
 					throw new ObjReaderException("Invalid element size.", lineInd);
@@ -164,6 +184,10 @@ public class ObjReader {
 		} catch(IndexOutOfBoundsException e) {
 			throw new ObjReaderException("Too few arguments.", lineInd);
 		}
+	}
+
+	private static boolean isIndexOutOfBoundInFace(int index, int size) {
+		return index - 1 >= size;
 	}
 
 	public static boolean equalsCorrectFaceFormat(

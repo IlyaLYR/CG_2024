@@ -1,0 +1,442 @@
+Index: src/main/java/com/cgvsu/objreader/ObjReader.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/objreader/ObjReader.java b/src/main/java/com/cgvsu/objreader/ObjReader.java
+--- a/src/main/java/com/cgvsu/objreader/ObjReader.java	
++++ b/src/main/java/com/cgvsu/objreader/ObjReader.java	
+@@ -14,9 +14,10 @@
+ 	private static final String OBJ_TEXTURE_TOKEN = "vt";
+ 	private static final String OBJ_NORMAL_TOKEN = "vn";
+ 	private static final String OBJ_FACE_TOKEN = "f";
++	private static Model result = new Model();
+ 
+ 	public static Model read(String fileContent) {
+-		Model result = new Model();
++		result = new Model();
+ 
+ 		int lineInd = 0;
+ 		Scanner scanner = new Scanner(fileContent);
+@@ -140,13 +141,28 @@
+ 			String[] wordIndices = wordInLine.split("/");
+ 			switch (wordIndices.length) {
+ 				case 1 -> {
++					if (Integer.parseInt(wordIndices[0]) - 1 > result.getVertices().size()) {
++						throw new ObjReaderException("Vertex index is too much", lineInd);
++					}
+ 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
+ 				}
+ 				case 2 -> {
++					if (Integer.parseInt(wordIndices[0]) - 1 > result.getVertices().size()
++							|| Integer.parseInt(wordIndices[1]) - 1 > result.getTextureVertices().size()) {
++						throw new ObjReaderException("Index is too much.", lineInd);
++					} else if (onePolygonVertexIndices.size() != onePolygonTextureVertexIndices.size()) {
++						throw new ObjReaderException("Incorrect face format.", lineInd);
++					}
+ 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
+ 					onePolygonTextureVertexIndices.add(Integer.parseInt(wordIndices[1]) - 1);
+ 				}
+ 				case 3 -> {
++					if (isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[0]), result.getVertices().size())
++							|| isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[2]), result.getNormals().size())) {
++						throw new ObjReaderException("Index is too much.", lineInd);
++					} else if (onePolygonVertexIndices.size() != onePolygonNormalIndices.size()) {
++						throw new ObjReaderException("Incorrect face format.", lineInd);
++					}
+ 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
+ 					onePolygonNormalIndices.add(Integer.parseInt(wordIndices[2]) - 1);
+ 					if (!wordIndices[1].equals("")) {
+@@ -181,4 +197,8 @@
+ 		}
+ 		return true;
+ 	}
++
++	private static boolean isIndexOutOfBoundInFace(int index, int size){
++		return index - 1 >= size;
++	}
+ }
+Index: src/main/java/com/cgvsu/model/Model.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/cgvsu/model/Model.java b/src/main/java/com/cgvsu/model/Model.java
+--- a/src/main/java/com/cgvsu/model/Model.java	
++++ b/src/main/java/com/cgvsu/model/Model.java	
+@@ -11,4 +11,20 @@
+     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
+     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+ 
++
++    public ArrayList<Vector3f> getVertices() {
++        return vertices;
++    }
++
++    public ArrayList<Vector2f> getTextureVertices() {
++        return textureVertices;
++    }
++
++    public ArrayList<Vector3f> getNormals() {
++        return normals;
++    }
++
++    public ArrayList<Polygon> getPolygons() {
++        return polygons;
++    }
+ }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -4,11 +4,13 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="a5b639dd-209e-4df6-a7b7-b5ade0ac58d0" name="Changes" comment="add MatrixLibrary-1.0.jar">
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" afterDir="false" />
++    <list default="true" id="a5b639dd-209e-4df6-a7b7-b5ade0ac58d0" name="Changes" comment="добавил тесты текстурных координат, нормалей и полигонов; В ObjReader добавил метод equalsCorrectFaceFormat для тестов полигонов, косметический рефакторинг">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/model/Model.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/Main.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/model/Model.class" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReader.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/target/test-classes/ObjReaderTest/ObjReaderTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/ObjReaderTest/ObjReaderTest.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/tests/ObjReaderTest/ObjReaderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ObjReaderTest/ObjReaderTest.java" afterDir="false" />
+     </list>
+@@ -62,7 +64,7 @@
+     </key>
+   </component>
+   <component name="RunManager" selected="JUnit.ObjReaderTest.testParseFace05">
+-    <configuration name="ObjReaderTest.testParseFace05" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="ObjReaderTest.testParseFace01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="cgvsu" />
+       <extension name="coverage">
+         <pattern>
+@@ -72,13 +74,13 @@
+       </extension>
+       <option name="PACKAGE_NAME" value="ObjReaderTest" />
+       <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
+-      <option name="METHOD_NAME" value="testParseFace05" />
++      <option name="METHOD_NAME" value="testParseFace01" />
+       <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="ObjReaderTest.testParseVertex01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="ObjReaderTest.testParseFace02" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="cgvsu" />
+       <extension name="coverage">
+         <pattern>
+@@ -88,13 +90,13 @@
+       </extension>
+       <option name="PACKAGE_NAME" value="ObjReaderTest" />
+       <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
+-      <option name="METHOD_NAME" value="testParseVertex01" />
++      <option name="METHOD_NAME" value="testParseFace02" />
+       <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="ObjReaderTest.testParseVertex02" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="ObjReaderTest.testParseFace03" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="cgvsu" />
+       <extension name="coverage">
+         <pattern>
+@@ -104,13 +106,13 @@
+       </extension>
+       <option name="PACKAGE_NAME" value="ObjReaderTest" />
+       <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
+-      <option name="METHOD_NAME" value="testParseVertex02" />
++      <option name="METHOD_NAME" value="testParseFace03" />
+       <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="ObjReaderTest.testParseVertex03" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="ObjReaderTest.testParseFace04" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="cgvsu" />
+       <extension name="coverage">
+         <pattern>
+@@ -120,13 +122,13 @@
+       </extension>
+       <option name="PACKAGE_NAME" value="ObjReaderTest" />
+       <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
+-      <option name="METHOD_NAME" value="testParseVertex03" />
++      <option name="METHOD_NAME" value="testParseFace04" />
+       <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="ObjReaderTest.testParseVertex04" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="ObjReaderTest.testParseFace05" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="cgvsu" />
+       <extension name="coverage">
+         <pattern>
+@@ -136,7 +138,7 @@
+       </extension>
+       <option name="PACKAGE_NAME" value="ObjReaderTest" />
+       <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
+-      <option name="METHOD_NAME" value="testParseVertex04" />
++      <option name="METHOD_NAME" value="testParseFace05" />
+       <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+@@ -145,10 +147,10 @@
+     <recent_temporary>
+       <list>
+         <item itemvalue="JUnit.ObjReaderTest.testParseFace05" />
+-        <item itemvalue="JUnit.ObjReaderTest.testParseVertex01" />
+-        <item itemvalue="JUnit.ObjReaderTest.testParseVertex02" />
+-        <item itemvalue="JUnit.ObjReaderTest.testParseVertex03" />
+-        <item itemvalue="JUnit.ObjReaderTest.testParseVertex04" />
++        <item itemvalue="JUnit.ObjReaderTest.testParseFace04" />
++        <item itemvalue="JUnit.ObjReaderTest.testParseFace03" />
++        <item itemvalue="JUnit.ObjReaderTest.testParseFace02" />
++        <item itemvalue="JUnit.ObjReaderTest.testParseFace01" />
+       </list>
+     </recent_temporary>
+   </component>
+@@ -203,7 +205,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1733996583923</updated>
+     </task>
+-    <option name="localTasksCounter" value="7" />
++    <task id="LOCAL-00007" summary="добавил тесты текстурных координат, нормалей и полигонов; В ObjReader добавил метод equalsCorrectFaceFormat для тестов полигонов, косметический рефакторинг">
++      <created>1734098612371</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1734098612371</updated>
++    </task>
++    <option name="localTasksCounter" value="8" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -234,7 +243,8 @@
+     <MESSAGE value="Импорт библиотеки" />
+     <MESSAGE value="Добавил обработку исключений в ObjReader, добавил пакет ObjReaderTest с тестом" />
+     <MESSAGE value="добавил пару тестовых случаев parseVertex" />
+-    <option name="LAST_COMMIT_MESSAGE" value="добавил пару тестовых случаев parseVertex" />
++    <MESSAGE value="добавил тесты текстурных координат, нормалей и полигонов; В ObjReader добавил метод equalsCorrectFaceFormat для тестов полигонов, косметический рефакторинг" />
++    <option name="LAST_COMMIT_MESSAGE" value="добавил тесты текстурных координат, нормалей и полигонов; В ObjReader добавил метод equalsCorrectFaceFormat для тестов полигонов, косметический рефакторинг" />
+   </component>
+   <component name="XDebuggerManager">
+     <breakpoint-manager>
+Index: tests/ObjReaderTest/ObjReaderTest.java
+===================================================================
+diff --git a/tests/ObjReaderTest/ObjReaderTest.java b/tests/ObjReaderTest/ObjReaderTest.java
+--- a/tests/ObjReaderTest/ObjReaderTest.java	
++++ b/tests/ObjReaderTest/ObjReaderTest.java	
+@@ -14,6 +14,8 @@
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ 
++import static org.junit.jupiter.api.Assertions.assertTrue;
++
+ class ObjReaderTest extends ObjReader {
+     @Test
+     void read() {
+@@ -161,56 +163,155 @@
+ 
+     @Test
+     void testParseFace01() {
+-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1//2", "3/2/1"));
+-        try {
+-            ObjReader.parseFace(wordsInLineWithoutToken, 8);
+-        } catch (ObjReaderException exception) {
+-            String expectedError = "Error parsing OBJ file on line: 8. Incorrect face format.";
+-            Assertions.assertEquals(expectedError, exception.getMessage());
+-        }
++        String fileContent =
++                """
++                        v 1 2 3
++                        v 2 3 4
++                        v 3 4 5
++                        vt 1 2
++                        vt 1 2
++                        vt 1 2
++                        vn 1 2 3
++                        vn 2 4 1
++                        f 1//2 3/2/1""";
++        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
++        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
+     }
++
+     @Test
+     void testParseFace02() {
+-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1//2", "2//1"));
+-        try {
+-            ObjReader.parseFace(wordsInLineWithoutToken, 8);
+-        } catch (ObjReaderException exception) {
+-            String expectedError = "Error parsing OBJ file on line: 8. Incorrect face format.";
+-            Assertions.assertEquals(expectedError, exception.getMessage());
+-        }
++        String fileContent =
++                """
++                        v 1 2 3
++                        v 2 3 4
++                        v 3 4 5
++                        vt 1 2
++                        vt 1 2
++                        vt 1 2
++                        vn 1 2 3
++                        vn 2 4 1
++                        f 1//2 3//1""";
++        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
++        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
+     }
+ 
+     @Test
+     void testParseFace03() {
+-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1", "3"));
+-        try {
+-            ObjReader.parseFace(wordsInLineWithoutToken, 8);
+-        } catch (ObjReaderException exception) {
+-            String expectedError = "Error parsing OBJ file on line: 8. Incorrect face format.";
+-            Assertions.assertEquals(expectedError, exception.getMessage());
+-        }
++        String fileContent =
++                """
++                        v 1 2 3
++                        v 2 3 4
++                        v 3 4 5
++                        vt 1 2
++                        vt 1 2
++                        vt 1 2
++                        vn 1 2 3
++                        vn 2 4 1
++                        f 1 2""";
++        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
++        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
+     }
+ 
+     @Test
+     void testParseFace04() {
+-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1//2", "3"));
+-        try {
+-            ObjReader.parseFace(wordsInLineWithoutToken, 8);
+-        } catch (ObjReaderException exception) {
+-            String expectedError = "Error parsing OBJ file on line: 8. Incorrect face format.";
+-            Assertions.assertEquals(expectedError, exception.getMessage());
+-        }
++        String fileContent =
++                """
++                        v 1 2 3
++                        v 2 3 4
++                        v 3 4 5
++                        vt 1 2
++                        vt 1 2
++                        vt 1 2
++                        vn 1 2 3
++                        vn 2 4 1
++                        f 1//2 2""";
++        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
++        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
+     }
+ 
+     @Test
+     void testParseFace05() {
+-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1//2", "3/2/1", "3/4/2"));
+-        try {
+-            ObjReader.parseFace(wordsInLineWithoutToken, 8);
+-        } catch (ObjReaderException exception) {
+-            String expectedError = "Error parsing OBJ file on line: 8. Incorrect face format.";
+-            Assertions.assertEquals(expectedError, exception.getMessage());
+-        }
++        String fileContent =
++                """
++                        v 1 2 3
++                        v 2 3 4
++                        v 3 4 5
++                        vt 1 2
++                        vt 1 2
++                        vt 1 2
++                        vn 1 2 3
++                        vn 2 4 1
++                        f 1//2 2/3/1 3/4/1""";
++        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
++        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
++    }
++
++    @Test
++    void testParseFace06() {
++        String fileContent =
++                """
++                        v 1 2 3
++                        v 2 3 4
++                        v 3 4 5
++                        vt 1 2
++                        vt 1 2
++                        vt 1 2
++                        vn 1 2 4
++                        vn 1 2 4
++                        f a/b/c 2/3/1 3/4/1""";
++        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
++        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Failed to parse int value."));
+     }
++
++    @Test
++    void testParseFace07() {
++        String fileContent =
++                """
++                        v 1 2 3
++                        v 2 3 4
++                        v 3 4 5
++                        vt 1 2
++                        vt 1 2
++                        vt 1 2
++                        vn 1 2 4
++                        vn 1 2 4
++                        f a/b/c 2/3/1 lakf""";
++        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
++        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Failed to parse int value."));
++    }
++
++    @Test
++    void testParseFace08(){
++        String fileContent =
++                """
++                        v 1 2 3
++                        v 2 3 4
++                        v 3 4 5
++                        vt 1 2
++                        vt 1 2
++                        vt 1 2
++                        vn 1 2 4
++                        vn 1 2 4
++                        f 1/2/2 1/3/2 1/2/""";
++        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
++        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
++    }
++
++    @Test
++    void testParseFace09() {
++        String fileContent =
++                """
++                        v 1 2 3
++                        v 2 3 4
++                        v 3 4 5
++                        vt 1 2
++                        vt 1 2
++                        vt 1 2
++                        vn 1 2 4
++                        vn 1 2 4
++                        f 1/2/3 4/5/6 7/8/9""";
++        ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
++        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Index is too much."));
++    }
+ 
+ }
+\ No newline at end of file

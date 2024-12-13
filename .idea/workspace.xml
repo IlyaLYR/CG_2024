@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a5b639dd-209e-4df6-a7b7-b5ade0ac58d0" name="Changes" comment="добавил пару тестовых случаев parseVertex">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="a5b639dd-209e-4df6-a7b7-b5ade0ac58d0" name="Changes" comment="add MatrixLibrary-1.0.jar">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector2f.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/math/Vector3f.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cgvsu/objreader/ObjReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/objreader/ObjReader.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cgvsu/math/Vector2f.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/test-classes/ObjReaderTest/ObjReaderTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/ObjReaderTest/ObjReaderTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/ObjReaderTest/ObjReaderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ObjReaderTest/ObjReaderTest.java" afterDir="false" />
     </list>
@@ -60,7 +61,23 @@
       <recent name="D:\cg-task-4\3DViewer\tests\ObjReaderTest" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ObjReaderTest.testParseVertex01">
+  <component name="RunManager" selected="JUnit.ObjReaderTest.testParseFace05">
+    <configuration name="ObjReaderTest.testParseFace05" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="cgvsu" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ObjReaderTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ObjReaderTest" />
+      <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
+      <option name="METHOD_NAME" value="testParseFace05" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ObjReaderTest.testParseVertex01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="cgvsu" />
       <extension name="coverage">
@@ -125,29 +142,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ObjReaderTest.testParseVertex05" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="cgvsu" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ObjReaderTest.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ObjReaderTest" />
-      <option name="MAIN_CLASS_NAME" value="ObjReaderTest.ObjReaderTest" />
-      <option name="METHOD_NAME" value="testParseVertex05" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ObjReaderTest.testParseFace05" />
         <item itemvalue="JUnit.ObjReaderTest.testParseVertex01" />
         <item itemvalue="JUnit.ObjReaderTest.testParseVertex02" />
         <item itemvalue="JUnit.ObjReaderTest.testParseVertex03" />
         <item itemvalue="JUnit.ObjReaderTest.testParseVertex04" />
-        <item itemvalue="JUnit.ObjReaderTest.testParseVertex05" />
       </list>
     </recent_temporary>
   </component>

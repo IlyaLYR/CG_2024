@@ -117,9 +117,13 @@ public class ObjReader {
 		}
 
 		Polygon result = new Polygon();
-		result.setVertexIndices(onePolygonVertexIndices);
-		result.setTextureVertexIndices(onePolygonTextureVertexIndices);
-		result.setNormalIndices(onePolygonNormalIndices);
+
+		if (equalsCorrectFaceFormat(onePolygonVertexIndices, onePolygonTextureVertexIndices, onePolygonNormalIndices)) {
+			result.setVertexIndices(onePolygonVertexIndices);
+			result.setTextureVertexIndices(onePolygonTextureVertexIndices);
+			result.setNormalIndices(onePolygonNormalIndices);
+		} else throw new ObjReaderException("Incorrect face format.", lineInd);
+
 		return result;
 	}
 
@@ -160,5 +164,21 @@ public class ObjReader {
 		} catch(IndexOutOfBoundsException e) {
 			throw new ObjReaderException("Too few arguments.", lineInd);
 		}
+	}
+
+	public static boolean equalsCorrectFaceFormat(
+			ArrayList<Integer> onePolygonVertexIndices,
+			ArrayList<Integer> onePolygonTextureVertexIndices,
+			ArrayList<Integer> onePolygonNormalIndices) {
+		if (onePolygonVertexIndices.size() < 3) {
+			return false;
+		}
+		if (!onePolygonTextureVertexIndices.isEmpty() && onePolygonTextureVertexIndices.size() < 3) {
+			return false;
+		}
+		if (!onePolygonNormalIndices.isEmpty() && onePolygonNormalIndices.size() < 3) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -21,7 +21,7 @@ import java.io.File;
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
-import com.cgvsu.matrix.typesVectors.Vector3C;
+import com.cgvsu.math.typesVectors.Vector3C;
 
 
 public class GuiController {

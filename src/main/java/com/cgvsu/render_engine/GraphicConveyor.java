@@ -2,16 +2,16 @@ package com.cgvsu.render_engine;
 
 
 
-import com.cgvsu.matrix.typesMatrix.Matrix4D;
-import com.cgvsu.matrix.typesVectors.Vector3C;
-import com.cgvsu.matrix.typesVectors.Vector4C;
+import com.cgvsu.math.typesMatrix.Matrix4D;
+import com.cgvsu.math.typesVectors.Vector3C;
+import com.cgvsu.math.typesVectors.Vector4C;
 
 import javax.vecmath.Point2f;
 
 public class GraphicConveyor {
 
     public static Matrix4D rotateScaleTranslate() {
-//        double[] matrix = new double[]{
+//        double[] math = new double[]{
 //                1, 0, 0, 0,
 //                0, 1, 0, 0,
 //                0, 0, 1, 0,

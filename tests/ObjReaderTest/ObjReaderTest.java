@@ -1,7 +1,7 @@
 package ObjReaderTest;
 
-import com.cgvsu.math.Vector2f;
-import com.cgvsu.math.Vector3f;
+import com.cgvsu.math.typesVectors.Vector2C;
+import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.objreader.ObjReaderException;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ObjReaderTest extends ObjReader {
@@ -33,17 +34,17 @@ class ObjReaderTest extends ObjReader {
     @Test
     void testParseVertex01() {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02", "1.03"));
-        Vector3f result = ObjReader.parseVertex(wordsInLineWithoutToken, 5);
-        Vector3f expectedResult = new Vector3f(1.01f, 1.02f, 1.03f);
-        Assertions.assertTrue(result.equals(expectedResult));
+        Vector3C result = ObjReader.parseVertex(wordsInLineWithoutToken, 5);
+        Vector3C expectedResult = new Vector3C(1.01f, 1.02f, 1.03f);
+        assertEquals(result, expectedResult);
     }
 
     @Test
     void testParseVertex02() {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02", "1"));
-        Vector3f result = ObjReader.parseVertex(wordsInLineWithoutToken, 5);
-        Vector3f expectedResult = new Vector3f(1.01f, 1.02f, 1.10f);
-        Assertions.assertFalse(result.equals(expectedResult));
+        Vector3C result = ObjReader.parseVertex(wordsInLineWithoutToken, 5);
+        Vector3C expectedResult = new Vector3C(1.01f, 1.02f, 1.10f);
+        Assertions.assertNotEquals(result, expectedResult);
     }
 
     @Test
@@ -53,7 +54,7 @@ class ObjReaderTest extends ObjReader {
             ObjReader.parseVertex(wordsInLineWithoutToken, 10);
         } catch (ObjReaderException exception) {
             String expectedError = "Error parsing OBJ file on line: 10. Too few vertex arguments.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
+            assertEquals(expectedError, exception.getMessage());
         }
     }
 
@@ -64,7 +65,7 @@ class ObjReaderTest extends ObjReader {
             ObjReader.parseVertex(wordsInLineWithoutToken, 10);
         } catch (ObjReaderException exception) {
             String expectedError = "Error parsing OBJ file on line: 10. Failed to parse float value.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
+            assertEquals(expectedError, exception.getMessage());
         }
     }
 
@@ -75,7 +76,7 @@ class ObjReaderTest extends ObjReader {
             ObjReader.parseVertex(wordsInLineWithoutToken, 10);
         } catch (ObjReaderException exception) {
             String expectedError = "Error parsing OBJ file on line: 10. Failed to parse float value.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
+            assertEquals(expectedError, exception.getMessage());
         }
     }
 
@@ -86,16 +87,16 @@ class ObjReaderTest extends ObjReader {
             ObjReader.parseVertex(wordsInLineWithoutToken, 10);
         } catch (ObjReaderException exception) {
             String expectedError = "Error parsing OBJ file on line: 10. Too many vertex arguments.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
+            assertEquals(expectedError, exception.getMessage());
         }
     }
 
     @Test
     void testParseTextureVertex01() {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02"));
-        Vector2f result = ObjReader.parseTextureVertex(wordsInLineWithoutToken, 5);
-        Vector2f expectedResult = new Vector2f(1.01f, 1.02f);
-        Assertions.assertEquals(result, expectedResult);
+        Vector2C result = ObjReader.parseTextureVertex(wordsInLineWithoutToken, 5);
+        Vector2C expectedResult = new Vector2C(1.01f, 1.02f);
+        assertEquals(result, expectedResult);
     }
 
     @Test
@@ -105,7 +106,7 @@ class ObjReaderTest extends ObjReader {
             ObjReader.parseTextureVertex(wordsInLineWithoutToken, 10);
         } catch (ObjReaderException exception) {
             String expectedError = "Error parsing OBJ file on line: 10. Too many texture vertex arguments.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
+            assertEquals(expectedError, exception.getMessage());
         }
     }
 
@@ -116,7 +117,7 @@ class ObjReaderTest extends ObjReader {
             ObjReader.parseTextureVertex(wordsInLineWithoutToken, 10);
         } catch (ObjReaderException exception) {
             String expectedError = "Error parsing OBJ file on line: 10. Failed to parse float value.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
+            assertEquals(expectedError, exception.getMessage());
         }
     }
 
@@ -127,16 +128,16 @@ class ObjReaderTest extends ObjReader {
             ObjReader.parseNormal(wordsInLineWithoutToken, 8);
         } catch (ObjReaderException exception) {
             String expectedError = "Error parsing OBJ file on line: 8. Too many normal arguments.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
+            assertEquals(expectedError, exception.getMessage());
         }
     }
 
     @Test
     void testParseNormal02() {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02", "1.03"));
-        Vector3f expectedResult = new Vector3f(1.01f, 1.02f, 1.03f);
-        Vector3f result = ObjReader.parseNormal(wordsInLineWithoutToken, 8);
-        Assertions.assertEquals(expectedResult, result);
+        Vector3C expectedResult = new Vector3C(1.01f, 1.02f, 1.03f);
+        Vector3C result = ObjReader.parseNormal(wordsInLineWithoutToken, 8);
+        assertEquals(expectedResult, result);
     }
 
     @Test
@@ -146,7 +147,7 @@ class ObjReaderTest extends ObjReader {
             ObjReader.parseNormal(wordsInLineWithoutToken, 8);
         } catch (ObjReaderException exception) {
             String expectedError = "Error parsing OBJ file on line: 8. Failed to parse float value.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
+            assertEquals(expectedError, exception.getMessage());
         }
     }
 
@@ -157,7 +158,7 @@ class ObjReaderTest extends ObjReader {
             ObjReader.parseNormal(wordsInLineWithoutToken, 8);
         } catch (ObjReaderException exception) {
             String expectedError = "Error parsing OBJ file on line: 8. Too few normal arguments.";
-            Assertions.assertEquals(expectedError, exception.getMessage());
+            assertEquals(expectedError, exception.getMessage());
         }
     }
 

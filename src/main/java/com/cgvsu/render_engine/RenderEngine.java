@@ -3,9 +3,9 @@ package com.cgvsu.render_engine;
 
 import com.cgvsu.model.Model;
 import javafx.scene.canvas.GraphicsContext;
-import com.cgvsu.matrix.core.MatrixUtils;
-import com.cgvsu.matrix.typesMatrix.Matrix4D;
-import com.cgvsu.matrix.typesVectors.Vector3C;
+import com.cgvsu.math.core.MatrixUtils;
+import com.cgvsu.math.typesMatrix.Matrix4D;
+import com.cgvsu.math.typesVectors.Vector3C;
 
 
 import javax.vecmath.Point2f;

@@ -25,7 +25,7 @@ public class GraphicConveyor {
     }
 
     public static Matrix4D lookAt(Vector3C eye, Vector3C target, Vector3C up) {
-        Vector3C resultZ = eye.subtracted(target).normalize();
+        Vector3C resultZ = target.subtracted(eye).normalize();
         Vector3C resultX = up.crossProduct(resultZ).normalize();
         Vector3C resultY = resultZ.crossProduct(resultX);
 

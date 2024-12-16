@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class ObjReader {
+	private static final String NAME_OF_MODEL_TOKEN = "m";
 	private static final String OBJ_VERTEX_TOKEN = "v";
 	private static final String OBJ_TEXTURE_TOKEN = "vt";
 	private static final String OBJ_NORMAL_TOKEN = "vn";
@@ -24,33 +25,36 @@ public class ObjReader {
 		while (scanner.hasNextLine()) {
 			final String line = scanner.nextLine();
 			ArrayList<String> wordsInLine = new ArrayList<String>(Arrays.asList(line.split("\\s+")));
-			if (wordsInLine.isEmpty()) {
+			if (wordsInLine.isEmpty() || line.startsWith("#")) {
 				continue;
 			}
+
 
 			final String token = wordsInLine.get(0);
 			wordsInLine.remove(0);
 
 			++lineInd;
 			switch (token) {
-				// Для структур типа вершин методы написаны так, чтобы ничего не знать о внешней среде.
-				// Они принимают только то, что им нужно для работы, а возвращают только то, что могут создать.
-				// Исключение - индекс строки. Он прокидывается, чтобы выводить сообщение об ошибке.
-				// Могло быть иначе. Например, метод parseVertex мог вместо возвращения вершины принимать вектор вершин
-				// модели или сам класс модели, работать с ним.
-				// Но такой подход может привести к большему количеству ошибок в коде. Например, в нем что-то может
-				// тайно сделаться с классом модели.
-				// А еще это портит читаемость
-				// И не стоит забывать про тесты. Чем проще вам задать данные для теста, проверить, что метод рабочий,
-				// тем лучше.
+
+				case NAME_OF_MODEL_TOKEN -> result.setNameOfModel(parseNameOfModel(wordsInLine, lineInd));
 				case OBJ_VERTEX_TOKEN -> result.vertices.add(parseVertex(wordsInLine, lineInd));
 				case OBJ_TEXTURE_TOKEN -> result.textureVertices.add(parseTextureVertex(wordsInLine, lineInd));
 				case OBJ_NORMAL_TOKEN -> result.normals.add(parseNormal(wordsInLine, lineInd));
 				case OBJ_FACE_TOKEN -> result.polygons.add(parseFace(wordsInLine, lineInd));
-				default -> {}
+				default -> {
+				}
 			}
 		}
 		return result;
+	}
+
+	protected static String parseNameOfModel(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+		if (wordsInLineWithoutToken.isEmpty()) {
+			return "";
+		} else if (wordsInLineWithoutToken.size() > 1) {
+			throw new ObjReaderException("Incorrect name of model", lineInd);
+		}
+		return wordsInLineWithoutToken.get(0);
 	}
 
 	// Всем методам кроме основного я поставил модификатор доступа protected, чтобы обращаться к ним в тестах
@@ -88,7 +92,6 @@ public class ObjReader {
 			throw new ObjReaderException("Too few texture vertex arguments.", lineInd);
 		}
 	}
-
 
 	protected static Vector3C parseNormal(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
 		if (wordsInLineWithoutToken.size() > 3) {
@@ -128,9 +131,6 @@ public class ObjReader {
 		return result;
 	}
 
-	// Обратите внимание, что для чтения полигонов я выделил еще один вспомогательный метод.
-	// Это бывает очень полезно и с точки зрения структурирования алгоритма в голове, и с точки зрения тестирования.
-	// В радикальных случаях не бойтесь выносить в отдельные методы и тестировать код из одной-двух строчек.
 	protected static void parseFaceWord(
 			String wordInLine,
 			ArrayList<Integer> onePolygonVertexIndices,

@@ -9,6 +9,7 @@ import java.util.*;
 
 public class Model {
 
+    public String nameOfModel;
     public ArrayList<Vector3C> vertices = new ArrayList<Vector3C>();
     public ArrayList<Vector2C> textureVertices = new ArrayList<Vector2C>();
     public ArrayList<Vector3C> normals = new ArrayList<Vector3C>();
@@ -28,5 +29,13 @@ public class Model {
 
     public ArrayList<Polygon> getPolygons() {
         return polygons;
+    }
+
+    public String getNameOfModel() {
+        return nameOfModel;
+    }
+
+    public void setNameOfModel(String nameOfModel) {
+        this.nameOfModel = nameOfModel;
     }
 }

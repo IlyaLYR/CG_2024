@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ObjReaderTest extends ObjReader {
     @Test
-    void read() {
+    void testRead01() {
         File file = new File("tests/ObjReaderTest/objectReaderTest.obj");
         Path fileName = Path.of(file.getAbsolutePath());
         String fileContent;
@@ -225,7 +225,7 @@ class ObjReaderTest extends ObjReader {
                         vt 1 2
                         vn 1 2 3
                         vn 2 4 1
-                        f 1//3 2""";
+                        f 1//2 2""";
         ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
         assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Incorrect face format."));
     }
@@ -259,7 +259,7 @@ class ObjReaderTest extends ObjReader {
                         vt 1 2
                         vn 1 2 3
                         vn 2 4 1
-                        f 1/2/3 3/2/1 a/b/c""";
+                        f a/b/c 1/2/3 3/2/1""";
         ObjReaderException thrown = Assertions.assertThrows(ObjReaderException.class, () -> ObjReader.read(fileContent));
         assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Failed to parse int value."));
     }
@@ -315,4 +315,14 @@ class ObjReaderTest extends ObjReader {
         assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 9. Index is too much."));
     }
 
-}
+    @Test
+    void testParseNameOfModel() {
+        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("Triangle", "Pepe"));
+        ObjReaderException exception = Assertions.assertThrows(
+                ObjReaderException.class,
+                () -> ObjReader.parseNameOfModel(wordsInLineWithoutToken, 8)
+        );
+            String expectedError = "Error parsing OBJ file on line: 8. Incorrect name of model";
+            Assertions.assertEquals(expectedError, exception.getMessage());
+        }
+    }

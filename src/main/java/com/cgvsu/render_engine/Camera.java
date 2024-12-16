@@ -53,7 +53,7 @@ public class Camera {
     }
 
     public void moveTarget(final Vector3C translation) {
-        this.target = this.target.added(translation);
+        this.target.add(translation);
     }
 
     public Matrix4D getViewMatrix() {

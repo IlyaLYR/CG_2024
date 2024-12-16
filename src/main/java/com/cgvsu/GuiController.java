@@ -107,12 +107,12 @@ public class GuiController {
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3C(-TRANSLATION, 0, 0));
+        camera.movePosition(new Vector3C(TRANSLATION, 0, 0));
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3C(TRANSLATION, 0, 0));
+        camera.movePosition(new Vector3C(-TRANSLATION, 0, 0));
     }
 
     @FXML

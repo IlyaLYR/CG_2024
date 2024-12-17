@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -30,6 +29,13 @@ import com.cgvsu.math.typesVectors.Vector3C;
 public class GuiController {
 
     final private float TRANSLATION = 0.5F;
+
+    //Поля для управления мышкой
+
+    private double startX;
+    private double startY;
+
+
     private Timeline timeline;
 
     @FXML
@@ -134,5 +140,17 @@ public class GuiController {
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
         camera.mouseCameraZoom(scrollEvent.getDeltaY());
+    }
+
+    @FXML
+    public void fixStartCoordinates(MouseEvent mouseEvent) {
+        startX = mouseEvent.getX();
+        startY = mouseEvent.getY();
+    }
+
+    public void mouseCameraMove(MouseEvent mouseEvent) {
+//        camera.mouseCameraMove(startX - mouseEvent.getX(), startY - mouseEvent.getY());
+        startX = mouseEvent.getX();
+        startY = mouseEvent.getY();
     }
 }

@@ -60,7 +60,8 @@ public class GraphicConveyor {
         double w = resultVector.get(3);
 
         if (w == 0) {
-            throw new IllegalArgumentException("Invalid transformation: w = 0");
+//            throw new IllegalArgumentException("Invalid transformation: w = 0");
+            return new Vector3C();
         }
 
         return new Vector3C(x / w, y / w, z / w);

@@ -38,7 +38,6 @@ public class RenderEngine {
             for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
                 // Получаем вершину
                 Vector3C vertex = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd));
-                Vector3C transformedVertex = multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex);
 
                 // Преобразуем в координаты экрана
                 Point2f resultPoint = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex), width, height);

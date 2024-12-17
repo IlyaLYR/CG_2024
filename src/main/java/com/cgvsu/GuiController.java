@@ -7,6 +7,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -57,6 +60,7 @@ public class GuiController {
 
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
+
 
             if (mesh != null) {
                 canvas.getGraphicsContext2D().setStroke(Color.BLACK);
@@ -123,5 +127,12 @@ public class GuiController {
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
         camera.movePosition(new Vector3C(0, -TRANSLATION, 0));
+    }
+
+
+    //Управление камерой мышкой
+    @FXML
+    public void mouseCameraZoom(ScrollEvent scrollEvent) {
+        camera.mouseCameraZoom(scrollEvent.getDeltaY());
     }
 }

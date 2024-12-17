@@ -63,4 +63,22 @@ public class Camera {
     public Matrix4D getProjectionMatrix() {
         return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
     }
+
+
+    public void mouseCameraZoom(double deltaY) {
+        double smoothFactor = 0.02; // Коэффициент для чувствительности (можно его настроить)
+        double delta = deltaY * smoothFactor;
+
+        double minDistance = 2.0;
+
+        Vector3C det = target.subtracted(position).normalize();
+
+        double x = position.get(0) + det.get(0) * delta;
+        double y = position.get(1) + det.get(1) * delta;
+        double z = position.get(2) + det.get(2) * delta;
+        Vector3C newPosition = new Vector3C(x, y, z);
+        if (target.subtracted(newPosition).getLength() > minDistance) {
+            position = new Vector3C(x, y, z);
+        }
+    }
 }

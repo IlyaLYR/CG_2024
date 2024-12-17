@@ -69,7 +69,7 @@ public class GuiController {
 
 
             if (mesh != null) {
-                canvas.getGraphicsContext2D().setStroke(Color.BLACK);
+                canvas.getGraphicsContext2D().setStroke(Color.BLUE);
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
             }
         });

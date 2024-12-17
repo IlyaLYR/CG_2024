@@ -1,6 +1,7 @@
 package com.cgvsu.render_engine;
 
 
+import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.model.Model;
 import javafx.scene.canvas.GraphicsContext;
 import com.cgvsu.math.core.MatrixUtils;
@@ -34,32 +35,32 @@ public class RenderEngine {
         for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
             final int nVerticesInPolygon = mesh.polygons.get(polygonInd).getVertexIndices().size();
 
-            ArrayList<Point2f> resultPoints = new ArrayList<>();
+            ArrayList<Vector2C> resultPoints = new ArrayList<>();
             for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
                 // Получаем вершину
                 Vector3C vertex = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd));
 
                 // Преобразуем в координаты экрана
-                Point2f resultPoint = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex), width, height);
+                Vector2C resultPoint = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex), width, height);
                 resultPoints.add(resultPoint);
             }
 
             // Отрисовываем рёбра полигона
             for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
                 graphicsContext.strokeLine(
-                        resultPoints.get(vertexInPolygonInd - 1).x,
-                        resultPoints.get(vertexInPolygonInd - 1).y,
-                        resultPoints.get(vertexInPolygonInd).x,
-                        resultPoints.get(vertexInPolygonInd).y);
+                        resultPoints.get(vertexInPolygonInd - 1).getX(),
+                        resultPoints.get(vertexInPolygonInd - 1).getY(),
+                        resultPoints.get(vertexInPolygonInd).getX(),
+                        resultPoints.get(vertexInPolygonInd).getY());
             }
 
             // Замыкаем полигон, если это необходимо
             if (nVerticesInPolygon > 0) {
                 graphicsContext.strokeLine(
-                        resultPoints.get(nVerticesInPolygon - 1).x,
-                        resultPoints.get(nVerticesInPolygon - 1).y,
-                        resultPoints.get(0).x,
-                        resultPoints.get(0).y);
+                        resultPoints.get(nVerticesInPolygon - 1).getX(),
+                        resultPoints.get(nVerticesInPolygon - 1).getY(),
+                        resultPoints.get(0).getX(),
+                        resultPoints.get(0).getY());
             }
         }
     }

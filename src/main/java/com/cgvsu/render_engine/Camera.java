@@ -73,9 +73,9 @@ public class Camera {
 
         Vector3C det = target.subtracted(position).normalize();
 
-        double x = position.get(0) + det.get(0) * delta;
-        double y = position.get(1) + det.get(1) * delta;
-        double z = position.get(2) + det.get(2) * delta;
+        double x = position.getX() + det.getX() * delta;
+        double y = position.getY() + det.getY() * delta;
+        double z = position.getZ() + det.getZ() * delta;
         Vector3C newPosition = new Vector3C(x, y, z);
         if (target.subtracted(newPosition).getLength() > minDistance) {
             position = new Vector3C(x, y, z);

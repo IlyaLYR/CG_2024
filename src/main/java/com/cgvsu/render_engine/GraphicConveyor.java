@@ -3,6 +3,7 @@ package com.cgvsu.render_engine;
 
 
 import com.cgvsu.math.typesMatrix.Matrix4D;
+import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.math.typesVectors.Vector4C;
 
@@ -30,9 +31,9 @@ public class GraphicConveyor {
         Vector3C resultY = resultZ.crossProduct(resultX);
 
         double[] matrix = new double[]{
-                resultX.get(0), resultX.get(1), resultX.get(2), -resultX.dotProduct(eye),
-                resultY.get(0), resultY.get(1), resultY.get(2), -resultY.dotProduct(eye),
-                resultZ.get(0), resultZ.get(1), resultZ.get(2), -resultZ.dotProduct(eye),
+                resultX.getX(), resultX.getY(), resultX.getZ(), -resultX.dotProduct(eye),
+                resultY.getX(), resultY.getY(), resultY.getZ(), -resultY.dotProduct(eye),
+                resultZ.getX(), resultZ.getY(), resultZ.getZ(), -resultZ.dotProduct(eye),
                 0, 0, 0, 1
         };
 
@@ -51,7 +52,7 @@ public class GraphicConveyor {
     }
 
     public static Vector3C multiplyMatrix4ByVector3(final Matrix4D matrix, final Vector3C vertex) {
-        double[] baseVec4 = new double[]{vertex.get(0), vertex.get(1), vertex.get(2), 1};
+        double[] baseVec4 = new double[]{vertex.getX(), vertex.getY(), vertex.getZ(), 1};
 
         Vector4C resultVector = matrix.multiplied(new Vector4C(baseVec4));
         double x = resultVector.get(0);
@@ -67,7 +68,7 @@ public class GraphicConveyor {
         return new Vector3C(x / w, y / w, z / w);
     }
 
-    public static Point2f vertexToPoint(final Vector3C vertex, final int width, final int height) {
-        return new Point2f((float) (vertex.get(0) * width + width / 2.0F), (float) (-vertex.get(1) * height + height / 2.0F));
+    public static Vector2C vertexToPoint(final Vector3C vertex, final int width, final int height) {
+        return new Vector2C((vertex.getX() * width + width / 2.0F), (-vertex.getY() * height + height / 2.0F));
     }
 }

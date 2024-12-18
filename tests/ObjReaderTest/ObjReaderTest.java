@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ObjReaderTest extends ObjReader {
     @Test
     void testRead01() {
-        File file = new File("tests/ObjReaderTest/objectReaderTest.obj");
+        File file = new File("tests/ObjReaderTest/objReaderTest01.obj");
         Path fileName = Path.of(file.getAbsolutePath());
         String fileContent;
         try {
@@ -29,6 +29,35 @@ class ObjReaderTest extends ObjReader {
             throw new RuntimeException(e);
         }
         ObjReader.read(fileContent);
+    }
+
+    @Test
+    void testRead02() {
+        File file = new File("tests/ObjReaderTest/objReaderTest02.obj");
+        Path fileName = Path.of(file.getAbsolutePath());
+        String fileContent;
+        try {
+            fileContent = Files.readString(fileName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ObjReaderException thrown = Assertions.assertThrowsExactly(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 1. Index is too much."));
+    }
+
+
+    @Test
+    void testRead03() {
+        File file = new File("tests/ObjReaderTest/objReaderTest04.obj");
+        Path fileName = Path.of(file.getAbsolutePath());
+        String fileContent;
+        try {
+            fileContent = Files.readString(fileName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ObjReaderException thrown = Assertions.assertThrowsExactly(ObjReaderException.class, () -> ObjReader.read(fileContent));
+        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 1. The token is incorrect."));
     }
 
     @Test

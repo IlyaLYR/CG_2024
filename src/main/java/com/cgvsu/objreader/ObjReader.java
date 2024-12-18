@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class ObjReader {
-	private static final String NAME_OF_MODEL_TOKEN = "m";
+	private static final String NAME_OF_MODEL_TOKEN = "o";
 	private static final String OBJ_VERTEX_TOKEN = "v";
 	private static final String OBJ_TEXTURE_TOKEN = "vt";
 	private static final String OBJ_NORMAL_TOKEN = "vn";
@@ -35,14 +35,12 @@ public class ObjReader {
 
 			++lineInd;
 			switch (token) {
-
 				case NAME_OF_MODEL_TOKEN -> result.setNameOfModel(parseNameOfModel(wordsInLine, lineInd));
 				case OBJ_VERTEX_TOKEN -> result.vertices.add(parseVertex(wordsInLine, lineInd));
 				case OBJ_TEXTURE_TOKEN -> result.textureVertices.add(parseTextureVertex(wordsInLine, lineInd));
 				case OBJ_NORMAL_TOKEN -> result.normals.add(parseNormal(wordsInLine, lineInd));
 				case OBJ_FACE_TOKEN -> result.polygons.add(parseFace(wordsInLine, lineInd));
-				default -> {
-				}
+				default -> { throw new ObjReaderException("The token is incorrect.", lineInd); }
 			}
 		}
 		return result;
@@ -141,38 +139,50 @@ public class ObjReader {
 			String[] wordIndices = wordInLine.split("/");
 			switch (wordIndices.length) {
 				case 1 -> {
+
 					if (Integer.parseInt(wordIndices[0]) - 1 > result.getVertices().size()) {
 						throw new ObjReaderException("Vertex index is too much", lineInd);
 					}
+
 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
 				}
 				case 2 -> {
+
 					if (Integer.parseInt(wordIndices[0]) - 1 > result.getVertices().size()
 							|| Integer.parseInt(wordIndices[1]) - 1 > result.getTextureVertices().size()) {
 						throw new ObjReaderException("Index is too much.", lineInd);
+
 					} else if (onePolygonVertexIndices.size() != onePolygonTextureVertexIndices.size()) {
 						throw new ObjReaderException("Incorrect face format.", lineInd);
 					}
+
 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
 					onePolygonTextureVertexIndices.add(Integer.parseInt(wordIndices[1]) - 1);
 				}
 				case 3 -> {
+
 					if (isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[0]), result.getVertices().size())
 							|| isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[2]), result.getNormals().size())) {
 						throw new ObjReaderException("Index is too much.", lineInd);
+
 					} else if (onePolygonVertexIndices.size() != onePolygonNormalIndices.size()) {
 						throw new ObjReaderException("Incorrect face format.", lineInd);
 					}
+
 					onePolygonVertexIndices.add(Integer.parseInt(wordIndices[0]) - 1);
 					onePolygonNormalIndices.add(Integer.parseInt(wordIndices[2]) - 1);
+
 					if (!wordIndices[1].isEmpty() && !isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[1]), result.getTextureVertices().size())) {
 						onePolygonTextureVertexIndices.add(Integer.parseInt(wordIndices[1]) - 1);
+
 						if (onePolygonVertexIndices.size() != onePolygonTextureVertexIndices.size()) {
 							throw new ObjReaderException("Incorrect face format.", lineInd);
 						}
+
 					} else if (!wordIndices[1].isEmpty() && isIndexOutOfBoundInFace(Integer.parseInt(wordIndices[1]), result.getTextureVertices().size()))
 						throw new ObjReaderException("Index of normal is too much.", lineInd);
 				}
+
 				default -> {
 					throw new ObjReaderException("Invalid element size.", lineInd);
 				}
@@ -194,15 +204,19 @@ public class ObjReader {
 			ArrayList<Integer> onePolygonVertexIndices,
 			ArrayList<Integer> onePolygonTextureVertexIndices,
 			ArrayList<Integer> onePolygonNormalIndices) {
+
 		if (onePolygonVertexIndices.size() < 3) {
 			return false;
 		}
+
 		if (!onePolygonTextureVertexIndices.isEmpty() && onePolygonTextureVertexIndices.size() < 3) {
 			return false;
 		}
+
 		if (!onePolygonNormalIndices.isEmpty() && onePolygonNormalIndices.size() < 3) {
 			return false;
 		}
+
 		return true;
 	}
 }

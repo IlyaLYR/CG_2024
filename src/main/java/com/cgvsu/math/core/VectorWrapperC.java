@@ -98,7 +98,6 @@ public abstract class VectorWrapperC<T extends VectorWrapperC<T>> {
     public double get(int row) {
         return vector.get(row, 0);
     }
-
     /**
      * Установить элемент вектора по индексу.
      *

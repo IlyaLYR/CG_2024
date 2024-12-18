@@ -7,6 +7,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -27,6 +29,13 @@ import com.cgvsu.math.typesVectors.Vector3C;
 public class GuiController {
 
     final private float TRANSLATION = 0.5F;
+
+    //Поля для управления мышкой
+
+    private double startX;
+    private double startY;
+
+
     private Timeline timeline;
 
     @FXML
@@ -58,8 +67,9 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
+
             if (mesh != null) {
-                canvas.getGraphicsContext2D().setStroke(Color.BLACK);
+                canvas.getGraphicsContext2D().setStroke(Color.BLUE);
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
             }
         });
@@ -123,5 +133,24 @@ public class GuiController {
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
         camera.movePosition(new Vector3C(0, -TRANSLATION, 0));
+    }
+
+
+    //Управление камерой мышкой
+    @FXML
+    public void mouseCameraZoom(ScrollEvent scrollEvent) {
+        camera.mouseCameraZoom(scrollEvent.getDeltaY());
+    }
+
+    @FXML
+    public void fixStartCoordinates(MouseEvent mouseEvent) {
+        startX = mouseEvent.getX();
+        startY = mouseEvent.getY();
+    }
+
+    public void mouseCameraMove(MouseEvent mouseEvent) {
+//        camera.mouseCameraMove(startX - mouseEvent.getX(), startY - mouseEvent.getY());
+        startX = mouseEvent.getX();
+        startY = mouseEvent.getY();
     }
 }

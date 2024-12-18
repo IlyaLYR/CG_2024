@@ -1,4 +1,4 @@
-package mathTest;
+package mathtest;
 
 import com.cgvsu.math.types.RecMatrix;
 import com.cgvsu.math.types.SquareMatrix;

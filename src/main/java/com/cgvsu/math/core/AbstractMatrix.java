@@ -557,7 +557,8 @@ public abstract class AbstractMatrix<T extends AbstractMatrix<T>> {
         public Matrix normalize() {
             double length = getLength();
             if (length == 0) {
-                throw new ArithmeticException("Невозможно нормализовать нулевой вектор.");
+//                throw new ArithmeticException("Невозможно нормализовать нулевой вектор.");
+                return new Matrix(this.rows, this.cols, this.base);
             }
             double[] vector = getBase();
             double[] normalized = new double[vector.length];

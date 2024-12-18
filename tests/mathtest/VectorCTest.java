@@ -1,4 +1,4 @@
-package mathTest;
+package mathtest;
 
 import com.cgvsu.math.types.VectorC;
 import org.junit.jupiter.api.Test;

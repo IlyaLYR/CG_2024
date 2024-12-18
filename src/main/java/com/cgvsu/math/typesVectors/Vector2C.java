@@ -41,4 +41,11 @@ public class Vector2C extends VectorWrapperC<Vector2C> {
     public Vector2C(double x, double y) {
         super(2, new double[]{x, y});
     }
+
+    public double getX(){
+        return get(0);
+    }
+    public double getY(){
+        return get(1);
+    }
 }

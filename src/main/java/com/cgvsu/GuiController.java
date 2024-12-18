@@ -1,12 +1,19 @@
 package com.cgvsu;
 
 import com.cgvsu.render_engine.RenderEngine;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -19,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
+import java.util.HashMap;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
@@ -44,8 +52,12 @@ public class GuiController {
     @FXML
     private Canvas canvas;
 
-    private Model mesh = null;
+    private HashMap<String, Model> meshes = new HashMap<>();
+    private ContextMenu contextMenu;
 
+    @FXML
+    private ListView<String> fileName;
+    private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
     private Camera camera = new Camera(
             new Vector3C(0, 0, 100),
             new Vector3C(0, 0, 0),
@@ -54,6 +66,7 @@ public class GuiController {
 
     @FXML
     private void initialize() {
+        contextMenu = new ContextMenu();
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
@@ -68,11 +81,19 @@ public class GuiController {
             camera.setAspectRatio((float) (width / height));
 
 
-            if (mesh != null) {
+            if (meshes != null) {
                 canvas.getGraphicsContext2D().setStroke(Color.BLUE);
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
+                RenderEngine.render(canvas.getGraphicsContext2D(), camera, meshes, (int) width, (int) height);
             }
         });
+
+        fileName.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.SECONDARY) {
+                contextMenu.getItems().clear();
+                removeModelFromTheScene(event);
+            }
+        });
+
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
@@ -89,20 +110,25 @@ public class GuiController {
             return;
         }
 
+        this.tempFileName.add(file.getName());
+        this.fileName.setItems(tempFileName);
         Path fileName = Path.of(file.getAbsolutePath());
 
         try {
             String fileContent = Files.readString(fileName);
-            mesh = ObjReader.read(fileContent);
+            meshes.put(file.getName(), ObjReader.read(fileContent));
             // todo: обработка ошибок
         } catch (IOException exception) {
 
         }
     }
 
+    // Очистка сцены
     @FXML
     public void clearScene() {
-        mesh = null;
+        meshes.clear();
+        tempFileName.clear();
+        fileName.setItems(tempFileName);
     }
 
     @FXML
@@ -152,5 +178,26 @@ public class GuiController {
 //        camera.mouseCameraMove(startX - mouseEvent.getX(), startY - mouseEvent.getY());
         startX = mouseEvent.getX();
         startY = mouseEvent.getY();
+    }
+
+    // Удаление моделей в Active Models по клику на модель
+    private void removeModelFromTheScene(MouseEvent event) {
+        String selectedItem = fileName.getSelectionModel().getSelectedItem();
+
+        if (selectedItem == null) {
+            return;
+        }
+
+        MenuItem deleteItem = new MenuItem();
+        deleteItem.textProperty().bind(Bindings.format("Delete \"%s\"", selectedItem));
+
+        deleteItem.setOnAction(deleteEvent -> {
+            meshes.remove(selectedItem);
+            tempFileName.remove(selectedItem);
+            fileName.setItems(tempFileName);
+        });
+
+        contextMenu.getItems().setAll(deleteItem);
+        contextMenu.show(fileName, event.getScreenX(), event.getScreenY() + 10.5);
     }
 }

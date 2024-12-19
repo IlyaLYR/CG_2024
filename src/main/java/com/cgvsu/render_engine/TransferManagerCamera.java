@@ -1,5 +1,6 @@
 package com.cgvsu.render_engine;
 
+import com.cgvsu.affinetransformation.ATransformation;
 import com.cgvsu.math.typesVectors.Vector3C;
 
 public class TransferManagerCamera {
@@ -16,12 +17,11 @@ public class TransferManagerCamera {
         this.mouseY = 0;
         this.RADIUS = camera.getRadius(); // Инициализация радиуса
 
-        // Получаем начальную позицию камеры и её целевую точку
+        // Инициализируем углы на основе позиции камеры
         Vector3C position = camera.getPosition();
         Vector3C target = camera.getTarget();
         Vector3C direction = target.subtracted(position).normalize();
 
-        // Вычисляем углы
         this.ANGLEForXZ = Math.toDegrees(Math.atan2(direction.getZ(), direction.getX())); // Угол в плоскости XZ
         this.ANGLEForY = Math.toDegrees(Math.asin(direction.getY())); // Угол по высоте (Y)
     }
@@ -31,7 +31,13 @@ public class TransferManagerCamera {
         double minDistance = 2.0;
 
         Vector3C direction = camera.getTarget().subtracted(camera.getPosition()).normalize();
-        Vector3C newPosition = camera.getPosition().added(direction.multiplied(delta));
+
+        // Создаем матрицу трансформации для зумирования
+        ATransformation transformation = new ATransformation.ATBuilder()
+                .translateByVector(direction.multiplied(delta))
+                .build();
+
+        Vector3C newPosition = transformation.applyTransformationToVector(camera.getPosition());
 
         // Проверяем, чтобы расстояние не было меньше минимального
         if (camera.getTarget().subtracted(newPosition).getLength() > minDistance) {
@@ -51,19 +57,18 @@ public class TransferManagerCamera {
 
         // Обновляем углы, добавляя изменения
         ANGLEForXZ = (ANGLEForXZ - deltaX) % 360;
-        ANGLEForY = Math.max(-90, Math.min(90, ANGLEForY + deltaY)); // Ограничение угла
+        ANGLEForY = Math.max(-90, Math.min(90, ANGLEForY + deltaY));
 
-        // Вычисляем новое положение камеры
-        double thetaXZ = Math.toRadians(ANGLEForXZ);
-        double thetaY = Math.toRadians(ANGLEForY);
-        Vector3C target = camera.getTarget();
 
-        double newX = target.getX() + RADIUS * Math.cos(thetaXZ) * Math.cos(thetaY);
-        double newY = target.getY() + RADIUS * Math.sin(thetaY);
-        double newZ = target.getZ() + RADIUS * Math.sin(thetaXZ) * Math.cos(thetaY);
+// Построение матрицы аффинного преобразования
+        ATransformation transformation = new ATransformation.ATBuilder()
+                .rotateByY(Math.toRadians(-ANGLEForXZ))                  // Вращение вокруг оси Y
+                .rotateByX(Math.toRadians(-ANGLEForY))                   // Вращение вокруг оси X
+                .build();
 
-        // Устанавливаем новую позицию камеры
-        camera.setPosition(new Vector3C(newX, newY, newZ));
+// Применяем трансформацию к позиции камеры
+        Vector3C newPosition = transformation.applyTransformationToVector(new Vector3C(0, 0, -RADIUS));
+        camera.setPosition(newPosition.added(camera.getTarget()));
 
         // Обновляем текущие координаты мыши
         mouseX = x;

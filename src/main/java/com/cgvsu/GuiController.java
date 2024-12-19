@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.render_engine.GridRenderer;
 import com.cgvsu.render_engine.RenderEngine;
 import com.cgvsu.render_engine.TransferManagerCamera;
 import javafx.fxml.FXML;
@@ -61,7 +62,8 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-
+//            GridRenderer gridRenderer = new GridRenderer(10, (int)(height/10)); // Размер сетки 10, 20 делений
+//            gridRenderer.render(canvas.getGraphicsContext2D(), camera, (int)width, (int)height);
             if (mesh != null) {
                 canvas.getGraphicsContext2D().setStroke(Color.BLUE);
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
@@ -143,6 +145,6 @@ public class GuiController {
 
     @FXML
     public void onMouseDragged(MouseEvent event) {
-        transfer.onMouseDragged(event.getX(), event.getY(), 0.02);
+        transfer.onMouseDragged(event.getX(), event.getY(), 1);
     }
 }

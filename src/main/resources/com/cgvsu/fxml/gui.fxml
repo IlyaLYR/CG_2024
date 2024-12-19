@@ -48,5 +48,5 @@
         </Menu>
     </MenuBar>
 
-    <Canvas fx:id="canvas" height="870" onMouseClicked="#fixStartCoordinates" onMouseDragged="#mouseCameraMove" onScroll="#mouseCameraZoom" width="1600" AnchorPane.topAnchor="30.0" />
+    <Canvas fx:id="canvas" height="870" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onScroll="#mouseCameraZoom" width="1600" AnchorPane.topAnchor="30.0" />
 </AnchorPane>

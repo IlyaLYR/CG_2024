@@ -1,6 +1,7 @@
 package com.cgvsu;
 
 import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.render_engine.TransferManagerCamera;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -11,13 +12,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.io.IOException;
 import java.io.File;
 
 import com.cgvsu.model.Model;
@@ -30,13 +29,6 @@ public class GuiController {
 
     final private float TRANSLATION = 0.5F;
 
-    //Поля для управления мышкой
-
-    private double startX;
-    private double startY;
-
-
-    private Timeline timeline;
 
     @FXML
     AnchorPane anchorPane;
@@ -46,10 +38,12 @@ public class GuiController {
 
     private Model mesh = null;
 
-    private Camera camera = new Camera(
+    private final Camera camera = new Camera(
             new Vector3C(0, 0, 100),
             new Vector3C(0, 0, 0),
             1.0F, 1, 0.01F, 100);
+
+    final private TransferManagerCamera transfer = new TransferManagerCamera(camera);
 
 
     @FXML
@@ -57,7 +51,7 @@ public class GuiController {
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
-        timeline = new Timeline();
+        Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
         KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
@@ -84,7 +78,7 @@ public class GuiController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Load Model");
 
-        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
         if (file == null) {
             return;
         }
@@ -95,8 +89,8 @@ public class GuiController {
             String fileContent = Files.readString(fileName);
             mesh = ObjReader.read(fileContent);
             // todo: обработка ошибок
-        } catch (IOException exception) {
-
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
         }
     }
 
@@ -139,18 +133,16 @@ public class GuiController {
     //Управление камерой мышкой
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
-        camera.mouseCameraZoom(scrollEvent.getDeltaY());
+        transfer.mouseCameraZoom(scrollEvent.getDeltaY(), 0.02);
     }
 
     @FXML
-    public void fixStartCoordinates(MouseEvent mouseEvent) {
-        startX = mouseEvent.getX();
-        startY = mouseEvent.getY();
+    public void onMousePressed(MouseEvent mouseEvent) {
+        transfer.fixPoint(mouseEvent.getX(), mouseEvent.getY());
     }
 
-    public void mouseCameraMove(MouseEvent mouseEvent) {
-//        camera.mouseCameraMove(startX - mouseEvent.getX(), startY - mouseEvent.getY());
-        startX = mouseEvent.getX();
-        startY = mouseEvent.getY();
+    @FXML
+    public void onMouseDragged(MouseEvent event) {
+        transfer.onMouseDragged(event.getX(), event.getY(), 0.02);
     }
 }

@@ -10,10 +10,10 @@ import java.util.*;
 public class Model {
 
     public String nameOfModel;
-    public ArrayList<Vector3C> vertices = new ArrayList<Vector3C>();
-    public ArrayList<Vector2C> textureVertices = new ArrayList<Vector2C>();
-    public ArrayList<Vector3C> normals = new ArrayList<Vector3C>();
-    public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+    public ArrayList<Vector3C> vertices = new ArrayList<>();
+    public ArrayList<Vector2C> textureVertices = new ArrayList<>();
+    public ArrayList<Vector3C> normals = new ArrayList<>();
+    public ArrayList<Polygon> polygons = new ArrayList<>();
 
     public ArrayList<Vector3C> getVertices() {
         return vertices;

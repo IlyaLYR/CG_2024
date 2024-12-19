@@ -1,7 +1,7 @@
 package com.cgvsu.render_engine;
 
 
-
+import com.cgvsu.affinetransformation.ATransformation;
 import com.cgvsu.math.typesMatrix.Matrix4D;
 import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
@@ -11,14 +11,17 @@ import javax.vecmath.Point2f;
 
 public class GraphicConveyor {
 
-    public static Matrix4D rotateScaleTranslate() {
-//        double[] math = new double[]{
-//                1, 0, 0, 0,
-//                0, 1, 0, 0,
-//                0, 0, 1, 0,
-//                0, 0, 0, 1
-//        };
-        return new Matrix4D(true);
+    public static Matrix4D rotateScaleTranslate(Vector3C modelCenter) {
+        // Создаем билдера для трансформации
+        ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
+
+        // Сдвигаем модель так, чтобы её центр совпал с началом координат
+        ATransformation transformation = builder
+                .translateByVector(modelCenter.multiplied(-1)) // Сдвиг в противоположную сторону центра
+                .build();
+
+        // Возвращаем матрицу трансформации
+        return transformation.getTransformationMatrix();
     }
 
     public static Matrix4D lookAt(Vector3C eye, Vector3C target) {

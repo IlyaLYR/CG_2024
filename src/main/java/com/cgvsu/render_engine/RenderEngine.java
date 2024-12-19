@@ -8,8 +8,6 @@ import com.cgvsu.math.core.MatrixUtils;
 import com.cgvsu.math.typesMatrix.Matrix4D;
 import com.cgvsu.math.typesVectors.Vector3C;
 
-
-import javax.vecmath.Point2f;
 import java.util.ArrayList;
 
 import static com.cgvsu.render_engine.GraphicConveyor.*;
@@ -24,7 +22,7 @@ public class RenderEngine {
             final int height) {
 
         // Матрицы модели, вида и проекции
-        Matrix4D modelMatrix = rotateScaleTranslate();
+        Matrix4D modelMatrix = rotateScaleTranslate(mesh.calculateModelCenter());
         Matrix4D viewMatrix = camera.getViewMatrix();
         Matrix4D projectionMatrix = camera.getProjectionMatrix();
 

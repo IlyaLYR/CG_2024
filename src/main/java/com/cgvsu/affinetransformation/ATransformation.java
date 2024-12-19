@@ -47,6 +47,10 @@ public class ATransformation {
         return transformedModel;
     }
 
+    public Matrix4D getTransformationMatrix() {
+        return transformationMatrix;
+    }
+
     public static class ATBuilder {
         private Matrix4D currentMatrix;
 
@@ -131,7 +135,7 @@ public class ATransformation {
             return scale(1, 1, sZ);
         }
 
-        public ATBuilder scaleByVertor(Vector3C vector) {
+        public ATBuilder scaleByVector(Vector3C vector) {
             return scale(vector.getX(), vector.getY(), vector.getZ());
         }
 

@@ -7,8 +7,6 @@ import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.math.typesVectors.Vector4C;
 
-import javax.vecmath.Point2f;
-
 public class GraphicConveyor {
 
     public static Matrix4D rotateScaleTranslate(Vector3C modelCenter) {

@@ -1,6 +1,5 @@
 package com.cgvsu;
 
-import com.cgvsu.render_engine.GridRenderer;
 import com.cgvsu.render_engine.RenderEngine;
 import com.cgvsu.render_engine.TransferManagerCamera;
 import javafx.fxml.FXML;
@@ -9,6 +8,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -37,6 +37,9 @@ public class GuiController {
     @FXML
     private Canvas canvas;
 
+    @FXML
+    Label info;
+
     private Model mesh = null;
 
     private final Camera camera = new Camera(
@@ -62,12 +65,11 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-//            GridRenderer gridRenderer = new GridRenderer(10, (int)(height/10)); // Размер сетки 10, 20 делений
-//            gridRenderer.render(canvas.getGraphicsContext2D(), camera, (int)width, (int)height);
             if (mesh != null) {
                 canvas.getGraphicsContext2D().setStroke(Color.BLUE);
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
             }
+            info.setText("Camera " + camera.getPosition().toString());
         });
 
         timeline.getKeyFrames().add(frame);
@@ -94,6 +96,11 @@ public class GuiController {
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
         }
+    }
+
+    @FXML
+    public void setCamera(){
+        camera.setPosition(new Vector3C(0,0,100));
     }
 
     @FXML
@@ -145,6 +152,6 @@ public class GuiController {
 
     @FXML
     public void onMouseDragged(MouseEvent event) {
-        transfer.onMouseDragged(event.getX(), event.getY(), 1);
+        transfer.onMouseDragged(event.getX(), event.getY(), 0.01);
     }
 }

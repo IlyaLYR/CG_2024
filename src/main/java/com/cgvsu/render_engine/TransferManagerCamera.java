@@ -1,29 +1,17 @@
 package com.cgvsu.render_engine;
 
-import com.cgvsu.affinetransformation.ATransformation;
 import com.cgvsu.math.typesVectors.Vector3C;
 
 public class TransferManagerCamera {
     private double mouseX;
     private double mouseY;
-    private double ANGLEForXZ;
-    private double ANGLEForY;
-    private double RADIUS;
     private final Camera camera;
 
+    // Конструктор для инициализации камеры
     public TransferManagerCamera(Camera camera) {
         this.camera = camera;
         this.mouseX = 0;
         this.mouseY = 0;
-        this.RADIUS = camera.getRadius(); // Инициализация радиуса
-
-        // Инициализируем углы на основе позиции камеры
-        Vector3C position = camera.getPosition();
-        Vector3C target = camera.getTarget();
-        Vector3C direction = target.subtracted(position).normalize();
-
-        this.ANGLEForXZ = Math.toDegrees(Math.atan2(direction.getZ(), direction.getX())); // Угол в плоскости XZ
-        this.ANGLEForY = Math.toDegrees(Math.asin(direction.getY())); // Угол по высоте (Y)
     }
 
     public void mouseCameraZoom(double deltaY, double smoothFactor) {
@@ -31,46 +19,46 @@ public class TransferManagerCamera {
         double minDistance = 2.0;
 
         Vector3C direction = camera.getTarget().subtracted(camera.getPosition()).normalize();
+        Vector3C newPosition = camera.getPosition().added(direction.multiplied(delta));
 
-        // Создаем матрицу трансформации для зумирования
-        ATransformation transformation = new ATransformation.ATBuilder()
-                .translateByVector(direction.multiplied(delta))
-                .build();
-
-        Vector3C newPosition = transformation.applyTransformationToVector(camera.getPosition());
-
-        // Проверяем, чтобы расстояние не было меньше минимального
         if (camera.getTarget().subtracted(newPosition).getLength() > minDistance) {
             camera.setPosition(newPosition);
         }
     }
 
+    // Метод для фиксации положения мыши (используется при старте перетаскивания)
     public void fixPoint(double detX, double detY) {
         mouseX = detX;
         mouseY = detY;
-        RADIUS = camera.getRadius();
     }
 
     public void onMouseDragged(double x, double y, double smoothFactor) {
-        double deltaX = x - mouseX;
-        double deltaY = y - mouseY;
+        double deltaX = (x - mouseX) * smoothFactor;
+        double deltaY = (y - mouseY) * smoothFactor;
 
-        // Обновляем углы, добавляя изменения
-        ANGLEForXZ = (ANGLEForXZ - deltaX) % 360;
-        ANGLEForY = Math.max(-90, Math.min(90, ANGLEForY + deltaY));
+        // Получаем текущую позицию камеры
+        double xCamera = camera.getPosition().getX();
+        double yCamera = camera.getPosition().getY();
+        double zCamera = camera.getPosition().getZ();
 
 
-// Построение матрицы аффинного преобразования
-        ATransformation transformation = new ATransformation.ATBuilder()
-                .rotateByY(Math.toRadians(-ANGLEForXZ))                  // Вращение вокруг оси Y
-                .rotateByX(Math.toRadians(-ANGLEForY))                   // Вращение вокруг оси X
-                .build();
+        double radius = camera.getRadius();
+        double phi = Math.acos(yCamera / radius); // Широта
+        double theta = Math.atan2(zCamera, xCamera); // Долгота
 
-// Применяем трансформацию к позиции камеры
-        Vector3C newPosition = transformation.applyTransformationToVector(new Vector3C(0, 0, -RADIUS));
-        camera.setPosition(newPosition.added(camera.getTarget()));
+        theta -= deltaX;
+        phi -= deltaY;
 
-        // Обновляем текущие координаты мыши
+        // Ограничиваем phi, чтобы избежать переворота
+        phi = Math.max(0.1, Math.min(Math.PI - 0.1, phi));
+
+        xCamera = radius * Math.sin(phi) * Math.cos(theta);
+        yCamera = radius * Math.cos(phi);
+        zCamera = radius * Math.sin(phi) * Math.sin(theta);
+
+
+        camera.setPosition(new Vector3C(xCamera, yCamera, zCamera));
+
         mouseX = x;
         mouseY = y;
     }

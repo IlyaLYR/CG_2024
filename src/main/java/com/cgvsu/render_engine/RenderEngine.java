@@ -43,7 +43,7 @@ public class RenderEngine {
                 resultPoints.add(resultPoint);
             }
 
-            // Отрисовываем рёбра полигона
+            // Обрисовываем рёбра полигона
             for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
                 graphicsContext.strokeLine(
                         resultPoints.get(vertexInPolygonInd - 1).getX(),

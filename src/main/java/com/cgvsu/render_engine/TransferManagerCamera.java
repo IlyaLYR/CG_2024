@@ -1,5 +1,6 @@
 package com.cgvsu.render_engine;
 
+import com.cgvsu.affinetransformation.STransformation;
 import com.cgvsu.math.typesVectors.Vector3C;
 
 public class TransferManagerCamera {
@@ -36,30 +37,34 @@ public class TransferManagerCamera {
         double deltaX = (x - mouseX) * smoothFactor;
         double deltaY = (y - mouseY) * smoothFactor;
 
-        // Получаем текущую позицию камеры
-        double xCamera = camera.getPosition().getX();
-        double yCamera = camera.getPosition().getY();
-        double zCamera = camera.getPosition().getZ();
+        Vector3C position = STransformation.toSpherical(camera.getPosition());
 
+        double theta = position.getY() - deltaX;
+        double phi = Math.max(0.1, Math.min(Math.PI - 0.1, position.getZ() - deltaY)); //ограничение на переворот
 
-        double radius = camera.getRadius();
-        double phi = Math.acos(yCamera / radius); // Широта
-        double theta = Math.atan2(zCamera, xCamera); // Долгота
-
-        theta -= deltaX;
-        phi -= deltaY;
-
-        // Ограничиваем phi, чтобы избежать переворота
-        phi = Math.max(0.1, Math.min(Math.PI - 0.1, phi));
-
-        xCamera = radius * Math.sin(phi) * Math.cos(theta);
-        yCamera = radius * Math.cos(phi);
-        zCamera = radius * Math.sin(phi) * Math.sin(theta);
-
-
-        camera.setPosition(new Vector3C(xCamera, yCamera, zCamera));
+        camera.setPosition(STransformation.toCartesian(position.getX(), theta, phi));
 
         mouseX = x;
         mouseY = y;
+    }
+
+    public double getMouseX() {
+        return mouseX;
+    }
+
+    public void setMouseX(double mouseX) {
+        this.mouseX = mouseX;
+    }
+
+    public double getMouseY() {
+        return mouseY;
+    }
+
+    public void setMouseY(double mouseY) {
+        this.mouseY = mouseY;
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 }

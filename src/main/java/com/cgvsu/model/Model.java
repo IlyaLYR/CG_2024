@@ -35,7 +35,7 @@ public class Model {
         return nameOfModel;
     }
 
-    public  Vector3C calculateModelCenter() {
+    public  Vector3C getModelCenter() {
         double xSum = 0, ySum = 0, zSum = 0;
         int vertexCount = vertices.size();
 

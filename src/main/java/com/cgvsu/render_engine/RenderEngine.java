@@ -22,7 +22,7 @@ public class RenderEngine {
             final int height) {
 
         // Матрицы модели, вида и проекции
-        Matrix4D modelMatrix = rotateScaleTranslate(mesh.calculateModelCenter());
+        Matrix4D modelMatrix = rotateScaleTranslate(mesh.getModelCenter());
         Matrix4D viewMatrix = camera.getViewMatrix();
         Matrix4D projectionMatrix = camera.getProjectionMatrix();
 

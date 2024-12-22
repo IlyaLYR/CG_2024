@@ -9,16 +9,14 @@ import com.cgvsu.math.typesVectors.Vector4C;
 
 public class GraphicConveyor {
 
+
     public static Matrix4D rotateScaleTranslate(Vector3C modelCenter) {
-        // Создаем билдера для трансформации
         ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
 
-        // Сдвигаем модель так, чтобы её центр совпал с началом координат
         ATransformation transformation = builder
                 .translateByVector(modelCenter.multiplied(-1)) // Сдвиг в противоположную сторону центра
                 .build();
 
-        // Возвращаем матрицу трансформации
         return transformation.getTransformationMatrix();
     }
 

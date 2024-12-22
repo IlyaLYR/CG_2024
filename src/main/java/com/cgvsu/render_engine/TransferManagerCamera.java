@@ -37,12 +37,14 @@ public class TransferManagerCamera {
         double deltaX = (x - mouseX) * smoothFactor;
         double deltaY = (y - mouseY) * smoothFactor;
 
-        Vector3C position = STransformation.toSpherical(camera.getPosition());
+        camera.setPosition(STransformation.rotateTwoAngles(camera.getPosition(), -deltaX, -deltaY));
 
-        double theta = position.getY() - deltaX;
-        double phi = Math.max(0.1, Math.min(Math.PI - 0.1, position.getZ() - deltaY)); //ограничение на переворот
-
-        camera.setPosition(STransformation.toCartesian(position.getX(), theta, phi));
+//        Vector3C position = STransformation.toSpherical(camera.getPosition());
+//
+//        double theta = position.getY() - deltaX;
+//        double phi = Math.max(0.1, Math.min(Math.PI - 0.1, position.getZ() - deltaY)); //ограничение на переворот
+//
+//        camera.setPosition(STransformation.toCartesian(position.getX(), theta, phi));
 
         mouseX = x;
         mouseY = y;

@@ -49,7 +49,6 @@ public class GuiController {
             1.0F, 1, 0.01F, 100);
 
     final private TransferManagerCamera transfer = new TransferManagerCamera(camera);
-    private final TransferManagerModel transferModel = new TransferManagerModel(null);
 
 
     @FXML
@@ -95,8 +94,6 @@ public class GuiController {
         try {
             String fileContent = Files.readString(fileName);
             mesh = ObjReader.read(fileContent);
-            //TODO модель нужно выбирать
-            transferModel.setModel(mesh);
             // todo: обработка ошибок
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
@@ -153,12 +150,10 @@ public class GuiController {
     @FXML
     public void onMousePressed(MouseEvent mouseEvent) {
         transfer.fixPoint(mouseEvent.getX(), mouseEvent.getY());
-//        transferModel.fixPoint(mouseEvent.getX(), mouseEvent.getY());
     }
 
     @FXML
     public void onMouseDragged(MouseEvent event) {
         transfer.onMouseDragged(event.getX(), event.getY(), 0.01);
-//        mesh = transferModel.rotateAroundCentralPoint(event.getX(), event.getY());
     }
 }

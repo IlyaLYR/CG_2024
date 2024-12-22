@@ -5,10 +5,10 @@ import com.cgvsu.affinetransformation.STransformation;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 
+import static com.cgvsu.affinetransformation.STransformation.rotateTwoAngles;
+
 public class TransferManagerModel {
     private Model model;
-    private double mouseX = 0;
-    private double mouseY = 0;
 
     public TransferManagerModel(Model model) {
         this.model = model;
@@ -23,61 +23,34 @@ public class TransferManagerModel {
 
     }
 
-    public double getMouseX() {
-        return mouseX;
-    }
+    public void rotate(double x, double y, double z) {
 
-    public void setMouseX(double mouseX) {
-        this.mouseX = mouseX;
-    }
-
-    public double getMouseY() {
-        return mouseY;
-    }
-
-    public void setMouseY(double mouseY) {
-        this.mouseY = mouseY;
-    }
-
-    public void fixPoint(double detX, double detY) {
-        mouseX = detX;
-        mouseY = detY;
-    }
-
-    public Model rotateAroundCentralPoint(double x, double y) {
-        double deltaX = (x - mouseX) * 0.02;
-        double deltaY = (y - mouseY) * 0.02;
-        // Получение центра модели
-        Vector3C modelCenter = model.getModelCenter();
-
-        // Создание трансформаций
-        ATransformation toStart = new ATransformation.ATBuilder()
-                .translateByVector(modelCenter.multiplied(-1)) // Перемещение в начало
+        ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
+        ATransformation transformation = builder
+                .rotateByX(Math.toRadians(x % 360))
+                .rotateByY(Math.toRadians(y % 360))
+                .rotateByZ(Math.toRadians(z % 360))
                 .build();
-
-        ATransformation toEnd = new ATransformation.ATBuilder()
-                .translateByVector(modelCenter) // Возврат в исходное положение
-                .build();
-
-        // Создание новой модели для хранения преобразованных данных
-        Model transformedModel = new Model();
-
-        // Преобразование вершин
-        for (Vector3C vertex : model.vertices) {
-            // Применяем трансформации
-            Vector3C transformedVertex = toStart.applyTransformationToVector(vertex);
-            transformedVertex = STransformation.rotateTwoAngles(transformedVertex, -deltaX, -deltaY);
-            transformedVertex = toEnd.applyTransformationToVector(transformedVertex);
-
-            transformedModel.vertices.add(transformedVertex);
-        }
-
-        // Копируем остальные свойства модели
-        transformedModel.textureVertices.addAll(model.textureVertices);
-        transformedModel.normals.addAll(model.normals);
-        transformedModel.polygons.addAll(model.polygons);
-
-        return transformedModel;
+        model = transformation.applyTransformationToModel(model);
     }
 
+    public void translate(double x, double y, double z) {
+        ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
+        ATransformation transformation = builder
+                .translateByX(x)
+                .translateByY(y)
+                .translateByZ(z).build();
+
+        model = transformation.applyTransformationToModel(model);
+    }
+
+    public void scale(double x, double y, double z) {
+        ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
+        ATransformation transformation = builder
+                .scaleByX(x)
+                .scaleByY(y)
+                .scaleByZ(z).build();
+
+        model = transformation.applyTransformationToModel(model);
+    }
 }

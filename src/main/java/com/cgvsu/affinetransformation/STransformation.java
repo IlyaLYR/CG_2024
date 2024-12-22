@@ -63,7 +63,7 @@ public class STransformation {
     public static Vector3C rotateTwoAngles(Vector3C vector, double deltaTheta, double deltaPhi) {
         Vector3C spherical = toSpherical(vector);
         double newTheta = spherical.getY() + deltaTheta;
-        double newPhi = spherical.getZ() + deltaPhi;
+        double newPhi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.getZ() + deltaPhi));
 
         return toCartesian(spherical.getX(), newTheta, newPhi);
     }

@@ -28,7 +28,7 @@ public class ObjWriterClass implements ObjWriter {
             model.normals.forEach(v -> writer.println(normalToString(v)));
             model.polygons.forEach(v -> writer.println(polygonToString(v)));
         } catch (IOException e) {
-            System.out.println("Error while writing file");
+            throw new ObjWriterException(e.getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ public class ObjWriterClass implements ObjWriter {
         return OBJ_VERTEX_TOKEN + " " + vector.getX() + " " + vector.getY() + " " + vector.getZ();
     }
 
-    public String textureVertexToString(Vector2C vector) {
+    public String textureVertexToString(Vector3C vector) {
         return OBJ_TEXTURE_TOKEN + " " + (float)vector.getX() + " " + (float)vector.getY();
     }
 

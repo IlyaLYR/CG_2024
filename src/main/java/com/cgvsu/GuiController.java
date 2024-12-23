@@ -1,5 +1,8 @@
 package com.cgvsu;
 
+import com.cgvsu.objreader.ObjReaderException;
+import com.cgvsu.objwriter.ObjWriter;
+import com.cgvsu.objwriter.ObjWriterClass;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -10,9 +13,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -52,12 +53,19 @@ public class GuiController {
     @FXML
     private Canvas canvas;
 
+    @FXML
+    private CheckBox checkBoxTransform;
+
     private HashMap<String, Model> meshes = new HashMap<>();
+    private HashMap<String, Model> transformMeshes = new HashMap<>();
+
     private ContextMenu contextMenu;
 
     @FXML
-    private ListView<String> fileName;
+    private ListView<String> fileNameModel;
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
+
+    private final ObjWriterClass objWriter = new ObjWriterClass();
     private Camera camera = new Camera(
             new Vector3C(0, 0, 100),
             new Vector3C(0, 0, 0),
@@ -80,14 +88,13 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-
             if (meshes != null) {
                 canvas.getGraphicsContext2D().setStroke(Color.BLUE);
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, meshes, (int) width, (int) height);
+                RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height);
             }
         });
 
-        fileName.setOnMouseClicked(event -> {
+        fileNameModel.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
                 contextMenu.getItems().clear();
                 removeModelFromTheScene(event);
@@ -97,6 +104,13 @@ public class GuiController {
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
+    }
+
+    public void showAlertWindow(AnchorPane anchorPane, Alert.AlertType alertType, String message, ButtonType buttonType) {
+        Stage mainStage = (Stage) anchorPane.getScene().getWindow();
+        Alert alert = new Alert(alertType, message, buttonType);
+        alert.initOwner(mainStage);
+        alert.showAndWait();
     }
 
     @FXML
@@ -110,16 +124,45 @@ public class GuiController {
             return;
         }
 
-        this.tempFileName.add(file.getName());
-        this.fileName.setItems(tempFileName);
-        Path fileName = Path.of(file.getAbsolutePath());
+        String fileName = file.getName();
+        Path filePath = Path.of(file.getAbsolutePath());
 
         try {
-            String fileContent = Files.readString(fileName);
-            meshes.put(file.getName(), ObjReader.read(fileContent));
-            // todo: обработка ошибок
-        } catch (IOException exception) {
+            String fileContent = Files.readString(filePath);
+            Model model = ObjReader.read(fileContent);
+            meshes.put(fileName, model);
+            transformMeshes.put(fileName,model);
+            tempFileName.add(fileName);
+            fileNameModel.setItems(tempFileName);
 
+            // todo: обработка ошибок
+
+        } catch (IOException exception) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, exception.getMessage(), ButtonType.CLOSE);
+        } catch (ObjReaderException exception) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, exception.getMessage(), ButtonType.CLOSE);
+        }
+    }
+
+    @FXML
+    void save(MouseEvent event) {
+        if (meshes.size() != 0) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Model");
+
+            File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+            if (file == null) {
+                return;
+            }
+            String fileName = String.valueOf(Path.of(file.getAbsolutePath()));
+            if (checkBoxTransform.isSelected()) {
+                objWriter.write(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.substring(fileName.length() - 4).equals(".obj")) ? fileName : fileName + ".obj");
+            } else {
+                objWriter.write(meshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.substring(fileName.length() - 4).equals(".obj")) ? fileName : fileName + ".obj");
+            }
+            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!",ButtonType.OK);
+        } else {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Откройте модель для сохранения.",ButtonType.CLOSE);
         }
     }
 
@@ -128,7 +171,7 @@ public class GuiController {
     public void clearScene() {
         meshes.clear();
         tempFileName.clear();
-        fileName.setItems(tempFileName);
+        fileNameModel.setItems(tempFileName);
     }
 
     @FXML
@@ -182,7 +225,7 @@ public class GuiController {
 
     // Удаление моделей в Active Models по клику на модель
     private void removeModelFromTheScene(MouseEvent event) {
-        String selectedItem = fileName.getSelectionModel().getSelectedItem();
+        String selectedItem = fileNameModel.getSelectionModel().getSelectedItem();
 
         if (selectedItem == null) {
             return;
@@ -194,10 +237,12 @@ public class GuiController {
         deleteItem.setOnAction(deleteEvent -> {
             meshes.remove(selectedItem);
             tempFileName.remove(selectedItem);
-            fileName.setItems(tempFileName);
+            fileNameModel.setItems(tempFileName);
         });
 
         contextMenu.getItems().setAll(deleteItem);
-        contextMenu.show(fileName, event.getScreenX(), event.getScreenY() + 10.5);
+        contextMenu.show(fileNameModel, event.getScreenX(), event.getScreenY() + 10.5);
     }
+
+
 }

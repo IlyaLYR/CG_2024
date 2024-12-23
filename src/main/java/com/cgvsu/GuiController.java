@@ -1,9 +1,9 @@
 package com.cgvsu;
 
 import com.cgvsu.objreader.ObjReaderException;
-import com.cgvsu.objwriter.ObjWriter;
 import com.cgvsu.objwriter.ObjWriterClass;
 import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.render_engine.TransferManagerCamera;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,12 +14,12 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
@@ -38,14 +38,22 @@ import com.cgvsu.math.typesVectors.Vector3C;
 public class GuiController {
 
     final private float TRANSLATION = 0.5F;
-
-    //Поля для управления мышкой
-
-    private double startX;
-    private double startY;
-
-
-    private Timeline timeline;
+    public Button buttonSaveModel;
+    public Button addModel;
+    public ListView fileNameCamera;
+    public Button buttonApplyCamera;
+    public Button buttonAddCamera;
+    public TextField positionX;
+    public TextField positionY;
+    public TextField positionZ;
+    public TextField targetX;
+    public TextField targetY;
+    public TextField targetZ;
+    public Button buttonApplyModel;
+    public TextField fieldWriteCoordinate;
+    public ToggleButton buttonRemoveVertex;
+    public ToggleButton buttonRemoveFace;
+    public ToggleButton buttonTriangulation;
 
     @FXML
     AnchorPane anchorPane;
@@ -56,8 +64,8 @@ public class GuiController {
     @FXML
     private CheckBox checkBoxTransform;
 
-    private HashMap<String, Model> meshes = new HashMap<>();
-    private HashMap<String, Model> transformMeshes = new HashMap<>();
+    private final HashMap<String, Model> meshes = new HashMap<>();
+    private final HashMap<String, Model> transformMeshes = new HashMap<>();
 
     private ContextMenu contextMenu;
 
@@ -66,10 +74,12 @@ public class GuiController {
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
 
     private final ObjWriterClass objWriter = new ObjWriterClass();
-    private Camera camera = new Camera(
+    private final Camera camera = new Camera(
             new Vector3C(0, 0, 100),
             new Vector3C(0, 0, 0),
             1.0F, 1, 0.01F, 100);
+
+    final private TransferManagerCamera transfer = new TransferManagerCamera(camera);
 
 
     @FXML
@@ -78,7 +88,7 @@ public class GuiController {
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
-        timeline = new Timeline();
+        Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
         KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
@@ -88,10 +98,9 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-            if (meshes != null) {
-                canvas.getGraphicsContext2D().setStroke(Color.BLUE);
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height);
-            }
+            //TODO Убрали if()
+            canvas.getGraphicsContext2D().setStroke(Color.BLUE);
+            RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height);
         });
 
         fileNameModel.setOnMouseClicked(event -> {
@@ -131,7 +140,7 @@ public class GuiController {
             String fileContent = Files.readString(filePath);
             Model model = ObjReader.read(fileContent);
             meshes.put(fileName, model);
-            transformMeshes.put(fileName,model);
+            transformMeshes.put(fileName, model);
             tempFileName.add(fileName);
             fileNameModel.setItems(tempFileName);
 
@@ -146,7 +155,7 @@ public class GuiController {
 
     @FXML
     void save(MouseEvent event) {
-        if (meshes.size() != 0) {
+        if (!meshes.isEmpty()) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Model");
 
@@ -160,9 +169,9 @@ public class GuiController {
             } else {
                 objWriter.write(meshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.substring(fileName.length() - 4).equals(".obj")) ? fileName : fileName + ".obj");
             }
-            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!",ButtonType.OK);
+            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!", ButtonType.OK);
         } else {
-            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Откройте модель для сохранения.",ButtonType.CLOSE);
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Откройте модель для сохранения.", ButtonType.CLOSE);
         }
     }
 
@@ -170,6 +179,7 @@ public class GuiController {
     @FXML
     public void clearScene() {
         meshes.clear();
+        transformMeshes.clear();
         tempFileName.clear();
         fileNameModel.setItems(tempFileName);
     }
@@ -208,19 +218,18 @@ public class GuiController {
     //Управление камерой мышкой
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
-        camera.mouseCameraZoom(scrollEvent.getDeltaY());
+        transfer.mouseCameraZoom(scrollEvent.getDeltaY(), 0.02);
     }
 
     @FXML
-    public void fixStartCoordinates(MouseEvent mouseEvent) {
-        startX = mouseEvent.getX();
-        startY = mouseEvent.getY();
+    public void onMousePressed(MouseEvent mouseEvent) {
+        transfer.fixPoint(mouseEvent.getX(), mouseEvent.getY());
     }
 
-    public void mouseCameraMove(MouseEvent mouseEvent) {
-//        camera.mouseCameraMove(startX - mouseEvent.getX(), startY - mouseEvent.getY());
-        startX = mouseEvent.getX();
-        startY = mouseEvent.getY();
+    @FXML
+
+    public void onMouseDragged(MouseEvent event) {
+        transfer.onMouseDragged(event.getX(), event.getY(), 0.01);
     }
 
     // Удаление моделей в Active Models по клику на модель
@@ -235,6 +244,7 @@ public class GuiController {
         deleteItem.textProperty().bind(Bindings.format("Delete \"%s\"", selectedItem));
 
         deleteItem.setOnAction(deleteEvent -> {
+            transformMeshes.remove(selectedItem);
             meshes.remove(selectedItem);
             tempFileName.remove(selectedItem);
             fileNameModel.setItems(tempFileName);

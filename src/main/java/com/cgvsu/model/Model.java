@@ -2,7 +2,6 @@ package com.cgvsu.model;
 
 
 
-import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 
 import java.util.*;
@@ -33,6 +32,20 @@ public class Model {
 
     public String getNameOfModel() {
         return nameOfModel;
+    }
+
+    public  Vector3C getModelCenter() {
+        double xSum = 0, ySum = 0, zSum = 0;
+        int vertexCount = vertices.size();
+
+        for (Vector3C vertex : vertices) {
+            xSum += vertex.getX();
+            ySum += vertex.getY();
+            zSum += vertex.getZ();
+        }
+
+        // Вычисляем среднее значение по каждой координате
+        return new Vector3C(xSum / vertexCount, ySum / vertexCount, zSum / vertexCount);
     }
 
     public void setNameOfModel(String nameOfModel) {

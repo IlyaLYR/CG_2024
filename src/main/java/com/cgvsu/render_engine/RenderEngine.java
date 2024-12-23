@@ -9,7 +9,6 @@ import com.cgvsu.math.typesMatrix.Matrix4D;
 import com.cgvsu.math.typesVectors.Vector3C;
 
 
-import javax.vecmath.Point2f;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,15 +23,16 @@ public class RenderEngine {
             final int width,
             final int height) {
 
-        // Матрицы модели, вида и проекции
-        Matrix4D modelMatrix = rotateScaleTranslate();
-        Matrix4D viewMatrix = camera.getViewMatrix();
-        Matrix4D projectionMatrix = camera.getProjectionMatrix();
-
-        // Итоговая матрица MVP
-        Matrix4D modelViewProjectionMatrix = MatrixUtils.multiplied(projectionMatrix, viewMatrix, modelMatrix);
-
         for (Model mesh : meshes.values()) {
+            // Матрицы модели, вида и проекции
+            Matrix4D modelMatrix = rotateScaleTranslate(mesh.getModelCenter());
+            Matrix4D viewMatrix = camera.getViewMatrix();
+            Matrix4D projectionMatrix = camera.getProjectionMatrix();
+
+            // Итоговая матрица MVP
+            Matrix4D modelViewProjectionMatrix = MatrixUtils.multiplied(projectionMatrix, viewMatrix, modelMatrix);
+
+
             final int nPolygons = mesh.polygons.size();
             for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
                 final int nVerticesInPolygon = mesh.polygons.get(polygonInd).getVertexIndices().size();

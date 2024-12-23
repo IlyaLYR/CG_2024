@@ -64,21 +64,7 @@ public class Camera {
         return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
     }
 
-
-    public void mouseCameraZoom(double deltaY) {
-        double smoothFactor = 0.02; // Коэффициент для чувствительности (можно его настроить)
-        double delta = deltaY * smoothFactor;
-
-        double minDistance = 2.0;
-
-        Vector3C det = target.subtracted(position).normalize();
-
-        double x = position.getX() + det.getX() * delta;
-        double y = position.getY() + det.getY() * delta;
-        double z = position.getZ() + det.getZ() * delta;
-        Vector3C newPosition = new Vector3C(x, y, z);
-        if (target.subtracted(newPosition).getLength() > minDistance) {
-            position = new Vector3C(x, y, z);
-        }
+    public double getRadius() {
+        return target.subtracted(position).getLength();
     }
 }

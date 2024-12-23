@@ -47,4 +47,22 @@ public class Vector4C extends VectorWrapperC<Vector4C> {
     public Vector4C(double x, double y, double z, double t) {
         super(4, new double[]{x, y, z, t});
     }
+
+
+    public double getX() {
+        return get(0);
+    }
+
+    public double getY() {
+        return get(1);
+    }
+
+    public double getZ() {
+        return get(2);
+    }
+
+    public double getW() {
+        return get(3);
+    }
+
 }

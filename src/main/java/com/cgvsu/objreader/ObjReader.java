@@ -17,7 +17,7 @@ public class ObjReader {
 	private static final String OBJ_FACE_TOKEN = "f";
 	private static Model result = new Model();
 
-	public static Model read(String fileContent) {
+	public static Model read(String fileContent) throws ObjReaderException {
 		result = new Model();
 
 		int lineInd = 0;
@@ -25,7 +25,8 @@ public class ObjReader {
 		while (scanner.hasNextLine()) {
 			final String line = scanner.nextLine();
 			ArrayList<String> wordsInLine = new ArrayList<String>(Arrays.asList(line.split("\\s+")));
-			if (wordsInLine.isEmpty() || line.startsWith("#")) {
+			if (line.isEmpty() || line.startsWith("#")) {
+				lineInd++;
 				continue;
 			}
 
@@ -34,19 +35,21 @@ public class ObjReader {
 			wordsInLine.remove(0);
 
 			++lineInd;
-			switch (token) {
-				case NAME_OF_MODEL_TOKEN -> result.setNameOfModel(parseNameOfModel(wordsInLine, lineInd));
-				case OBJ_VERTEX_TOKEN -> result.vertices.add(parseVertex(wordsInLine, lineInd));
-				case OBJ_TEXTURE_TOKEN -> result.textureVertices.add(parseTextureVertex(wordsInLine, lineInd));
-				case OBJ_NORMAL_TOKEN -> result.normals.add(parseNormal(wordsInLine, lineInd));
-				case OBJ_FACE_TOKEN -> result.polygons.add(parseFace(wordsInLine, lineInd));
-				default -> { throw new ObjReaderException("The token is incorrect.", lineInd); }
+				switch (token) {
+					case NAME_OF_MODEL_TOKEN -> result.setNameOfModel(parseNameOfModel(wordsInLine, lineInd));
+					case OBJ_VERTEX_TOKEN -> result.vertices.add(parseVertex(wordsInLine, lineInd));
+					case OBJ_TEXTURE_TOKEN -> result.textureVertices.add(parseTextureVertex(wordsInLine, lineInd));
+					case OBJ_NORMAL_TOKEN -> result.normals.add(parseNormal(wordsInLine, lineInd));
+					case OBJ_FACE_TOKEN -> result.polygons.add(parseFace(wordsInLine, lineInd));
+					default -> {  }
+				}
 			}
-		}
+
 		return result;
 	}
 
-	protected static String parseNameOfModel(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+// throw new ObjReaderException("The token is incorrect: " + token, lineInd);
+	protected static String parseNameOfModel(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
 		if (wordsInLineWithoutToken.isEmpty()) {
 			return "";
 		} else if (wordsInLineWithoutToken.size() > 1) {
@@ -56,7 +59,7 @@ public class ObjReader {
 	}
 
 	// Всем методам кроме основного я поставил модификатор доступа protected, чтобы обращаться к ним в тестах
-	protected static Vector3C parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+	protected static Vector3C parseVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
 		if (wordsInLineWithoutToken.size() > 3) {
 			throw new ObjReaderException("Too many vertex arguments.", lineInd);
 		}
@@ -74,24 +77,33 @@ public class ObjReader {
 		}
 	}
 
-	protected static Vector2C parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
-		if (wordsInLineWithoutToken.size() > 2) {
+	protected static Vector3C parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
+		if (wordsInLineWithoutToken.size() > 3) {
 			throw new ObjReaderException("Too many texture vertex arguments.", lineInd);
 		}
 		try {
-			return new Vector2C(
+			return new Vector3C(
 					Float.parseFloat(wordsInLineWithoutToken.get(0)),
-					Float.parseFloat(wordsInLineWithoutToken.get(1)));
+					Float.parseFloat(wordsInLineWithoutToken.get(1)),
+					Float.parseFloat(wordsInLineWithoutToken.get(2)));
 
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			throw new ObjReaderException("Failed to parse float value.", lineInd);
 
-		} catch(IndexOutOfBoundsException e) {
-			throw new ObjReaderException("Too few texture vertex arguments.", lineInd);
+		} catch (IndexOutOfBoundsException e) {
+			try {
+				return new Vector3C(
+						Float.parseFloat(wordsInLineWithoutToken.get(0)),
+						Float.parseFloat(wordsInLineWithoutToken.get(1)),
+						0);
+			} catch (IndexOutOfBoundsException e1) {
+				throw new ObjReaderException("Too few texture vertex arguments.", lineInd);
+			}
 		}
 	}
 
-	protected static Vector3C parseNormal(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+
+	protected static Vector3C parseNormal(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
 		if (wordsInLineWithoutToken.size() > 3) {
 			throw new ObjReaderException("Too many normal arguments.", lineInd);
 		}
@@ -109,7 +121,7 @@ public class ObjReader {
 		}
 	}
 
-	protected static Polygon parseFace(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
+	protected static Polygon parseFace(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
 		ArrayList<Integer> onePolygonVertexIndices = new ArrayList<Integer>();
 		ArrayList<Integer> onePolygonTextureVertexIndices = new ArrayList<Integer>();
 		ArrayList<Integer> onePolygonNormalIndices = new ArrayList<Integer>();
@@ -134,7 +146,7 @@ public class ObjReader {
 			ArrayList<Integer> onePolygonVertexIndices,
 			ArrayList<Integer> onePolygonTextureVertexIndices,
 			ArrayList<Integer> onePolygonNormalIndices,
-			int lineInd) {
+			int lineInd) throws ObjReaderException {
 		try {
 			String[] wordIndices = wordInLine.split("/");
 			switch (wordIndices.length) {

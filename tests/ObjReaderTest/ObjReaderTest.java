@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ObjReaderTest extends ObjReader {
     @Test
-    void testRead01() {
+    void testRead01() throws ObjReaderException {
         File file = new File("tests/ObjReaderTest/objReaderTest01.obj");
         Path fileName = Path.of(file.getAbsolutePath());
         String fileContent;
@@ -45,23 +45,8 @@ class ObjReaderTest extends ObjReader {
         assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 1. Index is too much."));
     }
 
-
     @Test
-    void testRead03() {
-        File file = new File("tests/ObjReaderTest/objReaderTest04.obj");
-        Path fileName = Path.of(file.getAbsolutePath());
-        String fileContent;
-        try {
-            fileContent = Files.readString(fileName);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        ObjReaderException thrown = Assertions.assertThrowsExactly(ObjReaderException.class, () -> ObjReader.read(fileContent));
-        assertTrue(thrown.getMessage().contains("Error parsing OBJ file on line: 1. The token is incorrect."));
-    }
-
-    @Test
-    void testParseVertex01() {
+    void testParseVertex01() throws ObjReaderException {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02", "1.03"));
         Vector3C result = ObjReader.parseVertex(wordsInLineWithoutToken, 5);
         Vector3C expectedResult = new Vector3C(1.01f, 1.02f, 1.03f);
@@ -69,7 +54,7 @@ class ObjReaderTest extends ObjReader {
     }
 
     @Test
-    void testParseVertex02() {
+    void testParseVertex02() throws ObjReaderException {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02", "1"));
         Vector3C result = ObjReader.parseVertex(wordsInLineWithoutToken, 5);
         Vector3C expectedResult = new Vector3C(1.01f, 1.02f, 1.10f);
@@ -121,12 +106,13 @@ class ObjReaderTest extends ObjReader {
     }
 
     @Test
-    void testParseTextureVertex01() {
+    void testParseTextureVertex01() throws ObjReaderException {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02"));
-        Vector2C result = ObjReader.parseTextureVertex(wordsInLineWithoutToken, 5);
-        Vector2C expectedResult = new Vector2C(1.01f, 1.02f);
+        Vector3C result = ObjReader.parseTextureVertex(wordsInLineWithoutToken, 5);
+        Vector3C expectedResult = new Vector3C(1.01f, 1.02f, 0);
         assertEquals(result, expectedResult);
     }
+
 
     @Test
     void testParseTextureVertex02() {
@@ -150,6 +136,7 @@ class ObjReaderTest extends ObjReader {
         }
     }
 
+
     @Test
     void testParseNormal01() {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02", "1.03", "1.04"));
@@ -162,7 +149,7 @@ class ObjReaderTest extends ObjReader {
     }
 
     @Test
-    void testParseNormal02() {
+    void testParseNormal02() throws ObjReaderException {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02", "1.03"));
         Vector3C expectedResult = new Vector3C(1.01f, 1.02f, 1.03f);
         Vector3C result = ObjReader.parseNormal(wordsInLineWithoutToken, 8);
@@ -345,7 +332,7 @@ class ObjReaderTest extends ObjReader {
     }
 
     @Test
-    void testParseNameOfModel() {
+    void testParseNameOfModel01() {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("Triangle", "Pepe"));
         ObjReaderException exception = Assertions.assertThrows(
                 ObjReaderException.class,

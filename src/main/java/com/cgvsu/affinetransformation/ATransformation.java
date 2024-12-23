@@ -35,7 +35,6 @@ public class ATransformation {
 
     public Model applyTransformationToModel(Model originalModel) {
         Model transformedModel = new Model();
-
         for (Vector3C vertex : originalModel.vertices) {
             transformedModel.vertices.add(applyTransformationToVector(vertex));
         }

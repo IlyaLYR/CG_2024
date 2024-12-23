@@ -12,6 +12,7 @@ public class GraphicConveyor {
 
     public static Matrix4D rotateScaleTranslate(Vector3C modelCenter) {
         ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
+//        ATransformation transformation = builder.translateByCoordinates(0,0,0).build();
 
         ATransformation transformation = builder
                 .translateByVector(modelCenter.multiplied(-1)) // Сдвиг в противоположную сторону центра

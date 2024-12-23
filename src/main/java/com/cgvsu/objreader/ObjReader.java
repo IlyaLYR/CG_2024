@@ -101,10 +101,10 @@ public class ObjReader {
     protected static String parseNameOfModel(final ArrayList<String> wordsInLineWithoutToken, int lineInd) {
         if (wordsInLineWithoutToken.isEmpty()) {
             logger.log(Level.WARNING, "Line {0} [Model: {1}]: Model name is empty.", new Object[]{lineInd, getModelName()});
-            return null;
+            return "Unknown model";
         } else if (wordsInLineWithoutToken.size() > 1) {
             logger.log(Level.WARNING, "Line {0} [Model: {1}]: Incorrect model name format.", new Object[]{lineInd, getModelName()});
-            return null;
+            return "Unknown model";
         }
         return wordsInLineWithoutToken.get(0);
     }
@@ -113,7 +113,6 @@ public class ObjReader {
         try {
             if (wordsInLineWithoutToken.size() != 3) {
                 logger.log(Level.WARNING, "Line {0} [Model: {1}]: Incorrect number of vertex arguments.", new Object[]{lineInd, getModelName()});
-                return null;
             }
             return new Vector3C(
                     Float.parseFloat(wordsInLineWithoutToken.get(0)),
@@ -129,7 +128,6 @@ public class ObjReader {
         try {
             if (wordsInLineWithoutToken.size() != 2) {
                 logger.log(Level.WARNING, "Line {0} [Model: {1}]: Incorrect number of texture vertex arguments.", new Object[]{lineInd, getModelName()});
-                return null;
             }
             return new Vector2C(
                     Float.parseFloat(wordsInLineWithoutToken.get(0)),
@@ -144,7 +142,6 @@ public class ObjReader {
         try {
             if (wordsInLineWithoutToken.size() != 3) {
                 logger.log(Level.WARNING, "Line {0} [Model: {1}]: Incorrect number of normal arguments.", new Object[]{lineInd, getModelName()});
-                return null;
             }
             return new Vector3C(
                     Float.parseFloat(wordsInLineWithoutToken.get(0)),

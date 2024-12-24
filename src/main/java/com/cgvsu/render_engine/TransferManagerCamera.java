@@ -8,6 +8,7 @@ public class TransferManagerCamera {
     private double mouseX;
     private double mouseY;
     private final Camera camera;
+    private double sensitivity; // чувствительность
 
     // Конструктор для инициализации камеры
     public TransferManagerCamera(Camera camera) {
@@ -16,8 +17,8 @@ public class TransferManagerCamera {
         this.mouseY = 0;
     }
 
-    public void mouseCameraZoom(double deltaY, double smoothFactor) {
-        double delta = deltaY * smoothFactor;
+    public void mouseCameraZoom(double deltaY) {
+        double delta = deltaY * sensitivity * 10;
         double minDistance = 2.0;
 
         Vector3C direction = camera.getTarget().subtracted(camera.getPosition()).normalize();
@@ -34,9 +35,9 @@ public class TransferManagerCamera {
         mouseY = detY;
     }
 
-    public void onMouseDragged(double x, double y, double smoothFactor) {
-        double deltaX = (x - mouseX) * smoothFactor;
-        double deltaY = (y - mouseY) * smoothFactor;
+    public void onMouseDragged(double x, double y) {
+        double deltaX = (x - mouseX) * sensitivity;
+        double deltaY = (y - mouseY) * sensitivity;
 
         //Получаем позицию камеры и целевую точку
         Vector3C position = camera.getPosition();
@@ -81,5 +82,13 @@ public class TransferManagerCamera {
 
     public Camera getCamera() {
         return camera;
+    }
+
+    public double getSensitivity() {
+        return sensitivity;
+    }
+
+    public void setSensitivity(double sensitivity) {
+        this.sensitivity = sensitivity;
     }
 }

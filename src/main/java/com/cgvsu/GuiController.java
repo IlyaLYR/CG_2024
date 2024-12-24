@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -31,6 +32,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 
+import com.cgvsu.render_engine.Camera;
+
 
 @SuppressWarnings({"rawtypes", "DuplicateExpressions"})
 public class GuiController {
@@ -38,6 +41,7 @@ public class GuiController {
     final private float TRANSLATION = 0.5F;
     public Button buttonSaveModel;
     public Button addModel;
+    public ListView fileNameCamera;
     public Button buttonApplyCamera;
     public Button buttonAddCamera;
     public TextField positionX;
@@ -60,10 +64,15 @@ public class GuiController {
     public TextField translateX;
     public TextField translateY;
     public TextField translateZ;
-    public ListView fileNameCamera;
 
     @FXML
     AnchorPane anchorPane;
+
+    @FXML
+    Label labelPercent;
+
+    @FXML
+    Slider sliderMouseSensitivity;
 
     @FXML
     private Canvas canvas;
@@ -83,7 +92,7 @@ public class GuiController {
     private final ObjWriterClass objWriter = new ObjWriterClass();
     private final Camera camera = new Camera(new Vector3C(0, 0, 100), new Vector3C(0, 0, 0), 1.0F, 1, 0.01F, 100);
 
-    final private TransferManagerCamera transferCamera = new TransferManagerCamera(camera);
+    final private TransferManagerCamera transfer = new TransferManagerCamera(camera);
     private final TransferManagerModel transferModel = new TransferManagerModel();
 
     private final boolean isCtrlPressed = false;
@@ -108,7 +117,15 @@ public class GuiController {
             //TODO Убрали if()
             canvas.getGraphicsContext2D().setStroke(Color.BLUE);
             RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height);
+
         });
+
+        // начальное значение чувствительности камеры
+        double initialSensitivity = 10 / 10000.0;
+        transfer.setSensitivity(initialSensitivity);
+
+        sliderMouseSensitivity.valueProperty().addListener(
+                (observable, oldValue, newValue) -> MouseSensitivity(newValue.doubleValue()));
 
         fileNameModel.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
@@ -166,19 +183,37 @@ public class GuiController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Model");
 
-            File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
+
+            String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+            if (selectedModelName == null || selectedModelName.isEmpty()) {
+                showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель для сохранения!", ButtonType.CLOSE);
+                return;
+            }
+
+            // Устанавливаем имя файла по умолчанию
+            fileChooser.setInitialFileName(selectedModelName);
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ files (*.obj)", "*.obj"));
+            File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+
             if (file == null) {
                 return;
             }
-            String fileName = String.valueOf(Path.of(file.getAbsolutePath()));
-            if (checkBoxTransform.isSelected()) {
-                objWriter.write(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.endsWith(".obj")) ? fileName : fileName + ".obj");
-            } else {
-                objWriter.write(meshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.endsWith(".obj")) ? fileName : fileName + ".obj");
+
+            // расширение(формат) файла, если его нет
+            String filePath = file.getAbsolutePath();
+            if (!filePath.endsWith(".obj")) {
+                filePath += ".obj";
             }
-            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!", ButtonType.OK);
+
+            if (checkBoxTransform.isSelected()) {
+                objWriter.write(transformMeshes.get(selectedModelName), filePath);
+            } else {
+                objWriter.write(meshes.get(selectedModelName), filePath);
+            }
+
+            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!", ButtonType.CLOSE);
         } else {
-            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Откройте модель для сохранения.", ButtonType.CLOSE);
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Добавьте модель для сохранения.", ButtonType.CLOSE);
         }
     }
 
@@ -225,19 +260,20 @@ public class GuiController {
     //Управление камерой мышкой
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
-        transferCamera.mouseCameraZoom(scrollEvent.getDeltaY(), 0.02);
+        transfer.mouseCameraZoom(scrollEvent.getDeltaY());
     }
 
     @FXML
     public void onMousePressed(MouseEvent mouseEvent) {
-        transferCamera.fixPoint(mouseEvent.getX(), mouseEvent.getY());
+        transfer.fixPoint(mouseEvent.getX(), mouseEvent.getY());
     }
 
     @FXML
 
     public void onMouseDragged(MouseEvent event) {
-        transferCamera.onMouseDragged(event.getX(), event.getY(), 0.01);
+        transfer.onMouseDragged(event.getX(), event.getY());
     }
+
 
     // Удаление моделей в Active Models по клику на модель
     private void removeModelFromTheScene(MouseEvent event) {
@@ -261,6 +297,11 @@ public class GuiController {
         contextMenu.show(fileNameModel, event.getScreenX(), event.getScreenY() + 10.5);
     }
 
+    private void MouseSensitivity(double newValue) {
+        double sensitivity = newValue / 10000.0;
+        transfer.setSensitivity(sensitivity);
+        labelPercent.setText(String.format("%.0f%%", newValue));
+    }
     @FXML
     public void buttonApplyModel() {
         //TODO обработка ошибок null-model

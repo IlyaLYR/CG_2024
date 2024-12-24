@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-class ObjWriterTest {
+public class ObjWriterTest {
     private final ObjWriterClass objWriter = new ObjWriterClass();
 
     // Тест вершин
@@ -94,7 +94,7 @@ class ObjWriterTest {
         Assertions.assertEquals("f 1/7/4 2/5/6 3/4/5 6/2/3", result);
     }
 
-    // Тест записи координат в файлик
+    // Тест записи координат в файл
     @Test
     public void testWrite() throws IOException {
         Model model = new Model();
@@ -141,6 +141,5 @@ class ObjWriterTest {
 
         Assertions.assertEquals(expectedLines, fileLines);
         File file = new File(filename);
-        file.delete();
     }
 }

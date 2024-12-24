@@ -1,6 +1,5 @@
 package com.cgvsu.objwriter;
 
-import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;

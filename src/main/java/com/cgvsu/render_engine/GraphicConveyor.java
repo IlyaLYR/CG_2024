@@ -6,19 +6,19 @@ import com.cgvsu.math.typesMatrix.Matrix4D;
 import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.math.typesVectors.Vector4C;
+import com.cgvsu.model.Model;
 
 public class GraphicConveyor {
 
 
-    public static Matrix4D rotateScaleTranslate(Vector3C modelCenter) {
+    //ModelMatrix будет исполняться отдельно
+    public static Model rotateScaleTranslate(Model model ,Vector3C modelCenter) {
         ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
-//        ATransformation transformation = builder.translateByCoordinates(0,0,0).build();
-
         ATransformation transformation = builder
                 .translateByVector(modelCenter.multiplied(-1)) // Сдвиг в противоположную сторону центра
                 .build();
 
-        return transformation.getTransformationMatrix();
+        return transformation.applyTransformationToModel(model);
     }
 
     public static Matrix4D lookAt(Vector3C eye, Vector3C target) {

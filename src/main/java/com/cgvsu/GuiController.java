@@ -1,17 +1,19 @@
 package com.cgvsu;
 
+import com.cgvsu.math.typesVectors.Vector3C;
+import com.cgvsu.model.Model;
+import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.objreader.ObjReaderException;
 import com.cgvsu.objwriter.ObjWriterClass;
-import com.cgvsu.render_engine.RenderEngine;
-import com.cgvsu.render_engine.TransferManagerCamera;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
+import com.cgvsu.render_engine.*;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -21,20 +23,19 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.io.IOException;
-import java.io.File;
 import java.util.HashMap;
 
-import com.cgvsu.model.Model;
-import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
-import com.cgvsu.math.typesVectors.Vector3C;
 
 
+@SuppressWarnings({"rawtypes", "DuplicateExpressions"})
 public class GuiController {
 
     final private float TRANSLATION = 0.5F;
@@ -54,6 +55,15 @@ public class GuiController {
     public ToggleButton buttonRemoveVertex;
     public ToggleButton buttonRemoveFace;
     public ToggleButton buttonTriangulation;
+    public TextField rotateX;
+    public TextField rotateY;
+    public TextField rotateZ;
+    public TextField scaleX;
+    public TextField scaleY;
+    public TextField scaleZ;
+    public TextField translateX;
+    public TextField translateY;
+    public TextField translateZ;
 
     @FXML
     AnchorPane anchorPane;
@@ -80,12 +90,12 @@ public class GuiController {
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
 
     private final ObjWriterClass objWriter = new ObjWriterClass();
-    private final Camera camera = new Camera(
-            new Vector3C(0, 0, 100),
-            new Vector3C(0, 0, 0),
-            1.0F, 1, 0.01F, 100);
+    private final Camera camera = new Camera(new Vector3C(0, 0, 100), new Vector3C(0, 0, 0), 1.0F, 1, 0.01F, 100);
 
     final private TransferManagerCamera transfer = new TransferManagerCamera(camera);
+    private final TransferManagerModel transferModel = new TransferManagerModel();
+
+    private final boolean isCtrlPressed = false;
 
 
     @FXML
@@ -142,7 +152,7 @@ public class GuiController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Load Model");
 
-        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
         if (file == null) {
             return;
         }
@@ -154,7 +164,7 @@ public class GuiController {
             String fileContent = Files.readString(filePath);
             Model model = ObjReader.read(fileContent);
             meshes.put(fileName, model);
-            transformMeshes.put(fileName, model);
+            transformMeshes.put(fileName, GraphicConveyor.rotateScaleTranslate(model, model.getModelCenter()));
             tempFileName.add(fileName);
             fileNameModel.setItems(tempFileName);
 
@@ -246,6 +256,8 @@ public class GuiController {
         camera.movePosition(new Vector3C(0, -TRANSLATION, 0));
     }
 
+
+    //Управление камерой мышкой
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
         transfer.mouseCameraZoom(scrollEvent.getDeltaY());
@@ -257,6 +269,7 @@ public class GuiController {
     }
 
     @FXML
+
     public void onMouseDragged(MouseEvent event) {
         transfer.onMouseDragged(event.getX(), event.getY());
     }
@@ -288,6 +301,13 @@ public class GuiController {
         double sensitivity = newValue / 10000.0;
         transfer.setSensitivity(sensitivity);
         labelPercent.setText(String.format("%.0f%%", newValue));
+    }
+    @FXML
+    public void buttonApplyModel() {
+        //TODO обработка ошибок null-model
+        transferModel.setModel(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()));
+        Model model = transferModel.applyModel(rotateX.getText(), rotateY.getText(), rotateZ.getText(), scaleX.getText(), scaleY.getText(), scaleZ.getText(), translateX.getText(), translateY.getText(), translateZ.getText());
+        transformMeshes.put(fileNameModel.getSelectionModel().getSelectedItem(), model);
     }
 
 }

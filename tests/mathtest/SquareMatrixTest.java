@@ -119,9 +119,7 @@ public class SquareMatrixTest {
         SquareMatrix matrix = new SquareMatrix(2, data);
 
         // Проверяем, что деление на 0 вызывает исключение
-        assertThrows(IllegalArgumentException.class, () -> {
-            matrix.divide(0.0);
-        });
+        assertThrows(IllegalArgumentException.class, () -> matrix.divide(0.0));
     }
 
     @Test
@@ -157,9 +155,7 @@ public class SquareMatrixTest {
         double[] vectorData = {1.0, 2.0, 3.0};
         VectorC vector = new VectorC(3, vectorData);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            matrix.multiplied(vector);
-        });
+        assertThrows(IllegalArgumentException.class, () -> matrix.multiplied(vector));
     }
 
     @Test

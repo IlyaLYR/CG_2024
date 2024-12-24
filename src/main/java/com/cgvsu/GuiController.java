@@ -59,6 +59,12 @@ public class GuiController {
     AnchorPane anchorPane;
 
     @FXML
+    Label labelPercent;
+
+    @FXML
+    Slider sliderMouseSensitivity;
+
+    @FXML
     private Canvas canvas;
 
     @FXML
@@ -101,7 +107,15 @@ public class GuiController {
             //TODO Убрали if()
             canvas.getGraphicsContext2D().setStroke(Color.BLUE);
             RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height);
+
         });
+
+        // начальное значение чувствительности камеры
+        double initialSensitivity = 10 / 10000.0;
+        transfer.setSensitivity(initialSensitivity);
+
+        sliderMouseSensitivity.valueProperty().addListener(
+                (observable, oldValue, newValue) -> MouseSensitivity(newValue.doubleValue()));
 
         fileNameModel.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
@@ -159,19 +173,37 @@ public class GuiController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Model");
 
+
+            String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+            if (selectedModelName == null || selectedModelName.isEmpty()) {
+                showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель для сохранения!", ButtonType.CLOSE);
+                return;
+            }
+
+            // Устанавливаем имя файла по умолчанию
+            fileChooser.setInitialFileName(selectedModelName);
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ files (*.obj)", "*.obj"));
             File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+
             if (file == null) {
                 return;
             }
-            String fileName = String.valueOf(Path.of(file.getAbsolutePath()));
-            if (checkBoxTransform.isSelected()) {
-                objWriter.write(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.substring(fileName.length() - 4).equals(".obj")) ? fileName : fileName + ".obj");
-            } else {
-                objWriter.write(meshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.substring(fileName.length() - 4).equals(".obj")) ? fileName : fileName + ".obj");
+
+            // расширение(формат) файла, если его нет
+            String filePath = file.getAbsolutePath();
+            if (!filePath.endsWith(".obj")) {
+                filePath += ".obj";
             }
-            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!", ButtonType.OK);
+
+            if (checkBoxTransform.isSelected()) {
+                objWriter.write(transformMeshes.get(selectedModelName), filePath);
+            } else {
+                objWriter.write(meshes.get(selectedModelName), filePath);
+            }
+
+            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!", ButtonType.CLOSE);
         } else {
-            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Откройте модель для сохранения.", ButtonType.CLOSE);
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Добавьте модель для сохранения.", ButtonType.CLOSE);
         }
     }
 
@@ -214,11 +246,9 @@ public class GuiController {
         camera.movePosition(new Vector3C(0, -TRANSLATION, 0));
     }
 
-
-    //Управление камерой мышкой
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
-        transfer.mouseCameraZoom(scrollEvent.getDeltaY(), 0.02);
+        transfer.mouseCameraZoom(scrollEvent.getDeltaY());
     }
 
     @FXML
@@ -227,10 +257,10 @@ public class GuiController {
     }
 
     @FXML
-
     public void onMouseDragged(MouseEvent event) {
-        transfer.onMouseDragged(event.getX(), event.getY(), 0.01);
+        transfer.onMouseDragged(event.getX(), event.getY());
     }
+
 
     // Удаление моделей в Active Models по клику на модель
     private void removeModelFromTheScene(MouseEvent event) {
@@ -254,5 +284,10 @@ public class GuiController {
         contextMenu.show(fileNameModel, event.getScreenX(), event.getScreenY() + 10.5);
     }
 
+    private void MouseSensitivity(double newValue) {
+        double sensitivity = newValue / 10000.0;
+        transfer.setSensitivity(sensitivity);
+        labelPercent.setText(String.format("%.0f%%", newValue));
+    }
 
 }

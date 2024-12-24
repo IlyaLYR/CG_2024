@@ -1,6 +1,4 @@
 package com.cgvsu.objreader;
-
-import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
@@ -24,7 +22,7 @@ public class ObjReader {
         Scanner scanner = new Scanner(fileContent);
         while (scanner.hasNextLine()) {
             final String line = scanner.nextLine();
-            ArrayList<String> wordsInLine = new ArrayList<String>(Arrays.asList(line.split("\\s+")));
+            ArrayList<String> wordsInLine = new ArrayList<>(Arrays.asList(line.split("\\s+")));
             if (line.isEmpty() || line.startsWith("#")) {
                 lineInd++;
                 continue;
@@ -122,9 +120,9 @@ public class ObjReader {
     }
 
     protected static Polygon parseFace(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
-        ArrayList<Integer> onePolygonVertexIndices = new ArrayList<Integer>();
-        ArrayList<Integer> onePolygonTextureVertexIndices = new ArrayList<Integer>();
-        ArrayList<Integer> onePolygonNormalIndices = new ArrayList<Integer>();
+        ArrayList<Integer> onePolygonVertexIndices = new ArrayList<>();
+        ArrayList<Integer> onePolygonTextureVertexIndices = new ArrayList<>();
+        ArrayList<Integer> onePolygonNormalIndices = new ArrayList<>();
 
         for (String s : wordsInLineWithoutToken) {
             parseFaceWord(s, onePolygonVertexIndices, onePolygonTextureVertexIndices, onePolygonNormalIndices, lineInd);
@@ -195,9 +193,7 @@ public class ObjReader {
                         throw new ObjReaderException("Index of normal is too much.", lineInd);
                 }
 
-                default -> {
-                    throw new ObjReaderException("Invalid element size.", lineInd);
-                }
+                default -> throw new ObjReaderException("Invalid element size.", lineInd);
             }
 
         } catch(NumberFormatException e) {
@@ -225,10 +221,6 @@ public class ObjReader {
             return false;
         }
 
-        if (!onePolygonNormalIndices.isEmpty() && onePolygonNormalIndices.size() < 3) {
-            return false;
-        }
-
-        return true;
+        return onePolygonNormalIndices.isEmpty() || onePolygonNormalIndices.size() >= 3;
     }
 }

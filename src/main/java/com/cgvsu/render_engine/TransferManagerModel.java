@@ -1,43 +1,89 @@
 package com.cgvsu.render_engine;
 
 import com.cgvsu.affinetransformation.ATransformation;
+import com.cgvsu.affinetransformation.STransformation;
+import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 
-public abstract class TransferManagerModel {
+public class TransferManagerModel {
+    private Model model;
+    private double mouseX;
+    private double mouseY;
 
-    public static Model rotate(Model model, double x, double y, double z) {
+    public TransferManagerModel() {
+        mouseX = 0;
+        mouseY = 0;
+    }
+
+    public Model applyModel(String rotateX,
+                            String rotateY,
+                            String rotateZ,
+                            String scaleX,
+                            String scaleY,
+                            String scaleZ,
+                            String translateX,
+                            String translateY,
+                            String translateZ
+    ) {
+        double doubleRotateX = Math.toRadians(Float.parseFloat(rotateX));
+        double doubleRotateY = Math.toRadians(Float.parseFloat(rotateY));
+        double doubleRotateZ = Math.toRadians(Float.parseFloat(rotateZ));
+        double doubleScaleX = Float.parseFloat(scaleX);
+        double doubleScaleY = Float.parseFloat(scaleY);
+        double doubleScaleZ = Float.parseFloat(scaleZ);
+        double doubleTranslateX = Float.parseFloat(translateX);
+        double doubleTranslateY = Float.parseFloat(translateY);
+        double doubleTranslateZ = Float.parseFloat(translateZ);
+
         ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
         ATransformation transformation = builder
-                .rotateByX(Math.toRadians(x % 360))
-                .rotateByY(Math.toRadians(y % 360))
-                .rotateByZ(Math.toRadians(z % 360))
+                .translateByCoordinates(doubleTranslateX, doubleTranslateY, doubleTranslateZ)
+                .rotateByX(doubleRotateX)
+                .rotateByY(doubleRotateY)
+                .rotateByZ(doubleRotateZ)
+                .scaleByCoordinates(doubleScaleX, doubleScaleY, doubleScaleZ)
                 .build();
 
-        // Применяем трансформацию к текущей модели
         return transformation.applyTransformationToModel(model);
     }
 
-    public static Model translate(Model model, double x, double y, double z) {
-        ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
-        ATransformation transformation = builder
-                .translateByX(x)
-                .translateByY(y)
-                .translateByZ(z)
-                .build();
-
-        // Применяем трансформацию к текущей модели
-        return transformation.applyTransformationToModel(model);
+    public Model getModel() {
+        return model;
     }
 
-    public static Model scale(Model model, double x, double y, double z) {
-        ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
-        ATransformation transformation = builder
-                .scaleByX(x)
-                .scaleByY(y)
-                .scaleByZ(z)
-                .build();
-
-        // Применяем трансформацию к текущей модели
-        return transformation.applyTransformationToModel(model);
+    public void setModel(Model model) {
+        this.model = model;
     }
+
+    // Метод для фиксации положения мыши (используется при старте перетаскивания)
+    public void fixPoint(double detX, double detY) {
+        mouseX = detX;
+        mouseY = detY;
+    }
+
+
+
+    public void onMouseDragged(double x, double y, double smoothFactor) {
+        double deltaX = (x - mouseX) * smoothFactor;
+        double deltaY = (y - mouseY) * smoothFactor;
+
+        //Получаем позицию камеры и целевую точку
+        Vector3C target = model.getModelCenter();
+
+        //Перенос камеры в локальные координаты относительно target
+        ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
+        ATransformation transformationToStart = builder.translateByVector(target.multiplied(-1)).build();
+        model = transformationToStart.applyTransformationToModel(model);
+
+        //Вращаем камеру вокруг
+        model.vertices.replaceAll(vector -> STransformation.rotateTwoAngles(vector, -deltaX, -deltaY));
+        //Возвращаем камеру обратно
+        ATransformation transformationBack = new ATransformation.ATBuilder().translateByVector(target).build();
+        model = transformationBack.applyTransformationToModel(model);
+
+        mouseX = x;
+        mouseY = y;
+    }
+
+
 }

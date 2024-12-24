@@ -1,46 +1,43 @@
 package com.cgvsu;
 
+import com.cgvsu.math.typesVectors.Vector3C;
+import com.cgvsu.model.Model;
+import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.objreader.ObjReaderException;
 import com.cgvsu.objwriter.ObjWriterClass;
-import com.cgvsu.render_engine.RenderEngine;
-import com.cgvsu.render_engine.TransferManagerCamera;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
+import com.cgvsu.render_engine.*;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.io.IOException;
-import java.io.File;
 import java.util.HashMap;
 
-import com.cgvsu.model.Model;
-import com.cgvsu.objreader.ObjReader;
-import com.cgvsu.render_engine.Camera;
-import com.cgvsu.math.typesVectors.Vector3C;
 
-
+@SuppressWarnings({"rawtypes", "DuplicateExpressions"})
 public class GuiController {
 
     final private float TRANSLATION = 0.5F;
     public Button buttonSaveModel;
     public Button addModel;
-    public ListView fileNameCamera;
     public Button buttonApplyCamera;
     public Button buttonAddCamera;
     public TextField positionX;
@@ -54,6 +51,16 @@ public class GuiController {
     public ToggleButton buttonRemoveVertex;
     public ToggleButton buttonRemoveFace;
     public ToggleButton buttonTriangulation;
+    public TextField rotateX;
+    public TextField rotateY;
+    public TextField rotateZ;
+    public TextField scaleX;
+    public TextField scaleY;
+    public TextField scaleZ;
+    public TextField translateX;
+    public TextField translateY;
+    public TextField translateZ;
+    public ListView fileNameCamera;
 
     @FXML
     AnchorPane anchorPane;
@@ -74,12 +81,12 @@ public class GuiController {
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
 
     private final ObjWriterClass objWriter = new ObjWriterClass();
-    private final Camera camera = new Camera(
-            new Vector3C(0, 0, 100),
-            new Vector3C(0, 0, 0),
-            1.0F, 1, 0.01F, 100);
+    private final Camera camera = new Camera(new Vector3C(0, 0, 100), new Vector3C(0, 0, 0), 1.0F, 1, 0.01F, 100);
 
-    final private TransferManagerCamera transfer = new TransferManagerCamera(camera);
+    final private TransferManagerCamera transferCamera = new TransferManagerCamera(camera);
+    private final TransferManagerModel transferModel = new TransferManagerModel();
+
+    private final boolean isCtrlPressed = false;
 
 
     @FXML
@@ -128,7 +135,7 @@ public class GuiController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Load Model");
 
-        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
         if (file == null) {
             return;
         }
@@ -140,7 +147,7 @@ public class GuiController {
             String fileContent = Files.readString(filePath);
             Model model = ObjReader.read(fileContent);
             meshes.put(fileName, model);
-            transformMeshes.put(fileName, model);
+            transformMeshes.put(fileName, GraphicConveyor.rotateScaleTranslate(model, model.getModelCenter()));
             tempFileName.add(fileName);
             fileNameModel.setItems(tempFileName);
 
@@ -159,15 +166,15 @@ public class GuiController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Model");
 
-            File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+            File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
             if (file == null) {
                 return;
             }
             String fileName = String.valueOf(Path.of(file.getAbsolutePath()));
             if (checkBoxTransform.isSelected()) {
-                objWriter.write(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.substring(fileName.length() - 4).equals(".obj")) ? fileName : fileName + ".obj");
+                objWriter.write(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.endsWith(".obj")) ? fileName : fileName + ".obj");
             } else {
-                objWriter.write(meshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.substring(fileName.length() - 4).equals(".obj")) ? fileName : fileName + ".obj");
+                objWriter.write(meshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.endsWith(".obj")) ? fileName : fileName + ".obj");
             }
             showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!", ButtonType.OK);
         } else {
@@ -218,18 +225,18 @@ public class GuiController {
     //Управление камерой мышкой
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
-        transfer.mouseCameraZoom(scrollEvent.getDeltaY(), 0.02);
+        transferCamera.mouseCameraZoom(scrollEvent.getDeltaY(), 0.02);
     }
 
     @FXML
     public void onMousePressed(MouseEvent mouseEvent) {
-        transfer.fixPoint(mouseEvent.getX(), mouseEvent.getY());
+        transferCamera.fixPoint(mouseEvent.getX(), mouseEvent.getY());
     }
 
     @FXML
 
     public void onMouseDragged(MouseEvent event) {
-        transfer.onMouseDragged(event.getX(), event.getY(), 0.01);
+        transferCamera.onMouseDragged(event.getX(), event.getY(), 0.01);
     }
 
     // Удаление моделей в Active Models по клику на модель
@@ -254,5 +261,12 @@ public class GuiController {
         contextMenu.show(fileNameModel, event.getScreenX(), event.getScreenY() + 10.5);
     }
 
+    @FXML
+    public void buttonApplyModel() {
+        //TODO обработка ошибок null-model
+        transferModel.setModel(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()));
+        Model model = transferModel.applyModel(rotateX.getText(), rotateY.getText(), rotateZ.getText(), scaleX.getText(), scaleY.getText(), scaleZ.getText(), translateX.getText(), translateY.getText(), translateZ.getText());
+        transformMeshes.put(fileNameModel.getSelectionModel().getSelectedItem(), model);
+    }
 
 }

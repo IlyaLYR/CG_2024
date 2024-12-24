@@ -3,7 +3,6 @@ package mathtest;
 import com.cgvsu.math.types.VectorC;
 import org.junit.jupiter.api.Test;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -76,16 +75,6 @@ public class VectorCTest {
         VectorC result = vector.normalize();
         assertEquals(expectedVector, result);
     }
-
-//    @Test
-//    public void testNormalizeZeroVector() {
-//        // Вектор-столбец с нулевыми элементами
-//        double[] data = {0.0, 0.0};
-//        VectorC vector = new VectorC(2, data);
-//
-//        // Нормализация нулевого вектора должна вызвать исключение
-//        assertThrows(ArithmeticException.class, vector::normalize);
-//    }
 
     @Test
     public void testCrossProduct() {

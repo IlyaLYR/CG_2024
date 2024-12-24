@@ -1,6 +1,5 @@
-package ObjWriterTest;
+package objwritertest;
 
-import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-class ObjWriterTests {
+public class ObjWriterTest {
     private final ObjWriterClass objWriter = new ObjWriterClass();
 
     // Тест вершин
@@ -96,7 +94,7 @@ class ObjWriterTests {
         Assertions.assertEquals("f 1/7/4 2/5/6 3/4/5 6/2/3", result);
     }
 
-    // Тест записи координат в файлик
+    // Тест записи координат в файл
     @Test
     public void testWrite() throws IOException {
         Model model = new Model();
@@ -143,6 +141,5 @@ class ObjWriterTests {
 
         Assertions.assertEquals(expectedLines, fileLines);
         File file = new File(filename);
-        file.delete();
     }
 }

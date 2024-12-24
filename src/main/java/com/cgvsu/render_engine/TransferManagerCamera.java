@@ -1,5 +1,6 @@
 package com.cgvsu.render_engine;
 
+import com.cgvsu.affinetransformation.ATransformation;
 import com.cgvsu.affinetransformation.STransformation;
 import com.cgvsu.math.typesVectors.Vector3C;
 
@@ -37,10 +38,30 @@ public class TransferManagerCamera {
         double deltaX = (x - mouseX) * smoothFactor;
         double deltaY = (y - mouseY) * smoothFactor;
 
-        camera.setPosition(STransformation.rotateTwoAngles(camera.getPosition(), -deltaX, -deltaY));
+        //Получаем позицию камеры и целевую точку
+        Vector3C position = camera.getPosition();
+        Vector3C target = camera.getTarget();
+
+        //Перенос камеры в локальные координаты относительно target
+        ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
+        ATransformation transformationToTarget = builder.translateByVector(target.multiplied(-1)).build();
+        position = transformationToTarget.applyTransformationToVector(position);
+
+        //Вращаем камеру вокруг
+        position = STransformation.rotateTwoAngles(position, -deltaX, -deltaY);
+
+        //Возвращаем камеру обратно
+        ATransformation transformationBack = new ATransformation.ATBuilder().translateByVector(target).build();
+        position = transformationBack.applyTransformationToVector(position);
+
+        // Шаг 5. Устанавливаем новое положение камеры
+        camera.setPosition(position);
+
+        // Сохраняем новое положение мыши
         mouseX = x;
         mouseY = y;
     }
+
 
     public double getMouseX() {
         return mouseX;

@@ -25,12 +25,12 @@ public class RenderEngine {
 
         for (Model mesh : meshes.values()) {
             // Матрицы модели, вида и проекции
-            Matrix4D modelMatrix = rotateScaleTranslate(mesh.getModelCenter());
+//            Matrix4D modelMatrix = rotateScaleTranslate(mesh.getModelCenter());
             Matrix4D viewMatrix = camera.getViewMatrix();
             Matrix4D projectionMatrix = camera.getProjectionMatrix();
 
             // Итоговая матрица MVP
-            Matrix4D modelViewProjectionMatrix = MatrixUtils.multiplied(projectionMatrix, viewMatrix, modelMatrix);
+            Matrix4D modelViewProjectionMatrix = MatrixUtils.multiplied(projectionMatrix, viewMatrix); //была еще model matrix
 
 
             final int nPolygons = mesh.polygons.size();

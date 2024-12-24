@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="EntryPointsManager">
+    <pattern value="com.cgvsu.affinetransformation.ATransformation" method="applyTransformationToVectorList" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation.ATBuilder" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation" method="clean" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation" method="getTransformationMatrix" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation.ATBuilder" method="scaleByVector" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation.ATBuilder" method="scaleByX" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation.ATBuilder" method="scaleByY" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation.ATBuilder" method="scaleByZ" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation.ATBuilder" method="translateByX" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation.ATBuilder" method="translateByY" />
+    <pattern value="com.cgvsu.affinetransformation.ATransformation.ATBuilder" method="translateByZ" />
+    <pattern value="com.cgvsu.math.core.AbstractMatrix" />
+    <pattern value="com.cgvsu.math.core.AbstractMatrix" method="add" />
+    <pattern value="com.cgvsu.math.core.AbstractMatrix" method="multiply" />
+    <pattern value="com.cgvsu.math.core.AbstractMatrix" method="subtract" />
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="MavenProjectsManager">
     <option name="originalFiles">

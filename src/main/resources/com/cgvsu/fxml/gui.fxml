@@ -114,54 +114,54 @@
                                                                                                                         <Font size="14.0" />
                                                                                                                     </font>
                                                                                                                 </Label>
-                                                                                                                <TextField alignment="CENTER" prefHeight="34.0" prefWidth="65.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                                                                <TextField fx:id="scaleX" alignment="CENTER" prefHeight="34.0" prefWidth="65.0" text="1" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                                                     <font>
                                                                                                                         <Font size="14.0" />
                                                                                                                     </font>
                                                                                                                 </TextField>
-                                                                                                                <TextField alignment="CENTER" layoutX="75.0" layoutY="47.0" prefHeight="34.0" prefWidth="65.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                                                                                <TextField fx:id="scaleY" alignment="CENTER" layoutX="75.0" layoutY="47.0" prefHeight="34.0" prefWidth="65.0" text="1" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                                                                                                     <font>
                                                                                                                         <Font size="14.0" />
                                                                                                                     </font>
                                                                                                                 </TextField>
-                                                                                                                <TextField alignment="CENTER" layoutX="140.0" layoutY="47.0" prefHeight="34.0" prefWidth="65.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                                                                                <TextField fx:id="scaleZ" alignment="CENTER" layoutX="140.0" layoutY="47.0" prefHeight="34.0" prefWidth="65.0" text="1" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                                                                                                     <font>
                                                                                                                         <Font size="14.0" />
                                                                                                                     </font>
                                                                                                                 </TextField>
-                                                                                                                <TextField alignment="CENTER" layoutX="205.0" layoutY="47.0" prefHeight="34.0" prefWidth="65.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                                                                <TextField fx:id="rotateX" alignment="CENTER" layoutX="205.0" layoutY="47.0" prefHeight="34.0" prefWidth="65.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                                                                                     <font>
                                                                                                                         <Font size="14.0" />
                                                                                                                     </font>
                                                                                                                 </TextField>
-                                                                                                                <TextField alignment="CENTER" layoutX="75.0" layoutY="85.0" prefHeight="34.0" prefWidth="65.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                                                                                <TextField fx:id="rotateY" alignment="CENTER" layoutX="75.0" layoutY="85.0" prefHeight="34.0" prefWidth="65.0" text="0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                                                                                                     <font>
                                                                                                                         <Font size="14.0" />
                                                                                                                     </font>
                                                                                                                 </TextField>
-                                                                                                                <TextField alignment="CENTER" layoutX="140.0" layoutY="85.0" prefHeight="34.0" prefWidth="65.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                                                                                <TextField fx:id="rotateZ" alignment="CENTER" layoutX="140.0" layoutY="85.0" prefHeight="34.0" prefWidth="65.0" text="0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                                                                                                                     <font>
                                                                                                                         <Font size="14.0" />
                                                                                                                     </font>
                                                                                                                 </TextField>
-                                                                                                                <TextField alignment="CENTER" layoutX="205.0" layoutY="85.0" prefHeight="34.0" prefWidth="65.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                                                                                <TextField fx:id="translateX" alignment="CENTER" layoutX="205.0" layoutY="85.0" prefHeight="34.0" prefWidth="65.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                                                                                     <font>
                                                                                                                         <Font size="14.0" />
                                                                                                                     </font>
                                                                                                                 </TextField>
-                                                                                                                <TextField alignment="CENTER" layoutX="75.0" layoutY="123.0" prefHeight="34.0" prefWidth="65.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                                                                                <TextField fx:id="translateY" alignment="CENTER" layoutX="75.0" layoutY="123.0" prefHeight="34.0" prefWidth="65.0" text="0" GridPane.columnIndex="2" GridPane.rowIndex="3">
                                                                                                                     <font>
                                                                                                                         <Font size="14.0" />
                                                                                                                     </font>
                                                                                                                 </TextField>
-                                                                                                                <TextField alignment="CENTER" layoutX="140.0" layoutY="123.0" prefHeight="34.0" prefWidth="65.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                                                                                                <TextField fx:id="translateZ" alignment="CENTER" layoutX="140.0" layoutY="123.0" prefHeight="34.0" prefWidth="65.0" text="0" GridPane.columnIndex="3" GridPane.rowIndex="3">
                                                                                                                     <font>
                                                                                                                         <Font size="14.0" />
                                                                                                                     </font>
                                                                                                                 </TextField>
                                                                                                             </children>
                                                                                                         </GridPane>
-                                                                                                        <Button fx:id="buttonApplyModel" layoutX="14.0" layoutY="296.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="266.0" text="Применить" AnchorPane.leftAnchor="18.0">
+                                                                                                        <Button fx:id="buttonApplyModel" layoutX="14.0" layoutY="296.0" mnemonicParsing="false" onMouseClicked="#buttonApplyModel" prefHeight="39.0" prefWidth="266.0" text="Применить" AnchorPane.leftAnchor="18.0">
                                                                                                             <font>
                                                                                                                 <Font size="15.0" />
                                                                                                             </font>

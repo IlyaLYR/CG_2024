@@ -159,19 +159,37 @@ public class GuiController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Model");
 
+
+            String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+            if (selectedModelName == null || selectedModelName.isEmpty()) {
+                showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель для сохранения!", ButtonType.CLOSE);
+                return;
+            }
+
+            // Устанавливаем имя файла по умолчанию
+            fileChooser.setInitialFileName(selectedModelName);
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ files (*.obj)", "*.obj"));
             File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+
             if (file == null) {
                 return;
             }
-            String fileName = String.valueOf(Path.of(file.getAbsolutePath()));
-            if (checkBoxTransform.isSelected()) {
-                objWriter.write(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.substring(fileName.length() - 4).equals(".obj")) ? fileName : fileName + ".obj");
-            } else {
-                objWriter.write(meshes.get(fileNameModel.getSelectionModel().getSelectedItem()), (fileName.substring(fileName.length() - 4).equals(".obj")) ? fileName : fileName + ".obj");
+
+            // расширение(формат) файла, если его нет
+            String filePath = file.getAbsolutePath();
+            if (!filePath.endsWith(".obj")) {
+                filePath += ".obj";
             }
-            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!", ButtonType.OK);
+
+            if (checkBoxTransform.isSelected()) {
+                objWriter.write(transformMeshes.get(selectedModelName), filePath);
+            } else {
+                objWriter.write(meshes.get(selectedModelName), filePath);
+            }
+
+            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!", ButtonType.CLOSE);
         } else {
-            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Откройте модель для сохранения.", ButtonType.CLOSE);
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Добавьте модель для сохранения.", ButtonType.CLOSE);
         }
     }
 

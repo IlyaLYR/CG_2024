@@ -59,6 +59,12 @@ public class GuiController {
     AnchorPane anchorPane;
 
     @FXML
+    Label labelPercent;
+
+    @FXML
+    Slider sliderMouseSensitivity;
+
+    @FXML
     private Canvas canvas;
 
     @FXML
@@ -101,7 +107,15 @@ public class GuiController {
             //TODO Убрали if()
             canvas.getGraphicsContext2D().setStroke(Color.BLUE);
             RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height);
+
         });
+
+        // начальное значение чувствительности камеры
+        double initialSensitivity = 10 / 10000.0;
+        transfer.setSensitivity(initialSensitivity);
+
+        sliderMouseSensitivity.valueProperty().addListener(
+                (observable, oldValue, newValue) -> MouseSensitivity(newValue.doubleValue()));
 
         fileNameModel.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
@@ -232,11 +246,9 @@ public class GuiController {
         camera.movePosition(new Vector3C(0, -TRANSLATION, 0));
     }
 
-
-    //Управление камерой мышкой
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
-        transfer.mouseCameraZoom(scrollEvent.getDeltaY(), 0.02);
+        transfer.mouseCameraZoom(scrollEvent.getDeltaY());
     }
 
     @FXML
@@ -245,10 +257,10 @@ public class GuiController {
     }
 
     @FXML
-
     public void onMouseDragged(MouseEvent event) {
-        transfer.onMouseDragged(event.getX(), event.getY(), 0.01);
+        transfer.onMouseDragged(event.getX(), event.getY());
     }
+
 
     // Удаление моделей в Active Models по клику на модель
     private void removeModelFromTheScene(MouseEvent event) {
@@ -272,5 +284,10 @@ public class GuiController {
         contextMenu.show(fileNameModel, event.getScreenX(), event.getScreenY() + 10.5);
     }
 
+    private void MouseSensitivity(double newValue) {
+        double sensitivity = newValue / 10000.0;
+        transfer.setSensitivity(sensitivity);
+        labelPercent.setText(String.format("%.0f%%", newValue));
+    }
 
 }

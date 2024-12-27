@@ -310,10 +310,35 @@ public class GuiController {
     }
     @FXML
     public void buttonApplyModel() {
-        //TODO обработка ошибок null-model
-        transferModel.setModel(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()));
-        Model model = transferModel.applyModel(rotateX.getText(), rotateY.getText(), rotateZ.getText(), scaleX.getText(), scaleY.getText(), scaleZ.getText(), translateX.getText(), translateY.getText(), translateZ.getText());
-        transformMeshes.put(fileNameModel.getSelectionModel().getSelectedItem(), model);
+
+        String selectedModel = fileNameModel.getSelectionModel().getSelectedItem();
+
+        if (selectedModel == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель для трансформации!", ButtonType.CLOSE);
+            return;
+        }
+
+        Model model = transformMeshes.get(selectedModel);
+
+        if (model == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Модель не найдена!", ButtonType.CLOSE);
+            return;
+        }
+
+        transferModel.setModel(model);
+
+        try {
+            model = transferModel.applyModel(rotateX.getText(), rotateY.getText(),
+                    rotateZ.getText(), scaleX.getText(),
+                    scaleY.getText(), scaleZ.getText(),
+                    translateX.getText(), translateY.getText(), translateZ.getText());
+        } catch (Exception e) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR,
+                    "Ошибка применения трансформаций: " + e.getMessage(), ButtonType.CLOSE);
+            return;
+        }
+
+        transformMeshes.put(selectedModel, model);
     }
 
     @FXML

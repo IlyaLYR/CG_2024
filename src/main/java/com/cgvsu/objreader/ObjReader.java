@@ -47,7 +47,6 @@ public class ObjReader {
         return result;
     }
 
-    // throw new ObjReaderException("The token is incorrect: " + token, lineInd);
     protected static String parseNameOfModel(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
         if (wordsInLineWithoutToken.isEmpty()) {
             return "";

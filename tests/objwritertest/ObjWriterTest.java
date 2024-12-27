@@ -1,5 +1,6 @@
 package objwritertest;
 
+import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
@@ -35,7 +36,7 @@ public class ObjWriterTest {
     @ParameterizedTest
     @CsvSource({"0.0f, 2.7f", "0.3, 0", "77.341f, 0.00052f", "-1.2f, -15.0"})
     public void textureVertexToStringTest(float x, float y) {
-        String result = objWriter.textureVertexToString(new Vector3C(x, y, 0));
+        String result = objWriter.textureVertexToString(new Vector2C(x, y));
         String[] array = result.split(" ");
         Assertions.assertEquals("vt", array[0]);
         Assertions.assertEquals(x, Float.parseFloat(array[1]));
@@ -104,9 +105,9 @@ public class ObjWriterTest {
                 new Vector3C(7.0f, 8.0f, 9.0f)
         ));
         model.textureVertices = new ArrayList<>(List.of(
-                new Vector3C(0.1f, 0.2f, 0),
-                new Vector3C(0.3f, 0.4f, 0),
-                new Vector3C(0.5f, 0.6f, 0)
+                new Vector2C(0.1f, 0.2f),
+                new Vector2C(0.3f, 0.4f),
+                new Vector2C(0.5f, 0.6f)
         ));
         model.normals = new ArrayList<>(List.of(
                 new Vector3C(-1.0f, -2.0f, -3.0f),
@@ -141,5 +142,6 @@ public class ObjWriterTest {
 
         Assertions.assertEquals(expectedLines, fileLines);
         File file = new File(filename);
+        file.delete();
     }
 }

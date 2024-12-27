@@ -12,7 +12,6 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -190,21 +189,21 @@
                                                                                                             </font>
                                                                                                         </Text>
                                                                                                         <TextField fx:id="fieldWriteCoordinate" layoutX="14.0" layoutY="46.0" prefHeight="40.0" prefWidth="233.0" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="50.0" />
-                                                                                                        <ToggleButton fx:id="buttonRemoveVertex" layoutX="18.0" layoutY="110.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="233.0" text="Удалить вершины" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="100.0">
-                                                                                                            <font>
+                                                                                                          <Button fx:id="buttonRemoveVertex" layoutX="16.0" layoutY="99.0" mnemonicParsing="false" onMouseClicked="#handleRemoveVertex" prefHeight="40.0" prefWidth="233.0" text="Удалить вершины" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="102.0">
+                                                                                                             <font>
                                                                                                                 <Font size="15.0" />
-                                                                                                            </font>
-                                                                                                        </ToggleButton>
-                                                                                                        <ToggleButton fx:id="buttonRemoveFace" layoutX="18.0" layoutY="173.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="233.0" text="Удалить полигоны" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="150.0">
-                                                                                                            <font>
+                                                                                                             </font>
+                                                                                                          </Button>
+                                                                                                          <Button fx:id="buttonTriangulation" layoutX="18.0" layoutY="207.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="233.0" text="Триангулировать" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="207.0">
+                                                                                                             <font>
                                                                                                                 <Font size="15.0" />
-                                                                                                            </font>
-                                                                                                        </ToggleButton>
-                                                                                                        <ToggleButton fx:id="buttonTriangulation" layoutX="18.0" layoutY="239.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="233.0" text="Триангулировать" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="200.0">
-                                                                                                            <font>
-                                                                                                                <Font size="15.0" />
-                                                                                                            </font>
-                                                                                                        </ToggleButton>
+                                                                                                             </font>
+                                                                                                          </Button>
+                                                                              <Button fx:id="buttonRemovePoligon" layoutX="16.0" layoutY="155.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="233.0" text="Удалить полигоны" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="155.0">
+                                                                                 <font>
+                                                                                    <Font size="15.0" />
+                                                                                 </font>
+                                                                              </Button>
                                                                                                     </children>
                                                                                                 </AnchorPane>
                                                                                             </content>

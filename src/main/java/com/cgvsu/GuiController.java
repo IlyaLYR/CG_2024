@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.deleteVertexAndPoligon.DeleteVertex;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
@@ -23,14 +24,15 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.cgvsu.render_engine.Camera;
 
@@ -51,10 +53,11 @@ public class GuiController {
     public TextField targetY;
     public TextField targetZ;
     public Button buttonApplyModel;
+    @FXML
     public TextField fieldWriteCoordinate;
-    public ToggleButton buttonRemoveVertex;
-    public ToggleButton buttonRemoveFace;
-    public ToggleButton buttonTriangulation;
+    @FXML
+    public Button buttonRemoveVertex;
+    public Button buttonTriangulation;
     public TextField rotateX;
     public TextField rotateY;
     public TextField rotateZ;
@@ -121,7 +124,7 @@ public class GuiController {
         });
 
         // начальное значение чувствительности камеры
-        double initialSensitivity = 10 / 10000.0;
+        double initialSensitivity = 30 / 10000.0;
         transfer.setSensitivity(initialSensitivity);
 
         sliderMouseSensitivity.valueProperty().addListener(
@@ -133,6 +136,9 @@ public class GuiController {
                 removeModelFromTheScene(event);
             }
         });
+
+        // Удаление вершин
+        buttonRemoveVertex.setOnAction(event -> handleRemoveVertex());
 
 
         timeline.getKeyFrames().add(frame);
@@ -309,5 +315,54 @@ public class GuiController {
         Model model = transferModel.applyModel(rotateX.getText(), rotateY.getText(), rotateZ.getText(), scaleX.getText(), scaleY.getText(), scaleZ.getText(), translateX.getText(), translateY.getText(), translateZ.getText());
         transformMeshes.put(fileNameModel.getSelectionModel().getSelectedItem(), model);
     }
+
+    @FXML
+    public void handleRemoveVertex() {
+        String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+        if (selectedModelName == null || selectedModelName.isEmpty()) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель для удаления вершин!", ButtonType.CLOSE);
+            return;
+        }
+
+        String coordinateInput = fieldWriteCoordinate.getText();
+        if (coordinateInput == null || coordinateInput.isEmpty()) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Введите координаты вершин для удаления!", ButtonType.CLOSE);
+            return;
+        }
+
+        List<Integer> verticesToRemoveIndices = parseVerticesInput(coordinateInput);
+        if (verticesToRemoveIndices.isEmpty()) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Координаты введены некорректно!", ButtonType.CLOSE);
+            return;
+        }
+
+        Model selectedModel = transformMeshes.get(selectedModelName);
+        if (selectedModel == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Модель не найдена!", ButtonType.CLOSE);
+            return;
+        }
+
+        boolean removeNormals = true;
+        boolean removeTexVertices = true;
+
+        Model updatedModel = DeleteVertex.changeModel(selectedModel, verticesToRemoveIndices, removeNormals, removeTexVertices);
+        transformMeshes.put(selectedModelName, updatedModel);
+
+        showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Вершины успешно удалены!", ButtonType.CLOSE);
+        fieldWriteCoordinate.clear();
+    }
+
+    private List<Integer> parseVerticesInput(String input) {
+        List<Integer> indices = new ArrayList<>();
+        try {
+            String[] parts = input.split(",");
+            for (String part : parts) {
+                indices.add(Integer.parseInt(part.trim()));
+            }
+        } catch (NumberFormatException e) {
+        }
+        return indices;
+    }
+
 
 }

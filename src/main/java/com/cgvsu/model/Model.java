@@ -2,6 +2,7 @@ package com.cgvsu.model;
 
 
 
+import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 
 import java.util.*;
@@ -9,16 +10,19 @@ import java.util.*;
 public class Model {
 
     public String nameOfModel;
+
     public ArrayList<Vector3C> vertices = new ArrayList<>();
-    public ArrayList<Vector3C> textureVertices = new ArrayList<>();
+    public ArrayList<Vector2C> textureVertices = new ArrayList<>();
+
     public ArrayList<Vector3C> normals = new ArrayList<>();
+
     public ArrayList<Polygon> polygons = new ArrayList<>();
 
     public ArrayList<Vector3C> getVertices() {
         return vertices;
     }
 
-    public ArrayList<Vector3C> getTextureVertices() {
+    public ArrayList<Vector2C> getTextureVertices() {
         return textureVertices;
     }
 
@@ -51,4 +55,21 @@ public class Model {
     public void setNameOfModel(String nameOfModel) {
         this.nameOfModel = nameOfModel;
     }
+
+    public void setVertices(ArrayList<Vector3C> vertices) {
+        this.vertices = vertices;
+    }
+
+    public void setTextureVertices(ArrayList<Vector2C> textureVertices) {
+        this.textureVertices = textureVertices;
+    }
+
+    public void setNormals(ArrayList<Vector3C> normals) {
+        this.normals = normals;
+    }
+
+    public void setPolygons(ArrayList<Polygon> polygons) {
+        this.polygons = polygons;
+    }
+
 }

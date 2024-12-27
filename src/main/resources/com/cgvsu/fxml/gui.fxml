@@ -26,7 +26,7 @@
             <items>
                 <ScrollPane prefHeight="200.0" prefWidth="200.0">
                     <content>
-                        <Canvas fx:id="canvas" height="967.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onScroll="#mouseCameraZoom" width="809.0" />
+                        <Canvas fx:id="canvas" height="981.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onScroll="#mouseCameraZoom" width="1600.0" />
                     </content>
                 </ScrollPane>
                 <ScrollPane prefHeight="994.0" prefWidth="803.0">

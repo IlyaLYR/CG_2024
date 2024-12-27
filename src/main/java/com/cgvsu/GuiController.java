@@ -367,10 +367,7 @@ public class GuiController {
             return;
         }
 
-        boolean removeNormals = true;
-        boolean removeTexVertices = true;
-
-        Model updatedModel = DeleteVertex.changeModel(selectedModel, verticesToRemoveIndices, removeNormals, removeTexVertices);
+        Model updatedModel = DeleteVertex.changeModel(selectedModel, verticesToRemoveIndices);
         transformMeshes.put(selectedModelName, updatedModel);
 
         showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Вершины успешно удалены!", ButtonType.CLOSE);
@@ -388,6 +385,5 @@ public class GuiController {
         }
         return indices;
     }
-
 
 }

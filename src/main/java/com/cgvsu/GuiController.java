@@ -92,7 +92,8 @@ public class GuiController {
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
 
     private final ObjWriterClass objWriter = new ObjWriterClass();
-    private final Camera camera = new Camera(new Vector3C(0, 0, 100), new Vector3C(0, 0, 0), 1.0F, 1, 0.01F, 100);
+    private final Camera camera = new Camera(new Vector3C(0, 0, 100),
+            new Vector3C(0, 0, 0), 1.0F, 1, 0.01F, 100);
 
     final private TransferManagerCamera transfer = new TransferManagerCamera(camera);
     private final TransferManagerModel transferModel = new TransferManagerModel();
@@ -242,6 +243,7 @@ public class GuiController {
         transformMeshes.clear();
         tempFileName.clear();
         fileNameModel.setItems(tempFileName);
+        resetItemInGrid();
     }
 
     @FXML
@@ -309,6 +311,7 @@ public class GuiController {
             meshes.remove(selectedItem);
             tempFileName.remove(selectedItem);
             fileNameModel.setItems(tempFileName);
+            resetItemInGrid();
         });
 
         contextMenu.getItems().setAll(deleteItem);
@@ -327,7 +330,8 @@ public class GuiController {
         String selectedModel = fileNameModel.getSelectionModel().getSelectedItem();
 
         if (selectedModel == null) {
-            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель для трансформации!", ButtonType.CLOSE);
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING,
+                    "Выберите модель для трансформации!", ButtonType.CLOSE);
             return;
         }
 
@@ -335,6 +339,12 @@ public class GuiController {
 
         if (model == null) {
             showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Модель не найдена!", ButtonType.CLOSE);
+            return;
+        }
+
+        if (!checkScaleValues()) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR,
+                    "Значения масштабирования не могут быть меньше 1!", ButtonType.CLOSE);
             return;
         }
 
@@ -352,6 +362,7 @@ public class GuiController {
         }
 
         transformMeshes.put(selectedModel, model);
+
     }
 
     @FXML
@@ -405,4 +416,28 @@ public class GuiController {
         anchorPane.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource(theme)).toExternalForm());
     }
 
+    private void resetItemInGrid() {
+        scaleX.clear();
+        scaleY.clear();
+        scaleZ.clear();
+        rotateX.clear();
+        rotateY.clear();
+        rotateZ.clear();
+        translateX.clear();
+        translateY.clear();
+        translateZ.clear();
+    }
+
+    private boolean checkScaleValues() {
+        try {
+            double scaleXValue = Double.parseDouble(scaleX.getText());
+            double scaleYValue = Double.parseDouble(scaleY.getText());
+            double scaleZValue = Double.parseDouble(scaleZ.getText());
+
+            return scaleXValue >= 1 && scaleYValue >= 1 && scaleZValue >= 1;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+    }
 }

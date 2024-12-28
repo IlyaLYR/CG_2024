@@ -17,13 +17,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -33,11 +33,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
-import com.cgvsu.render_engine.Camera;
 
-
-@SuppressWarnings({"rawtypes", "DuplicateExpressions"})
+@SuppressWarnings({"rawtypes"})
 public class GuiController {
 
     final private float TRANSLATION = 0.5F;
@@ -88,8 +87,6 @@ public class GuiController {
 
     private ContextMenu contextMenu;
 
-    private ThemeSwitch themeSwitch;
-
     @FXML
     private ListView<String> fileNameModel;
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
@@ -99,6 +96,7 @@ public class GuiController {
 
     final private TransferManagerCamera transfer = new TransferManagerCamera(camera);
     private final TransferManagerModel transferModel = new TransferManagerModel();
+    private final double DEFAULT_SENSITIVITY = 30.0;
 
     private final boolean isCtrlPressed = false;
 
@@ -124,7 +122,7 @@ public class GuiController {
 
         });
 
-        themeSwitch = new ThemeSwitch();
+        ThemeSwitch themeSwitch = new ThemeSwitch();
 
         themeSwitch.setLayoutX(20);
         themeSwitch.setLayoutY(20);
@@ -134,11 +132,15 @@ public class GuiController {
         themeSwitch.lightButton.setOnAction(event -> setTheme(false)); // Светлая тема
 
         // начальное значение чувствительности камеры
-        double initialSensitivity = 30 / 10000.0;
+        double initialSensitivity = DEFAULT_SENSITIVITY / 10000.0;
         transfer.setSensitivity(initialSensitivity);
+        labelPercent.setText(String.format("%.0f%%", DEFAULT_SENSITIVITY));
+        sliderMouseSensitivity.setValue(DEFAULT_SENSITIVITY);
 
         sliderMouseSensitivity.valueProperty().addListener(
-                (observable, oldValue, newValue) -> MouseSensitivity(newValue.doubleValue()));
+                (observable, oldValue, newValue) -> {
+                    MouseSensitivity(newValue.doubleValue());
+                });
 
         fileNameModel.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
@@ -318,6 +320,7 @@ public class GuiController {
         transfer.setSensitivity(sensitivity);
         labelPercent.setText(String.format("%.0f%%", newValue));
     }
+
     @FXML
     public void buttonApplyModel() {
 
@@ -391,7 +394,7 @@ public class GuiController {
             for (String part : parts) {
                 indices.add(Integer.parseInt(part.trim()));
             }
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
         }
         return indices;
     }
@@ -399,7 +402,7 @@ public class GuiController {
     private void setTheme(boolean isDarkTheme) {
         anchorPane.getScene().getStylesheets().clear();
         String theme = isDarkTheme ? "/dark-theme.css" : "/light-theme.css";
-        anchorPane.getScene().getStylesheets().add(getClass().getResource(theme).toExternalForm());
+        anchorPane.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource(theme)).toExternalForm());
     }
 
 }

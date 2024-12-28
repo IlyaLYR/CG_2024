@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Task_3 (Matrix)/MatrixLibrary.iml" filepath="$PROJECT_DIR$/Task_3 (Matrix)/MatrixLibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Task_1 (Picture)/.idea/Task_1 (Picture).iml" filepath="$PROJECT_DIR$/Task_1 (Picture)/.idea/Task_1 (Picture).iml" />
+      <module fileurl="file://$PROJECT_DIR$/Task_2 (RasterizationFXApp)/Task_2.iml" filepath="$PROJECT_DIR$/Task_2 (RasterizationFXApp)/Task_2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Task_4 (CG)/Task_4.iml" filepath="$PROJECT_DIR$/Task_4 (CG)/Task_4.iml" />
+    </modules>
+  </component>
+</project>

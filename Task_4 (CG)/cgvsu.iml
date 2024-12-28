@@ -5,7 +5,6 @@
       <sourceFolder url="file://$MODULE_DIR$/3DModels" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/.idea/libraries" />
     </content>
   </component>
 </module>

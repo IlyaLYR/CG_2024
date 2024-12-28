@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Task_4" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.cgvsu.Main" />
-    <module name="Task_4" />
+    <module name="cgvsu" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

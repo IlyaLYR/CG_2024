@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Tests_1" type="JUnit" factoryName="JUnit">
-    <module name="Task_2" />
+  <configuration default="false" name="TestsTask4" type="JUnit" factoryName="JUnit">
+    <module name="cgvsu" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="directory" />
-    <dir value="$PROJECT_DIR$/Task_2 (RasterizationFXApp)/src/test" />
+    <dir value="$PROJECT_DIR$/Task_4 (CG)/tests" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

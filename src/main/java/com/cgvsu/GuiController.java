@@ -88,6 +88,8 @@ public class GuiController {
 
     private ContextMenu contextMenu;
 
+    private ThemeSwitch themeSwitch;
+
     @FXML
     private ListView<String> fileNameModel;
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
@@ -117,11 +119,19 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-            //TODO Убрали if()
             canvas.getGraphicsContext2D().setStroke(Color.BLUE);
             RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height);
 
         });
+
+        themeSwitch = new ThemeSwitch();
+
+        themeSwitch.setLayoutX(20);
+        themeSwitch.setLayoutY(20);
+
+        anchorPane.getChildren().add(themeSwitch);
+        themeSwitch.darkButton.setOnAction(event -> setTheme(true)); // Темная тема
+        themeSwitch.lightButton.setOnAction(event -> setTheme(false)); // Светлая тема
 
         // начальное значение чувствительности камеры
         double initialSensitivity = 30 / 10000.0;
@@ -384,6 +394,12 @@ public class GuiController {
         } catch (NumberFormatException e) {
         }
         return indices;
+    }
+
+    private void setTheme(boolean isDarkTheme) {
+        anchorPane.getScene().getStylesheets().clear();
+        String theme = isDarkTheme ? "/dark-theme.css" : "/light-theme.css";
+        anchorPane.getScene().getStylesheets().add(getClass().getResource(theme).toExternalForm());
     }
 
 }

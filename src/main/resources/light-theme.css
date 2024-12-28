@@ -1,0 +1,21 @@
+.root {
+    -fx-background-color: #ffffff;
+}
+
+.button {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #000000;
+    -fx-background-radius: 5;
+}
+
+.AnchorPane {
+    -fx-background-color: #ffffff;  /* Белый фон для AnchorPane */
+}
+
+.titled-pane {
+    -fx-background-color: #ffffff;  /* Белый фон для AnchorPane */
+}
+
+.tab-pane {
+    -fx-background-color: #ffffff;  /* Белый фон для AnchorPane */
+}

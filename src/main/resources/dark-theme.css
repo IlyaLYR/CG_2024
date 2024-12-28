@@ -1,7 +1,7 @@
 /* Общий фон приложения */
 .root {
     -fx-background-color: #2b2b2b; /* Тёмно-серый фон */
-    -fx-text-fill: #d0d0d0;        /* Светлый текст */
+    -fx-text-fill: #ffffff;        /* Светлый текст */
 }
 
 /* Стили кнопок */
@@ -16,7 +16,7 @@
 }
 
 /* Стили AnchorPane */
-.anchor-pane {
+.AnchorPane {
     -fx-background-color: #2b2b2b; /* Тёмно-серый фон */
 }
 
@@ -89,6 +89,6 @@
 
 /* Стили Text в TitledPane -> TabPane */
 .titled-pane .ScrollPane. tab-pane .text {
-    -fx-fill: #d0d0d0; /* Цвет текста внутри TabPane */
+    -fx-text-fill: #ffffff; /* Цвет текста внутри TabPane */
 }
 

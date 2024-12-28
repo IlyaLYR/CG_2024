@@ -11,7 +11,7 @@ public class RasterizationApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(RasterizationApplication.class.getResource("mainwindow.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 2000, 2000);
+        Scene scene = new Scene(fxmlLoader.load(), 1500, 700);
         stage.setTitle("Rasterization App");
         stage.setScene(scene);
         stage.show();

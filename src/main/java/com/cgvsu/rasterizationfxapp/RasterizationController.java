@@ -1,5 +1,10 @@
 package com.cgvsu.rasterizationfxapp;
 
+import io.github.shimeoki.jfx.rasterization.geom.Point2f;
+import io.github.shimeoki.jfx.rasterization.triangle.DDATriangler;
+import io.github.shimeoki.jfx.rasterization.triangle.Triangler;
+import io.github.shimeoki.jfx.rasterization.triangle.geom.Polygon3;
+import io.github.shimeoki.jfx.rasterization.triangle.geom.Triangle;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -34,8 +39,8 @@ public class RasterizationController {
 
 
         Rasterization.fillOval(canvas.getGraphicsContext2D(), 700, 200, 50, 30,
-                new Color[]{Color.RED, Color.BLUE, Color.GREEN},
-                new float[]{0.2f,0.5f, 0.8f});
+                new Color[]{Color.RED, Color.BLUE, Color.YELLOW},
+                new float[]{0.1f,0.5f, 0.9f});
     }
 
     public void test1(final GraphicsContext graphicsContext, int x, int y, int n, int l) {

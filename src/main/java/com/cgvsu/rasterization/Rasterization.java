@@ -4,7 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
-import java.awt.*;
 
 public class Rasterization {
 
@@ -252,17 +251,16 @@ public class Rasterization {
             double max = (a * b) / Math.sqrt(a * a * Math.pow(y / dist, 2) + b * b * Math.pow((i - x0) / dist, 2));
             double fraction = dist / max;
 
-            // Проверяем интервал, в который попадает fraction, и используем соответствующие цвета
-            Color color = colors[colors.length - 1]; // Цвет по умолчанию, если fraction выходит за пределы
+
+            Color color = colors[colors.length - 1];
 
 
             for (int j = 1; j < interval.length; j++) {
                 if (fraction <= interval[j]) {
-                    // Проверка на равные интервалы, чтобы избежать переходов
                     if (interval[j] == interval[j - 1]) {
                         color = colors[j - 1];
                     } else {
-                        // Расчет нормализованной доли для текущего интервала
+                        // Расчет доли для текущего интервала
                         double distInInterval = fraction - interval[j - 1];
                         double maxInInterval = interval[j] - interval[j - 1];
                         double normalizedFraction = distInInterval / maxInInterval;

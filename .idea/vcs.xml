@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$/Task_1 (Picture)" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Task_2 (RasterizationFXApp)" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Task_3 (Matrix)" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Task_4 (CG)" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
 </project>

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"ru.cs.vsu.cg.matrix"},{"l":"ru.cs.vsu.cg.matrix.core"},{"l":"ru.cs.vsu.cg.matrix.types"},{"l":"ru.cs.vsu.cg.matrix.typesMatrix"},{"l":"ru.cs.vsu.cg.matrix.typesVectors"}];updateSearchResults();

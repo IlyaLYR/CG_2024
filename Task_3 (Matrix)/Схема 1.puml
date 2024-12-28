@@ -1,0 +1,280 @@
+@startuml
+class Matrix2D {
++ <<Create>> Matrix2D(double[][])
++ <<Create>> Matrix2D(double[])
++ <<Create>> Matrix2D()
++ <<Create>> Matrix2D(boolean)
+# Matrix2D newMatrix(SquareMatrix)
+}
+
+abstract class VectorWrapperR {
+- VectorR vector
++ <<Create>> VectorWrapperR(int)
++ <<Create>> VectorWrapperR(int,double[])
++ double[] getBase()
++ int getRows()
++ int getCols()
+# VectorR getVector()
+# void setVector(VectorR)
++ double get(int,int)
++ void set(int,int,double)
++ {abstract}T newMatrix(VectorR)
++ void add(T)
++ T added(T)
++ void subtract(T)
++ T subtracted(T)
++ void multiply(double)
++ T multiplied(double)
++ void divide(double)
++ T divided(double)
++ double getLength()
++ T normalize()
++ void print()
++ String toString()
+}
+
+
+class SquareMatrix {
++ <<Create>> SquareMatrix(int,double[])
++ <<Create>> SquareMatrix(int,double[][])
++ <<Create>> SquareMatrix(int)
++ <<Create>> SquareMatrix(int,boolean)
+# <<Create>> SquareMatrix(Matrix)
++ void transpose()
++ SquareMatrix transposed()
++ void pow(int)
++ SquareMatrix pows(int)
++ void multiply(SquareMatrix)
++ SquareMatrix multiplied(SquareMatrix)
++ VectorC multiplied(VectorC)
++ RecMatrix multiplied(RecMatrix)
+- void validateSquare(int,int)
+# SquareMatrix newMatrix(Matrix)
+}
+
+class RecMatrix {
++ <<Create>> RecMatrix(int,int)
+# <<Create>> RecMatrix(Matrix)
++ <<Create>> RecMatrix(int,int,double[])
++ <<Create>> RecMatrix(int,int,double[][])
+- void validateNonSquare(int,int)
++ void transpose()
++ RecMatrix transposed()
++ void multiply(RecMatrix)
++ RecMatrix multiplied(RecMatrix)
++ RecMatrix multiplied(SquareMatrix)
++ VectorC multiplied(VectorC)
+# RecMatrix newMatrix(Matrix)
+}
+
+abstract class VectorWrapperC {
+- VectorC vector
++ <<Create>> VectorWrapperC(int)
++ <<Create>> VectorWrapperC(int,double[])
++ double[] getBase()
++ int getRows()
++ int getCols()
+# VectorC getVector()
+# void setVector(VectorC)
++ double get(int,int)
++ void set(int,int,double)
++ {abstract}T newMatrix(VectorC)
++ void add(T)
++ T added(T)
++ void subtract(T)
++ T subtracted(T)
++ void multiply(double)
++ T multiplied(double)
++ void divide(double)
++ T divided(double)
++ double getLength()
++ T normalize()
++ T crossProduct(T)
++ void print()
++ String toString()
+}
+
+
+abstract class MatrixWrapper {
+~ SquareMatrix matrix
++ <<Create>> MatrixWrapper(int,double[])
++ <<Create>> MatrixWrapper(int,double[][])
++ <<Create>> MatrixWrapper(int)
++ <<Create>> MatrixWrapper(int,boolean)
++ double[] getBase()
++ int getRows()
++ int getCols()
+# SquareMatrix getMatrix()
+# void setMatrix(SquareMatrix)
++ double get(int,int)
++ void set(int,int,double)
++ void print()
+# {abstract}T newMatrix(SquareMatrix)
++ void add(T)
++ T added(T)
++ void subtract(T)
++ T subtracted(T)
++ void multiply(double)
++ T multiplied(double)
++ void divide(double)
++ T divided(double)
++ String toString()
++ void transpose()
++ T transposed()
++ T pows(int)
++ void pow(int)
++ void multiply(T)
++ T multiplied(T)
++ E multiplied(E)
+}
+
+
+class VectorC {
++ <<Create>> VectorC(int)
++ <<Create>> VectorC(int,double[])
+# <<Create>> VectorC(Matrix)
++ RecMatrix multiplied(VectorR)
++ VectorC normalize()
++ double getLength()
++ VectorC crossProduct(VectorC)
+- void validateColumnVector(int)
+# VectorC newMatrix(Matrix)
+}
+
+class Vector2C {
++ <<Create>> Vector2C()
++ <<Create>> Vector2C(double[])
++ Vector2C newMatrix(VectorC)
+}
+
+class Vector3C {
++ <<Create>> Vector3C()
++ <<Create>> Vector3C(double[])
++ Vector3C newMatrix(VectorC)
+}
+
+class Main {
++ {static} void main(String[])
+}
+
+abstract class AbstractMatrix {
+# Matrix matrix
++ <<Create>> AbstractMatrix(int,int)
++ <<Create>> AbstractMatrix(int,int,double[])
++ <<Create>> AbstractMatrix(int,int,double[][])
++ <<Create>> AbstractMatrix(int,int,boolean)
++ double[] getBase()
++ int getRows()
++ int getCols()
+# Matrix getMatrix()
+# void setMatrix(Matrix)
++ double get(int,int)
++ void set(int,int,double)
++ void print()
+# {abstract}T newMatrix(Matrix)
++ void add(T)
++ T added(T)
++ void subtract(T)
++ T subtracted(T)
++ void multiply(double)
++ T multiplied(double)
++ void divide(double)
++ T divided(double)
++ String toString()
++ boolean equals(Object)
++ int hashCode()
+}
+
+
+class AbstractMatrix$Matrix {
+- int rows
+- int cols
+- double[] base
++ <<Create>> Matrix(int,int,double[])
++ <<Create>> Matrix(int,int,double[][])
++ <<Create>> Matrix(int,int)
++ <<Create>> Matrix(int,int,boolean)
++ void initialize(int,int,double[])
++ boolean equals(Object)
++ int hashCode()
++ String toString()
++ double get(int,int)
++ void set(int,int,double)
+- void validateIndex(int,int)
++ int getRows()
++ int getCols()
++ double[] getBase()
+- void setRows(int)
+- void setCols(int)
+- void setBase(double[])
++ void print()
++ Matrix transposed()
++ Matrix multiplied(Matrix)
++ Matrix multiplied(double)
++ Matrix added(Matrix)
++ Matrix subtracted(Matrix)
++ Matrix divided(double)
++ Matrix createUnitMatrix()
+- {static} double[] unwrap(double[][])
++ Matrix pows(int)
++ double getLength()
++ Matrix crossProduct(Matrix)
++ Matrix normalize()
+}
+
+
+class MatrixUtils {
++ {static} double dotProduct(T,T,double)
++ {static} T add(T)
++ {static} T multiplied(T)
+}
+
+class VectorR {
++ <<Create>> VectorR(int)
++ <<Create>> VectorR(int,double[])
+# <<Create>> VectorR(Matrix)
++ VectorR multiplied(SquareMatrix)
++ VectorR multiplied(RecMatrix)
++ double multiplied(VectorC)
++ VectorR normalize()
++ double getLength()
+- void validateRowVector(int)
+# VectorR newMatrix(Matrix)
+}
+
+class Matrix4D {
++ <<Create>> Matrix4D(double[][])
++ <<Create>> Matrix4D(double[])
++ <<Create>> Matrix4D()
++ <<Create>> Matrix4D(boolean)
+# Matrix4D newMatrix(SquareMatrix)
+}
+
+class Vector4C {
++ <<Create>> Vector4C()
++ <<Create>> Vector4C(double[])
++ Vector4C newMatrix(VectorC)
+}
+
+class Matrix3D {
++ <<Create>> Matrix3D(double[][])
++ <<Create>> Matrix3D(double[])
++ <<Create>> Matrix3D()
++ <<Create>> Matrix3D(boolean)
+# Matrix3D newMatrix(SquareMatrix)
+}
+
+
+
+MatrixWrapper <|-- Matrix2D
+AbstractMatrix <|-- SquareMatrix
+AbstractMatrix <|-- RecMatrix
+AbstractMatrix <|-- VectorC
+VectorWrapperC <|-- Vector2C
+VectorWrapperC <|-- Vector3C
+AbstractMatrix +.. AbstractMatrix$Matrix
+AbstractMatrix <|-- VectorR
+MatrixWrapper <|-- Matrix4D
+VectorWrapperC <|-- Vector4C
+MatrixWrapper <|-- Matrix3D
+@enduml

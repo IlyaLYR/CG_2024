@@ -33,6 +33,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import com.cgvsu.render_engine.Camera;
 
@@ -399,7 +400,7 @@ public class GuiController {
     private void setTheme(boolean isDarkTheme) {
         anchorPane.getScene().getStylesheets().clear();
         String theme = isDarkTheme ? "/dark-theme.css" : "/light-theme.css";
-        anchorPane.getScene().getStylesheets().add(getClass().getResource(theme).toExternalForm());
+        anchorPane.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource(theme)).toExternalForm());
     }
 
 }

@@ -1,4 +1,5 @@
 package com.cgvsu.objreader;
+import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
@@ -46,7 +47,6 @@ public class ObjReader {
         return result;
     }
 
-    // throw new ObjReaderException("The token is incorrect: " + token, lineInd);
     protected static String parseNameOfModel(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
         if (wordsInLineWithoutToken.isEmpty()) {
             return "";
@@ -75,25 +75,24 @@ public class ObjReader {
         }
     }
 
-    protected static Vector3C parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
+    protected static Vector2C parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
         if (wordsInLineWithoutToken.size() > 3) {
             throw new ObjReaderException("Too many texture vertex arguments.", lineInd);
         }
         try {
-            return new Vector3C(
+            return new Vector2C(
                     Float.parseFloat(wordsInLineWithoutToken.get(0)),
-                    Float.parseFloat(wordsInLineWithoutToken.get(1)),
-                    Float.parseFloat(wordsInLineWithoutToken.get(2)));
+                    Float.parseFloat(wordsInLineWithoutToken.get(1)));
 
         } catch (NumberFormatException e) {
             throw new ObjReaderException("Failed to parse float value.", lineInd);
 
         } catch (IndexOutOfBoundsException e) {
             try {
-                return new Vector3C(
+                return new Vector2C(
                         Float.parseFloat(wordsInLineWithoutToken.get(0)),
-                        Float.parseFloat(wordsInLineWithoutToken.get(1)),
-                        0);
+                        Float.parseFloat(wordsInLineWithoutToken.get(1)));
+
             } catch (IndexOutOfBoundsException e1) {
                 throw new ObjReaderException("Too few texture vertex arguments.", lineInd);
             }

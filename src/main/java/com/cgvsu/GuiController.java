@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.deleteVertexAndPoligon.DeleteVertex;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
@@ -23,14 +24,15 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.cgvsu.render_engine.Camera;
 
@@ -51,10 +53,11 @@ public class GuiController {
     public TextField targetY;
     public TextField targetZ;
     public Button buttonApplyModel;
+    @FXML
     public TextField fieldWriteCoordinate;
-    public ToggleButton buttonRemoveVertex;
-    public ToggleButton buttonRemoveFace;
-    public ToggleButton buttonTriangulation;
+    @FXML
+    public Button buttonRemoveVertex;
+    public Button buttonTriangulation;
     public TextField rotateX;
     public TextField rotateY;
     public TextField rotateZ;
@@ -85,6 +88,8 @@ public class GuiController {
 
     private ContextMenu contextMenu;
 
+    private ThemeSwitch themeSwitch;
+
     @FXML
     private ListView<String> fileNameModel;
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
@@ -114,14 +119,22 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-            //TODO Убрали if()
             canvas.getGraphicsContext2D().setStroke(Color.BLUE);
             RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height);
 
         });
 
+        themeSwitch = new ThemeSwitch();
+
+        themeSwitch.setLayoutX(20);
+        themeSwitch.setLayoutY(20);
+
+        anchorPane.getChildren().add(themeSwitch);
+        themeSwitch.darkButton.setOnAction(event -> setTheme(true)); // Темная тема
+        themeSwitch.lightButton.setOnAction(event -> setTheme(false)); // Светлая тема
+
         // начальное значение чувствительности камеры
-        double initialSensitivity = 10 / 10000.0;
+        double initialSensitivity = 30 / 10000.0;
         transfer.setSensitivity(initialSensitivity);
 
         sliderMouseSensitivity.valueProperty().addListener(
@@ -133,6 +146,9 @@ public class GuiController {
                 removeModelFromTheScene(event);
             }
         });
+
+        // Удаление вершин
+        buttonRemoveVertex.setOnAction(event -> handleRemoveVertex());
 
 
         timeline.getKeyFrames().add(frame);
@@ -304,10 +320,86 @@ public class GuiController {
     }
     @FXML
     public void buttonApplyModel() {
-        //TODO обработка ошибок null-model
-        transferModel.setModel(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()));
-        Model model = transferModel.applyModel(rotateX.getText(), rotateY.getText(), rotateZ.getText(), scaleX.getText(), scaleY.getText(), scaleZ.getText(), translateX.getText(), translateY.getText(), translateZ.getText());
-        transformMeshes.put(fileNameModel.getSelectionModel().getSelectedItem(), model);
+
+        String selectedModel = fileNameModel.getSelectionModel().getSelectedItem();
+
+        if (selectedModel == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель для трансформации!", ButtonType.CLOSE);
+            return;
+        }
+
+        Model model = transformMeshes.get(selectedModel);
+
+        if (model == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Модель не найдена!", ButtonType.CLOSE);
+            return;
+        }
+
+        transferModel.setModel(model);
+
+        try {
+            model = transferModel.applyModel(rotateX.getText(), rotateY.getText(),
+                    rotateZ.getText(), scaleX.getText(),
+                    scaleY.getText(), scaleZ.getText(),
+                    translateX.getText(), translateY.getText(), translateZ.getText());
+        } catch (Exception e) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR,
+                    "Ошибка применения трансформаций: " + e.getMessage(), ButtonType.CLOSE);
+            return;
+        }
+
+        transformMeshes.put(selectedModel, model);
+    }
+
+    @FXML
+    public void handleRemoveVertex() {
+        String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+        if (selectedModelName == null || selectedModelName.isEmpty()) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель для удаления вершин!", ButtonType.CLOSE);
+            return;
+        }
+
+        String coordinateInput = fieldWriteCoordinate.getText();
+        if (coordinateInput == null || coordinateInput.isEmpty()) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Введите координаты вершин для удаления!", ButtonType.CLOSE);
+            return;
+        }
+
+        List<Integer> verticesToRemoveIndices = parseVerticesInput(coordinateInput);
+        if (verticesToRemoveIndices.isEmpty()) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Координаты введены некорректно!", ButtonType.CLOSE);
+            return;
+        }
+
+        Model selectedModel = transformMeshes.get(selectedModelName);
+        if (selectedModel == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Модель не найдена!", ButtonType.CLOSE);
+            return;
+        }
+
+        Model updatedModel = DeleteVertex.changeModel(selectedModel, verticesToRemoveIndices);
+        transformMeshes.put(selectedModelName, updatedModel);
+
+        showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Вершины успешно удалены!", ButtonType.CLOSE);
+        fieldWriteCoordinate.clear();
+    }
+
+    private List<Integer> parseVerticesInput(String input) {
+        List<Integer> indices = new ArrayList<>();
+        try {
+            String[] parts = input.split(",");
+            for (String part : parts) {
+                indices.add(Integer.parseInt(part.trim()));
+            }
+        } catch (NumberFormatException e) {
+        }
+        return indices;
+    }
+
+    private void setTheme(boolean isDarkTheme) {
+        anchorPane.getScene().getStylesheets().clear();
+        String theme = isDarkTheme ? "/dark-theme.css" : "/light-theme.css";
+        anchorPane.getScene().getStylesheets().add(getClass().getResource(theme).toExternalForm());
     }
 
 }

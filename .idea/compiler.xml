@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Task_4" />
         <module name="Task_2" />
-        <module name="MatrixLibrary" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="MatrixLibrary" target="22" />
+      <module name="Task_4" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

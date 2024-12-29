@@ -33,12 +33,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static com.cgvsu.render_engine.JavaFXUtils.showAlertWindow;
-
 import static com.cgvsu.deleteVertexAndPoligon.DeleteVertex.parseVerticesInput;
 
 

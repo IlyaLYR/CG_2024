@@ -12,7 +12,7 @@ public class GraphicConveyor {
 
 
     //ModelMatrix будет исполняться отдельно
-    public static Model rotateScaleTranslate(Model model ,Vector3C modelCenter) {
+    public static Model rotateScaleTranslate(Model model, Vector3C modelCenter) {
         ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
         ATransformation transformation = builder
                 .translateByVector(modelCenter.multiplied(-1)) // Сдвиг в противоположную сторону центра

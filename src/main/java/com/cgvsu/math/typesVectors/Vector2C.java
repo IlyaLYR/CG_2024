@@ -27,6 +27,10 @@ public class Vector2C extends VectorWrapperC<Vector2C> {
         super(2, base);
     }
 
+    public Vector2C(double x, double y) {
+        super(2, new double[]{x, y});
+    }
+
     /**
      * Создаёт новый вектор-столбец Vector2C на основе другого вектора VectorC.
      *
@@ -38,14 +42,11 @@ public class Vector2C extends VectorWrapperC<Vector2C> {
         return new Vector2C(vector.getBase());
     }
 
-    public Vector2C(double x, double y) {
-        super(2, new double[]{x, y});
-    }
-
-    public double getX(){
+    public double getX() {
         return get(0);
     }
-    public double getY(){
+
+    public double getY() {
         return get(1);
     }
 }

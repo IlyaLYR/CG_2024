@@ -56,7 +56,7 @@ public class ObjWriterClass implements ObjWriter {
     }
 
     public String textureVertexToString(Vector2C vector) {
-        return OBJ_TEXTURE_TOKEN + " " + (float)vector.getX() + " " + (float)vector.getY();
+        return OBJ_TEXTURE_TOKEN + " " + (float) vector.getX() + " " + (float) vector.getY();
     }
 
     public String normalToString(Vector3C vector) {

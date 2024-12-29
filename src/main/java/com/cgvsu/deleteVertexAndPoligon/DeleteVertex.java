@@ -1,13 +1,11 @@
 package com.cgvsu.deleteVertexAndPoligon;
 
-import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 

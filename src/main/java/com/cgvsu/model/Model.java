@@ -1,11 +1,10 @@
 package com.cgvsu.model;
 
 
-
 import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class Model {
 
@@ -22,23 +21,43 @@ public class Model {
         return vertices;
     }
 
+    public void setVertices(ArrayList<Vector3C> vertices) {
+        this.vertices = vertices;
+    }
+
     public ArrayList<Vector2C> getTextureVertices() {
         return textureVertices;
+    }
+
+    public void setTextureVertices(ArrayList<Vector2C> textureVertices) {
+        this.textureVertices = textureVertices;
     }
 
     public ArrayList<Vector3C> getNormals() {
         return normals;
     }
 
+    public void setNormals(ArrayList<Vector3C> normals) {
+        this.normals = normals;
+    }
+
     public ArrayList<Polygon> getPolygons() {
         return polygons;
+    }
+
+    public void setPolygons(ArrayList<Polygon> polygons) {
+        this.polygons = polygons;
     }
 
     public String getNameOfModel() {
         return nameOfModel;
     }
 
-    public  Vector3C getModelCenter() {
+    public void setNameOfModel(String nameOfModel) {
+        this.nameOfModel = nameOfModel;
+    }
+
+    public Vector3C getModelCenter() {
         double xSum = 0, ySum = 0, zSum = 0;
         int vertexCount = vertices.size();
 
@@ -50,26 +69,6 @@ public class Model {
 
         // Вычисляем среднее значение по каждой координате
         return new Vector3C(xSum / vertexCount, ySum / vertexCount, zSum / vertexCount);
-    }
-
-    public void setNameOfModel(String nameOfModel) {
-        this.nameOfModel = nameOfModel;
-    }
-
-    public void setVertices(ArrayList<Vector3C> vertices) {
-        this.vertices = vertices;
-    }
-
-    public void setTextureVertices(ArrayList<Vector2C> textureVertices) {
-        this.textureVertices = textureVertices;
-    }
-
-    public void setNormals(ArrayList<Vector3C> normals) {
-        this.normals = normals;
-    }
-
-    public void setPolygons(ArrayList<Polygon> polygons) {
-        this.polygons = polygons;
     }
 
 }

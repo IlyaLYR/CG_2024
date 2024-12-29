@@ -1,19 +1,19 @@
 package com.cgvsu.render_engine;
 
 
-import com.cgvsu.math.typesVectors.Vector2C;
-import com.cgvsu.model.Model;
-import javafx.scene.canvas.GraphicsContext;
 import com.cgvsu.math.core.MatrixUtils;
 import com.cgvsu.math.typesMatrix.Matrix4D;
+import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
+import com.cgvsu.model.Model;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.cgvsu.render_engine.GraphicConveyor.*;
+import static com.cgvsu.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
+import static com.cgvsu.render_engine.GraphicConveyor.vertexToPoint;
 
 public class RenderEngine {
 

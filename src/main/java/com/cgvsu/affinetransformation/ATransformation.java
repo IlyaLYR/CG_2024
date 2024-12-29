@@ -50,6 +50,15 @@ public class ATransformation {
         return transformationMatrix;
     }
 
+    @Override
+    public String toString() {
+        return transformationMatrix.toString();
+    }
+
+    public void clean() {
+        this.transformationMatrix = new Matrix4D(true);
+    }
+
     public static class ATBuilder {
         private Matrix4D currentMatrix;
 
@@ -177,15 +186,5 @@ public class ATransformation {
         public ATransformation build() {
             return new ATransformation(currentMatrix);
         }
-    }
-
-
-    @Override
-    public String toString() {
-        return transformationMatrix.toString();
-    }
-
-    public void clean() {
-        this.transformationMatrix = new Matrix4D(true);
     }
 }

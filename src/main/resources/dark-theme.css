@@ -56,7 +56,7 @@
 }
 
 /* Стили ListView */
-.list-view {
+ListView {
     -fx-background-color: #2b2b2b; /* Тёмный фон */
     -fx-text-fill: #d0d0d0; /* Цвет текста */
     -fx-border-color: #454545; /* Цвет границы */
@@ -84,11 +84,20 @@
 }
 
 .tab .tab-label {
-    -fx-text-fill: #d0d0d0; /* Белый текст на вкладке */
+    -fx-text-fill: #d0d0d0; /* Темный текст на вкладке */
 }
 
 Text {
     -fx-fill: #ffffff; /* Белый цвет текста */
 }
+
+ // ToDO
+
+.alert {
+    -fx-background-color: #ffffff;
+}
+
+
+
 
 

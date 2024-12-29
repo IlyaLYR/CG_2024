@@ -1,8 +1,9 @@
-package com.cgvsu.render_engine;
+package com.cgvsu.Camera;
 
 
 import com.cgvsu.math.typesMatrix.Matrix4D;
 import com.cgvsu.math.typesVectors.Vector3C;
+import com.cgvsu.render_engine.GraphicConveyor;
 
 public class Camera {
 

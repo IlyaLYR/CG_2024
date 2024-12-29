@@ -6,8 +6,8 @@ import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.objreader.ObjReaderException;
 import com.cgvsu.objwriter.ObjWriterClass;
-import com.cgvsu.render_engine.CameraManager;
-import com.cgvsu.render_engine.ModelManager;
+import com.cgvsu.Controllers.CameraManager;
+import com.cgvsu.Controllers.ModelManager;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -36,7 +36,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
-import static com.cgvsu.render_engine.JavaFXUtils.showAlertWindow;
+import static com.cgvsu.JavaFXUtils.Alert.showAlertWindow;
 import static com.cgvsu.deleteVertexAndPoligon.DeleteVertex.parseVerticesInput;
 
 

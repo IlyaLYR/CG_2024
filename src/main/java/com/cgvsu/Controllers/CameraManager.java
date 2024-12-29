@@ -1,8 +1,9 @@
-package com.cgvsu.render_engine;
+package com.cgvsu.Controllers;
 
 import com.cgvsu.affinetransformation.ATransformation;
 import com.cgvsu.affinetransformation.STransformation;
 import com.cgvsu.math.typesVectors.Vector3C;
+import com.cgvsu.Camera.Camera;
 
 import java.util.HashMap;
 

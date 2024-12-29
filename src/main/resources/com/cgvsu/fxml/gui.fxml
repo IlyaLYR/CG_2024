@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -266,7 +267,10 @@
                         <Label fx:id="labelPercent" layoutX="14.0" layoutY="6.0" prefHeight="17.0" prefWidth="40.0" />
                     </AnchorPane>
                 </TitledPane>
-            <ColorPicker fx:id="changeColorModel" layoutX="249.0" layoutY="14.0" AnchorPane.topAnchor="14.0" />
+            <ColorPicker fx:id="changeColorModel" layoutX="249.0" layoutY="14.0" AnchorPane.topAnchor="14.0">
+               <value>
+                  <Color red="0.0833333358168602" blue="1.0" />
+               </value></ColorPicker>
             </AnchorPane>
         </ScrollPane>
     </SplitPane>

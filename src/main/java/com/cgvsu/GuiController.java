@@ -54,9 +54,7 @@ public class GuiController {
     public TextField targetY;
     public TextField targetZ;
     public Button buttonApplyModel;
-    @FXML
     public TextField fieldWriteCoordinate;
-    @FXML
     public Button buttonRemoveVertex;
     public Button buttonTriangulation;
     public TextField rotateX;
@@ -106,9 +104,6 @@ public class GuiController {
     private final TransferManagerModel transferModel = new TransferManagerModel();
     private final double DEFAULT_SENSITIVITY = 30.0;
 
-    private final boolean isCtrlPressed = false;
-
-
     @FXML
     private void initialize() {
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
@@ -146,9 +141,7 @@ public class GuiController {
         sliderMouseSensitivity.setValue(DEFAULT_SENSITIVITY);
 
         sliderMouseSensitivity.valueProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    MouseSensitivity(newValue.doubleValue());
-                });
+                (observable, oldValue, newValue) -> MouseSensitivity(newValue.doubleValue()));
 
         fileNameModel.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
@@ -194,8 +187,6 @@ public class GuiController {
             tempFileName.add(fileName);
             fileNameModel.setItems(tempFileName);
 
-            // todo: обработка ошибок
-
         } catch (IOException exception) {
             showAlertWindow(anchorPane, Alert.AlertType.ERROR, exception.getMessage(), ButtonType.CLOSE);
         } catch (ObjReaderException exception) {
@@ -204,7 +195,7 @@ public class GuiController {
     }
 
     @FXML
-    void save(MouseEvent event) {
+    void save() {
         if (!meshes.isEmpty()) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Model");
@@ -219,7 +210,7 @@ public class GuiController {
             // Устанавливаем имя файла по умолчанию
             fileChooser.setInitialFileName(selectedModelName);
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ files (*.obj)", "*.obj"));
-            File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+            File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
 
             if (file == null) {
                 return;
@@ -254,37 +245,35 @@ public class GuiController {
     }
 
     @FXML
-    public void handleCameraForward(KeyEvent actionEvent) {
+    public void handleCameraForward() {
         camera.movePosition(new Vector3C(0, 0, -TRANSLATION));
     }
 
     @FXML
-    public void handleCameraBackward(KeyEvent actionEvent) {
+    public void handleCameraBackward() {
         camera.movePosition(new Vector3C(0, 0, TRANSLATION));
     }
 
     @FXML
-    public void handleCameraLeft(KeyEvent actionEvent) {
+    public void handleCameraLeft() {
         camera.movePosition(new Vector3C(TRANSLATION, 0, 0));
     }
 
     @FXML
-    public void handleCameraRight(KeyEvent actionEvent) {
+    public void handleCameraRight() {
         camera.movePosition(new Vector3C(-TRANSLATION, 0, 0));
     }
 
     @FXML
-    public void handleCameraUp(KeyEvent actionEvent) {
+    public void handleCameraUp() {
         camera.movePosition(new Vector3C(0, TRANSLATION, 0));
     }
 
     @FXML
-    public void handleCameraDown(KeyEvent actionEvent) {
+    public void handleCameraDown() {
         camera.movePosition(new Vector3C(0, -TRANSLATION, 0));
     }
 
-
-    //Управление камерой мышкой
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
         transfer.mouseCameraZoom(scrollEvent.getDeltaY());
@@ -302,7 +291,6 @@ public class GuiController {
     }
 
 
-    // Удаление моделей в Active Models по клику на модель
     private void removeModelFromTheScene(MouseEvent event) {
         String selectedItem = fileNameModel.getSelectionModel().getSelectedItem();
 
@@ -450,12 +438,12 @@ public class GuiController {
     @FXML
     public void handleKeyPressed(KeyEvent event) {
         switch (event.getCode()) {
-            case W -> handleCameraUp(event);
-            case S -> handleCameraDown(event);
-            case LEFT -> handleCameraLeft(event);
-            case RIGHT -> handleCameraRight(event);
-            case UP -> handleCameraForward(event);
-            case DOWN -> handleCameraBackward(event);
+            case W -> handleCameraUp();
+            case S -> handleCameraDown();
+            case LEFT -> handleCameraLeft();
+            case RIGHT -> handleCameraRight();
+            case UP -> handleCameraForward();
+            case DOWN -> handleCameraBackward();
         }
     }
 }

@@ -1,13 +1,13 @@
 package com.cgvsu;
 
+import com.cgvsu.Controllers.CameraManager;
+import com.cgvsu.Controllers.ModelManager;
 import com.cgvsu.deleteVertexAndPoligon.DeleteVertex;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.objreader.ObjReaderException;
 import com.cgvsu.objwriter.ObjWriterClass;
-import com.cgvsu.Controllers.CameraManager;
-import com.cgvsu.Controllers.ModelManager;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -162,6 +162,7 @@ public class GuiController {
         try {
             String fileContent = Files.readString(filePath);
             Model model = ObjReader.read(fileContent);
+            model.computeNormals();
             modelManager.addModel(fileName, model);
             tempFileName.add(fileName);
             fileNameModel.setItems(tempFileName);
@@ -220,36 +221,6 @@ public class GuiController {
         tempFileName.clear();
         fileNameModel.setItems(tempFileName);
         resetItemInGrid();
-    }
-
-    @FXML
-    public void handleCameraForward() {
-        cameraManager.getActiveCamera().movePosition(new Vector3C(0, 0, -TRANSLATION));
-    }
-
-    @FXML
-    public void handleCameraBackward() {
-        cameraManager.getActiveCamera().movePosition(new Vector3C(0, 0, TRANSLATION));
-    }
-
-    @FXML
-    public void handleCameraLeft() {
-        cameraManager.getActiveCamera().movePosition(new Vector3C(TRANSLATION, 0, 0));
-    }
-
-    @FXML
-    public void handleCameraRight() {
-        cameraManager.getActiveCamera().movePosition(new Vector3C(-TRANSLATION, 0, 0));
-    }
-
-    @FXML
-    public void handleCameraUp() {
-        cameraManager.getActiveCamera().movePosition(new Vector3C(0, TRANSLATION, 0));
-    }
-
-    @FXML
-    public void handleCameraDown() {
-        cameraManager.getActiveCamera().movePosition(new Vector3C(0, -TRANSLATION, 0));
     }
 
     @FXML
@@ -406,12 +377,40 @@ public class GuiController {
     @FXML
     public void handleKeyPressed(KeyEvent event) {
         switch (event.getCode()) {
-            case W -> handleCameraUp();
-            case S -> handleCameraDown();
-            case LEFT -> handleCameraLeft();
-            case RIGHT -> handleCameraRight();
-            case UP -> handleCameraForward();
-            case DOWN -> handleCameraBackward();
+            case W -> cameraManager.getActiveCamera().movePosition(new Vector3C(0, TRANSLATION, 0));
+            case S -> cameraManager.getActiveCamera().movePosition(new Vector3C(0, -TRANSLATION, 0));
+            case LEFT -> cameraManager.getActiveCamera().movePosition(new Vector3C(TRANSLATION, 0, 0));
+            case RIGHT -> cameraManager.getActiveCamera().movePosition(new Vector3C(-TRANSLATION, 0, 0));
+            case UP -> cameraManager.getActiveCamera().movePosition(new Vector3C(0, 0, -TRANSLATION));
+            case DOWN -> cameraManager.getActiveCamera().movePosition(new Vector3C(0, 0, TRANSLATION));
         }
+    }
+
+    @FXML
+    public void triangleModel() {
+
+        String selectedModel = fileNameModel.getSelectionModel().getSelectedItem();
+
+        if (selectedModel == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING,
+                    "Выберите модель для триангуляции!", ButtonType.CLOSE);
+            return;
+        }
+
+        Model model = modelManager.getTransformedModel(selectedModel);
+
+        if (model == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Модель не найдена!", ButtonType.CLOSE);
+            return;
+        }
+        try {
+            model.triangulate();
+        } catch (Exception e) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR,
+                    "Ошибка применения триангуляции: " + e.getMessage(), ButtonType.CLOSE);
+            return;
+        }
+
+        modelManager.setMesh(selectedModel, model);
     }
 }

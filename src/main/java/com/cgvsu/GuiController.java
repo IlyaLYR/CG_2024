@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import static com.cgvsu.deleteVertexAndPoligon.DeleteVertex.parseVerticesInput;
+
 
 @SuppressWarnings({"rawtypes"})
 public class GuiController {
@@ -391,18 +393,6 @@ public class GuiController {
 
         showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Вершины успешно удалены!", ButtonType.CLOSE);
         fieldWriteCoordinate.clear();
-    }
-
-    private List<Integer> parseVerticesInput(String input) {
-        List<Integer> indices = new ArrayList<>();
-        try {
-            String[] parts = input.split(",");
-            for (String part : parts) {
-                indices.add(Integer.parseInt(part.trim()));
-            }
-        } catch (NumberFormatException ignored) {
-        }
-        return indices;
     }
 
     private void setTheme(boolean isDarkTheme) {

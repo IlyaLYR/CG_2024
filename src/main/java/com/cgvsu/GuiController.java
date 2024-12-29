@@ -39,6 +39,8 @@ import java.util.Objects;
 
 import static com.cgvsu.render_engine.JavaFXUtils.showAlertWindow;
 
+import static com.cgvsu.deleteVertexAndPoligon.DeleteVertex.parseVerticesInput;
+
 
 @SuppressWarnings({"rawtypes"})
 public class GuiController {
@@ -166,8 +168,6 @@ public class GuiController {
             tempFileName.add(fileName);
             fileNameModel.setItems(tempFileName);
 
-            // todo: обработка ошибок
-
         } catch (IOException exception) {
             showAlertWindow(anchorPane, Alert.AlertType.ERROR, exception.getMessage(), ButtonType.CLOSE);
         } catch (ObjReaderException exception) {
@@ -254,8 +254,6 @@ public class GuiController {
         cameraManager.getActiveCamera().movePosition(new Vector3C(0, -TRANSLATION, 0));
     }
 
-
-    //Управление камерой мышкой
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
         cameraManager.mouseCameraZoom(scrollEvent.getDeltaY());
@@ -273,7 +271,6 @@ public class GuiController {
     }
 
 
-    // Удаление моделей в Active Models по клику на модель
     private void removeModelFromTheScene(MouseEvent event) {
         String selectedItem = fileNameModel.getSelectionModel().getSelectedItem();
 
@@ -375,20 +372,6 @@ public class GuiController {
         fieldWriteCoordinate.clear();
     }
 
-    /// ???
-    private List<Integer> parseVerticesInput(String input) {
-        List<Integer> indices = new ArrayList<>();
-        try {
-            String[] parts = input.split(",");
-            for (String part : parts) {
-                indices.add(Integer.parseInt(part.trim()));
-            }
-        } catch (NumberFormatException ignored) {
-        }
-        return indices;
-    }
-
-    @FXML
     private void setTheme(boolean isDarkTheme) {
         anchorPane.getScene().getStylesheets().clear();
         String theme = isDarkTheme ? "/dark-theme.css" : "/light-theme.css";

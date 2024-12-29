@@ -23,6 +23,7 @@ public class DeleteVertex {
         // Смещение вершинных индексов внутри полигона
         shiftIndicesInPolygons(model.polygons, vertexIndices);
 
+
         return model;
     }
 
@@ -70,6 +71,18 @@ public class DeleteVertex {
             }
         }
         return result;
+    }
+
+    public static List<Integer> parseVerticesInput(String input) {
+        List<Integer> indices = new ArrayList<>();
+        try {
+            String[] parts = input.split(",");
+            for (String part : parts) {
+                indices.add(Integer.parseInt(part.trim()));
+            }
+        } catch (NumberFormatException ignored) {
+        }
+        return indices;
     }
 }
 

@@ -1,7 +1,6 @@
 package com.cgvsu.math;
 
 
-
 import com.cgvsu.math.types.SquareMatrix;
 
 import java.util.Random;
@@ -14,13 +13,13 @@ public class TEST {
         double[][] c2 = new double[5][5];
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                c1[i][j] = rand.nextInt(0,20);
+                c1[i][j] = rand.nextInt(0, 20);
             }
         }
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                c2[i][j] = rand.nextInt(0,20);
+                c2[i][j] = rand.nextInt(0, 20);
             }
         }
 

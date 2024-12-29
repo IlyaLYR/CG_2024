@@ -4,15 +4,20 @@ import com.cgvsu.affinetransformation.ATransformation;
 import com.cgvsu.affinetransformation.STransformation;
 import com.cgvsu.math.typesVectors.Vector3C;
 
-public class TransferManagerCamera {
+import java.util.HashMap;
+
+public class CameraManager {
+    private final HashMap<String, Camera> cameras = new HashMap<>();
     private double mouseX;
     private double mouseY;
-    private final Camera camera;
+    private Camera activeCamera;
     private double sensitivity; // чувствительность
 
     // Конструктор для инициализации камеры
-    public TransferManagerCamera(Camera camera) {
-        this.camera = camera;
+    public CameraManager() {
+        this.activeCamera = new Camera(
+                new Vector3C(0, 0, 100),
+                new Vector3C(0, 0, 0), 1.0F, 1, 0.01F, 100);
         this.mouseX = 0;
         this.mouseY = 0;
     }
@@ -21,11 +26,11 @@ public class TransferManagerCamera {
         double delta = deltaY * sensitivity * 10;
         double minDistance = 2.0;
 
-        Vector3C direction = camera.getTarget().subtracted(camera.getPosition()).normalize();
-        Vector3C newPosition = camera.getPosition().added(direction.multiplied(delta));
+        Vector3C direction = activeCamera.getTarget().subtracted(activeCamera.getPosition()).normalize();
+        Vector3C newPosition = activeCamera.getPosition().added(direction.multiplied(delta));
 
-        if (camera.getTarget().subtracted(newPosition).getLength() > minDistance) {
-            camera.setPosition(newPosition);
+        if (activeCamera.getTarget().subtracted(newPosition).getLength() > minDistance) {
+            activeCamera.setPosition(newPosition);
         }
     }
 
@@ -40,8 +45,8 @@ public class TransferManagerCamera {
         double deltaY = (y - mouseY) * sensitivity;
 
         //Получаем позицию камеры и целевую точку
-        Vector3C position = camera.getPosition();
-        Vector3C target = camera.getTarget();
+        Vector3C position = activeCamera.getPosition();
+        Vector3C target = activeCamera.getTarget();
 
         //Перенос камеры в локальные координаты относительно target
         ATransformation.ATBuilder builder = new ATransformation.ATBuilder();
@@ -56,7 +61,7 @@ public class TransferManagerCamera {
         position = transformationBack.applyTransformationToVector(position);
 
         // Шаг 5. Устанавливаем новое положение камеры
-        camera.setPosition(position);
+        activeCamera.setPosition(position);
 
         // Сохраняем новое положение мыши
         mouseX = x;
@@ -80,8 +85,15 @@ public class TransferManagerCamera {
         this.mouseY = mouseY;
     }
 
-    public Camera getCamera() {
-        return camera;
+    public Camera getActiveCamera() {
+        return activeCamera;
+    }
+
+    public void setActiveCamera(String cameraName) {
+        Camera camera = cameras.get(cameraName);
+        if (camera != null) {
+            activeCamera = camera;
+        }
     }
 
     public double getSensitivity() {
@@ -91,4 +103,13 @@ public class TransferManagerCamera {
     public void setSensitivity(double sensitivity) {
         this.sensitivity = sensitivity;
     }
+
+    public HashMap<String, Camera> getCameras() {
+        return cameras;
+    }
+
+    public void addCamera(String name, Camera camera) {
+        cameras.put(name, camera);
+    }
+
 }

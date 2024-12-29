@@ -5,12 +5,16 @@ import com.cgvsu.affinetransformation.STransformation;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 
-public class TransferManagerModel {
+import java.util.HashMap;
+
+public class ModelManager {
+    private final HashMap<String, Model> meshes = new HashMap<>();
+    private final HashMap<String, Model> transformMeshes = new HashMap<>();
     private Model model;
     private double mouseX;
     private double mouseY;
 
-    public TransferManagerModel() {
+    public ModelManager() {
         mouseX = 0;
         mouseY = 0;
     }
@@ -62,7 +66,6 @@ public class TransferManagerModel {
     }
 
 
-
     public void onMouseDragged(double x, double y, double smoothFactor) {
         double deltaX = (x - mouseX) * smoothFactor;
         double deltaY = (y - mouseY) * smoothFactor;
@@ -85,5 +88,46 @@ public class TransferManagerModel {
         mouseY = y;
     }
 
+    public void addModel(String name, Model model) {
+        meshes.put(name, model);
+        transformMeshes.put(name, GraphicConveyor.rotateScaleTranslate(model, model.getModelCenter()));
+    }
 
+    public void removeModel(String name) {
+        meshes.remove(name);
+        transformMeshes.remove(name);
+    }
+
+    public Model getModel(String name) {
+        return meshes.get(name);
+    }
+
+    public Model getTransformedModel(String name) {
+        return transformMeshes.get(name);
+    }
+
+    public void clear() {
+        meshes.clear();
+        transformMeshes.clear();
+    }
+
+    public HashMap<String, Model> getMeshes() {
+        return meshes;
+    }
+
+    public HashMap<String, Model> getTransformMeshes() {
+        return transformMeshes;
+    }
+
+    public double getMouseX() {
+        return mouseX;
+    }
+
+    public double getMouseY() {
+        return mouseY;
+    }
+
+    public void setMesh(String name, Model model) {
+        transformMeshes.put(name, model);
+    }
 }

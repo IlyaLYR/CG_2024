@@ -174,8 +174,8 @@ public class GuiController {
     }
 
     @FXML
-    void save() {
-        if (modelManager.getMeshes().isEmpty()) {
+    void save(MouseEvent event) {
+        if (!modelManager.getMeshes().isEmpty()) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Model");
 

@@ -11,12 +11,14 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -67,6 +69,7 @@ public class GuiController {
     public TextField translateY;
     public TextField translateZ;
 
+
     @FXML
     AnchorPane anchorPane;
 
@@ -82,10 +85,14 @@ public class GuiController {
     @FXML
     private CheckBox checkBoxTransform;
 
+    @FXML
+    private ColorPicker changeColorModel;
+
     private final HashMap<String, Model> meshes = new HashMap<>();
     private final HashMap<String, Model> transformMeshes = new HashMap<>();
 
     private ContextMenu contextMenu;
+    private final ObjectProperty<Color> selectedColor = new SimpleObjectProperty<>();
 
     @FXML
     private ListView<String> fileNameModel;
@@ -104,7 +111,6 @@ public class GuiController {
 
     @FXML
     private void initialize() {
-        contextMenu = new ContextMenu();
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
@@ -118,16 +124,17 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-            canvas.getGraphicsContext2D().setStroke(Color.BLUE);
-            RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height);
+            RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height, selectedColor.get());
 
         });
 
-        ThemeSwitch themeSwitch = new ThemeSwitch();
+        contextMenu = new ContextMenu();
 
+        selectedColor.bind(changeColorModel.valueProperty());
+
+        ThemeSwitch themeSwitch = new ThemeSwitch();
         themeSwitch.setLayoutX(20);
         themeSwitch.setLayoutY(20);
-
         anchorPane.getChildren().add(themeSwitch);
         themeSwitch.darkButton.setOnAction(event -> setTheme(true)); // Темная тема
         themeSwitch.lightButton.setOnAction(event -> setTheme(false)); // Светлая тема
@@ -247,32 +254,32 @@ public class GuiController {
     }
 
     @FXML
-    public void handleCameraForward(ActionEvent actionEvent) {
+    public void handleCameraForward(KeyEvent actionEvent) {
         camera.movePosition(new Vector3C(0, 0, -TRANSLATION));
     }
 
     @FXML
-    public void handleCameraBackward(ActionEvent actionEvent) {
+    public void handleCameraBackward(KeyEvent actionEvent) {
         camera.movePosition(new Vector3C(0, 0, TRANSLATION));
     }
 
     @FXML
-    public void handleCameraLeft(ActionEvent actionEvent) {
+    public void handleCameraLeft(KeyEvent actionEvent) {
         camera.movePosition(new Vector3C(TRANSLATION, 0, 0));
     }
 
     @FXML
-    public void handleCameraRight(ActionEvent actionEvent) {
+    public void handleCameraRight(KeyEvent actionEvent) {
         camera.movePosition(new Vector3C(-TRANSLATION, 0, 0));
     }
 
     @FXML
-    public void handleCameraUp(ActionEvent actionEvent) {
+    public void handleCameraUp(KeyEvent actionEvent) {
         camera.movePosition(new Vector3C(0, TRANSLATION, 0));
     }
 
     @FXML
-    public void handleCameraDown(ActionEvent actionEvent) {
+    public void handleCameraDown(KeyEvent actionEvent) {
         camera.movePosition(new Vector3C(0, -TRANSLATION, 0));
     }
 
@@ -417,15 +424,15 @@ public class GuiController {
     }
 
     private void resetItemInGrid() {
-        scaleX.clear();
-        scaleY.clear();
-        scaleZ.clear();
-        rotateX.clear();
-        rotateY.clear();
-        rotateZ.clear();
-        translateX.clear();
-        translateY.clear();
-        translateZ.clear();
+        scaleX.setText("1");
+        scaleY.setText("1");
+        scaleZ.setText("1");
+        rotateX.setText("0");
+        rotateY.setText("0");
+        rotateZ.setText("0");
+        translateX.setText("0");
+        translateY.setText("0");
+        translateZ.setText("0");
     }
 
     private boolean checkScaleValues() {
@@ -439,5 +446,16 @@ public class GuiController {
             return false;
         }
 
+    }
+    @FXML
+    public void handleKeyPressed(KeyEvent event) {
+        switch (event.getCode()) {
+            case W -> handleCameraUp(event);
+            case S -> handleCameraDown(event);
+            case LEFT -> handleCameraLeft(event);
+            case RIGHT -> handleCameraRight(event);
+            case UP -> handleCameraForward(event);
+            case DOWN -> handleCameraBackward(event);
+        }
     }
 }

@@ -1,9 +1,9 @@
 package com.cgvsu.Controllers;
 
+import com.cgvsu.Camera.Camera;
 import com.cgvsu.affinetransformation.ATransformation;
 import com.cgvsu.affinetransformation.STransformation;
 import com.cgvsu.math.typesVectors.Vector3C;
-import com.cgvsu.Camera.Camera;
 
 import java.util.HashMap;
 
@@ -19,6 +19,7 @@ public class CameraManager {
         this.activeCamera = new Camera(
                 new Vector3C(0, 0, 100),
                 new Vector3C(0, 0, 0), 1.0F, 1, 0.01F, 100);
+        cameras.put("Камера 0", activeCamera);
         this.mouseX = 0;
         this.mouseY = 0;
     }
@@ -97,6 +98,7 @@ public class CameraManager {
         }
     }
 
+
     public double getSensitivity() {
         return sensitivity;
     }
@@ -111,6 +113,13 @@ public class CameraManager {
 
     public void addCamera(String name, Camera camera) {
         cameras.put(name, camera);
+    }
+
+    public void removeCamera(String name) {
+        cameras.remove(name);
+    }
+    public Camera getCamera(String name) {
+        return cameras.get(name);
     }
 
 }

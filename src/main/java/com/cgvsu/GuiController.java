@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.Camera.Camera;
 import com.cgvsu.Controllers.CameraManager;
 import com.cgvsu.Controllers.ModelManager;
 import com.cgvsu.deleteVertexAndPoligon.DeleteVertex;
@@ -26,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
@@ -46,13 +48,14 @@ public class GuiController {
     final private float TRANSLATION = 0.5F;
     private final ObjectProperty<Color> selectedColor = new SimpleObjectProperty<>();
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
+    private final ObservableList<String> tempCameraName = FXCollections.observableArrayList("Камера 0");
     private final ObjWriterClass objWriter = new ObjWriterClass();
     final private CameraManager cameraManager = new CameraManager();
     private final ModelManager modelManager = new ModelManager();
     private final double DEFAULT_SENSITIVITY = 30.0;
     public Button buttonSaveModel;
     public Button addModel;
-    public ListView fileNameCamera;
+    public ListView<String> fileNameCamera;
     public Button buttonApplyCamera;
     public Button buttonAddCamera;
     public TextField positionX;
@@ -74,6 +77,10 @@ public class GuiController {
     public TextField translateX;
     public TextField translateY;
     public TextField translateZ;
+    public AnchorPane cameraPane;
+    public Text positionText;
+    public TextField nameCamera;
+    public Text nameCameraText;
     @FXML
     private AnchorPane anchorPane;
     @FXML
@@ -104,6 +111,7 @@ public class GuiController {
 
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             cameraManager.getActiveCamera().setAspectRatio((float) (width / height));
+            fileNameCamera.setItems(tempCameraName);
 
             RenderEngine.render(canvas.getGraphicsContext2D(), cameraManager.getActiveCamera(), modelManager.getTransformMeshes(), (int) width, (int) height, selectedColor.get());
 
@@ -135,6 +143,15 @@ public class GuiController {
                 removeModelFromTheScene(event);
             }
         });
+        fileNameCamera.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.SECONDARY) {
+                contextMenu.getItems().clear();
+                removeCameraFromTheScene(event);
+            }
+            if (event.getButton() == MouseButton.PRIMARY) {
+                getParamsCamera();
+            }
+        });
 
         // Удаление вершин
         buttonRemoveVertex.setOnAction(event -> handleRemoveVertex());
@@ -143,7 +160,6 @@ public class GuiController {
         timeline.getKeyFrames().add(frame);
         timeline.play();
     }
-
 
     @FXML
     private void onOpenModelMenuItemClick() {
@@ -173,6 +189,30 @@ public class GuiController {
             showAlertWindow(anchorPane, Alert.AlertType.WARNING, exception.getMessage(), ButtonType.CLOSE);
         }
     }
+
+    @FXML
+    private void buttonAddCamera() {
+        try {
+            String cameraName = nameCamera.getText();
+            Camera camera = new Camera(
+                    new Vector3C(
+                            Float.parseFloat(positionX.getText()),
+                            Float.parseFloat(positionY.getText()),
+                            Float.parseFloat(positionZ.getText())),
+                    new Vector3C(
+                            Float.parseFloat(targetX.getText()),
+                            Float.parseFloat(targetY.getText()),
+                            Float.parseFloat(targetZ.getText())),
+                    1.0F, 1, 0.01F, 100);
+            cameraManager.addCamera(cameraName, camera);
+            tempCameraName.add(cameraName);
+            fileNameCamera.setItems(tempCameraName);
+        } catch (Exception exception) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, exception.getMessage(), ButtonType.CLOSE);
+        }
+
+    }
+
 
     @FXML
     void save(MouseEvent event) {
@@ -235,11 +275,11 @@ public class GuiController {
 
     @FXML
 
-    public void onMouseDragged(MouseEvent event) {
+    private void onMouseDragged(MouseEvent event) {
         cameraManager.onMouseDragged(event.getX(), event.getY());
     }
 
-
+    @FXML
     private void removeModelFromTheScene(MouseEvent event) {
         String selectedItem = fileNameModel.getSelectionModel().getSelectedItem();
 
@@ -258,6 +298,48 @@ public class GuiController {
         });
 
         contextMenu.getItems().setAll(deleteItem);
+        contextMenu.show(fileNameModel, event.getScreenX(), event.getScreenY() + 10.5);
+    }
+
+    private void getParamsCamera() {
+        String selectedItem = fileNameCamera.getSelectionModel().getSelectedItem();
+        Camera camera = cameraManager.getCamera(selectedItem);
+        if (selectedItem == null) {
+            return;
+        }
+        nameCamera.setText(selectedItem);
+        positionX.setText("" + camera.getPosition().getX());
+        positionY.setText("" + camera.getPosition().getY());
+        positionZ.setText("" + camera.getPosition().getZ());
+        targetX.setText("" + camera.getTarget().getX());
+        targetY.setText("" + camera.getTarget().getY());
+        targetZ.setText("" + camera.getTarget().getZ());
+
+    }
+
+
+    private void removeCameraFromTheScene(MouseEvent event) {
+        String selectedItem = fileNameCamera.getSelectionModel().getSelectedItem();
+
+        if (selectedItem == null) {
+            return;
+        }
+
+        MenuItem deleteItem = new MenuItem();
+        deleteItem.textProperty().bind(Bindings.format("Delete \"%s\"", selectedItem));
+        MenuItem setItem = new MenuItem();
+        setItem.textProperty().bind(Bindings.format("Set Active \"%s\"", selectedItem));
+
+        deleteItem.setOnAction(deleteEvent -> {
+            cameraManager.removeCamera(selectedItem);
+            tempCameraName.remove(selectedItem);
+            fileNameCamera.setItems(tempCameraName);
+        });
+        setItem.setOnAction(setEvent -> {
+            cameraManager.setActiveCamera(selectedItem);
+        });
+
+        contextMenu.getItems().setAll(deleteItem, setItem);
         contextMenu.show(fileNameModel, event.getScreenX(), event.getScreenY() + 10.5);
     }
 
@@ -290,22 +372,15 @@ public class GuiController {
                     "Значения масштабирования не могут быть меньше 1!", ButtonType.CLOSE);
             return;
         }
-
-        modelManager.setModel(model);
-
         try {
-            model = modelManager.applyModel(rotateX.getText(), rotateY.getText(),
+            modelManager.applyModel(rotateX.getText(), rotateY.getText(),
                     rotateZ.getText(), scaleX.getText(),
                     scaleY.getText(), scaleZ.getText(),
-                    translateX.getText(), translateY.getText(), translateZ.getText());
+                    translateX.getText(), translateY.getText(), translateZ.getText(), selectedModel);
         } catch (Exception e) {
             showAlertWindow(anchorPane, Alert.AlertType.ERROR,
                     "Ошибка применения трансформаций: " + e.getMessage(), ButtonType.CLOSE);
-            return;
         }
-
-        modelManager.setMesh(selectedModel, model);
-
     }
 
     @FXML

@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class DeleteVertex {
+public class DeleteVertexAndFace {
     public static Model changeModel(Model model, List<Integer> vertexIndices) {
         // Список вершин на удаление отсортированный по возрастанию
         List<Integer> vertexIndicesToDelete = new ArrayList<>(vertexIndices).stream().sorted(Comparator.reverseOrder()).toList();

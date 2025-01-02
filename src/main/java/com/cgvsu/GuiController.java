@@ -1,6 +1,6 @@
 package com.cgvsu;
 
-import com.cgvsu.deleteVertexAndPoligon.DeleteVertex;
+import com.cgvsu.deleteVertexAndPoligon.DeleteVertexAndFace;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.cgvsu.JavaFXUtils.Alert.showAlertWindow;
-import static com.cgvsu.deleteVertexAndPoligon.DeleteVertex.parseVerticesInput;
+import static com.cgvsu.deleteVertexAndPoligon.DeleteVertexAndFace.parseVerticesInput;
 
 
 @SuppressWarnings({"rawtypes"})
@@ -105,7 +105,10 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             cameraManager.getActiveCamera().setAspectRatio((float) (width / height));
 
-            RenderEngine.render(canvas.getGraphicsContext2D(), cameraManager.getActiveCamera(), modelManager.getTransformMeshes(), (int) width, (int) height, selectedColor.get());
+            RenderEngine.render(canvas.getGraphicsContext2D(),
+                                cameraManager.getActiveCamera(),
+                                modelManager.getTransformMeshes(),
+                                (int) width, (int) height, selectedColor.get());
 
         });
 
@@ -117,8 +120,8 @@ public class GuiController {
         themeSwitch.setLayoutX(20);
         themeSwitch.setLayoutY(20);
         anchorPane.getChildren().add(themeSwitch);
-        themeSwitch.darkButton.setOnAction(event -> setTheme(true)); // Темная тема
-        themeSwitch.lightButton.setOnAction(event -> setTheme(false)); // Светлая тема
+        themeSwitch.darkButton.setOnAction(event -> setTheme(true));
+        themeSwitch.lightButton.setOnAction(event -> setTheme(false));
 
         // начальное значение чувствительности камеры
         double initialSensitivity = DEFAULT_SENSITIVITY / 10000.0;
@@ -174,7 +177,7 @@ public class GuiController {
     }
 
     @FXML
-    void save(MouseEvent event) {
+    void save() {
         if (!modelManager.getMeshes().isEmpty()) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Model");
@@ -363,7 +366,7 @@ public class GuiController {
             return;
         }
 
-        Model updatedModel = DeleteVertex.changeModel(selectedModel, verticesToRemoveIndices);
+        Model updatedModel = DeleteVertexAndFace.changeModel(selectedModel, verticesToRemoveIndices);
         modelManager.setMesh(selectedModelName, updatedModel);
 
         showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Вершины успешно удалены!", ButtonType.CLOSE);

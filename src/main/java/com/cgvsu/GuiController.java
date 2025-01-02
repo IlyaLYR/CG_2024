@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.Camera.Camera;
 import com.cgvsu.deleteVertexAndPoligon.DeleteVertexAndFace;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;

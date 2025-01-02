@@ -91,13 +91,10 @@ Text {
     -fx-fill: #ffffff; /* Белый цвет текста */
 }
 
- // ToDO
-
 .alert {
     -fx-background-color: #ffffff;
 }
 
 
-
-
-
+.dark-theme.css {
+}

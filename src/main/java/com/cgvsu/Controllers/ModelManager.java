@@ -20,15 +20,16 @@ public class ModelManager {
         mouseY = 0;
     }
 
-    public Model applyModel(String rotateX,
-                            String rotateY,
-                            String rotateZ,
-                            String scaleX,
-                            String scaleY,
-                            String scaleZ,
-                            String translateX,
-                            String translateY,
-                            String translateZ
+    public void applyModel(String rotateX,
+                           String rotateY,
+                           String rotateZ,
+                           String scaleX,
+                           String scaleY,
+                           String scaleZ,
+                           String translateX,
+                           String translateY,
+                           String translateZ,
+                           String name
     ) {
         double doubleRotateX = Math.toRadians(Float.parseFloat(rotateX));
         double doubleRotateY = Math.toRadians(Float.parseFloat(rotateY));
@@ -49,15 +50,7 @@ public class ModelManager {
                 .scaleByCoordinates(doubleScaleX, doubleScaleY, doubleScaleZ)
                 .build();
 
-        return transformation.applyTransformationToModel(model);
-    }
-
-    public Model getModel() {
-        return model;
-    }
-
-    public void setModel(Model model) {
-        this.model = model;
+        setMesh(name, transformation.applyTransformationToModel(model));
     }
 
     // Метод для фиксации положения мыши (используется при старте перетаскивания)

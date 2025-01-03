@@ -18,6 +18,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -35,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -47,13 +49,14 @@ import static com.cgvsu.deleteVertexAndPoligon.DeleteVertexAndFace.parseVertices
 public class GuiController {
 
     final private float TRANSLATION = 0.5F;
+    private final double DEFAULT_SENSITIVITY = 30.0;
+    private static double[][] zBuffer;
     private final ObjectProperty<Color> selectedColor = new SimpleObjectProperty<>();
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
     private final ObservableList<String> tempCameraName = FXCollections.observableArrayList("Камера 0");
     private final ObjWriterClass objWriter = new ObjWriterClass();
     final private CameraManager cameraManager = new CameraManager();
     private final ModelManager modelManager = new ModelManager();
-    private final double DEFAULT_SENSITIVITY = 30.0;
     public Button buttonSaveModel;
     public Button addModel;
     public ListView<String> fileNameCamera;
@@ -110,6 +113,11 @@ public class GuiController {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
+            zBuffer = new double[(int) width][(int) height];
+            for (double[] doubles : zBuffer) {
+                Arrays.fill(doubles, Double.POSITIVE_INFINITY);
+            }
+
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             cameraManager.getActiveCamera().setAspectRatio((float) (width / height));
             fileNameCamera.setItems(tempCameraName);
@@ -117,7 +125,7 @@ public class GuiController {
             RenderEngine.render(canvas.getGraphicsContext2D(),
                                 cameraManager.getActiveCamera(),
                                 modelManager.getTransformMeshes(),
-                                (int) width, (int) height, selectedColor.get());
+                                (int) width, (int) height, selectedColor.get(), zBuffer);
 
         });
 
@@ -183,7 +191,6 @@ public class GuiController {
             String fileContent = Files.readString(filePath);
             Model model = ObjReader.read(fileContent);
             model.computeNormals();
-            model.triangulate();
             modelManager.addModel(fileName, model);
             tempFileName.add(fileName);
             fileNameModel.setItems(tempFileName);
@@ -358,9 +365,7 @@ public class GuiController {
 
 
         });
-        setItem.setOnAction(setEvent -> {
-            cameraManager.setActiveCamera(selectedItem);
-        });
+        setItem.setOnAction(setEvent -> cameraManager.setActiveCamera(selectedItem));
 
         contextMenu.getItems().setAll(deleteItem, setItem);
         contextMenu.show(fileNameModel, event.getScreenX(), event.getScreenY() + 10.5);

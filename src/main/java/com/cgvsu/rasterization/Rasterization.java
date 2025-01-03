@@ -9,33 +9,76 @@ public class Rasterization {
             final GraphicsContext graphicsContext,
             final int[] arrX,
             final int[] arrY,
-            final Color[] colors) {
+            final double[] arrZ,
+            final Color[] colors,
+            double[][] zBuffer) {
 
         final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
 
         sort(arrX, arrY, colors);
 
         for (int y = arrY[1]; y <= arrY[2]; y++) {
+
             final int x1 = (arrY[2] - arrY[1] == 0) ? arrX[1] :
                     (y - arrY[1]) * (arrX[2] - arrX[1]) / (arrY[2] - arrY[1]) + arrX[1];
 
             final int x2 = (arrY[0] - arrY[2] == 0) ? arrX[2] :
                     (y - arrY[2]) * (arrX[0] - arrX[2]) / (arrY[0] - arrY[2]) + arrX[2];
 
-            for (int x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
+            final int Ax = Math.min(x1, x2);
+            final int Bx = Math.max(x1, x2);
+
+            if (y < 0){
+                break;
+            }
+
+            for (int x = Ax; x <= Bx; x++) {
+
+                if (x < 0){
+                    break;
+                }
+
                 double[] barizenticCoordinate = barizentricCalculator(x, y, arrX, arrY);
-                pixelWriter.setColor(x, y, getColor(barizenticCoordinate, colors));
+                double z = arrZ[0]*barizenticCoordinate[0] + arrZ[1]*barizenticCoordinate[1] + arrZ[2]*barizenticCoordinate[2];
+
+                if (z <= zBuffer[x][y]) {
+                    zBuffer[x][y] = z;
+                    if ((barizenticCoordinate[0] < 0.01 || barizenticCoordinate[1] < 0.01 || barizenticCoordinate[2] < 0.01)){
+                        pixelWriter.setColor(x, y, Color.BLACK);
+                    } else { pixelWriter.setColor(x, y, getColor(barizenticCoordinate, colors));}
+                }
             }
         }
 
         for (int y = arrY[1]; y >= arrY[0]; y--) {
             final int x1 = (arrY[1] - arrY[0] == 0) ? arrX[0] :
                     (y - arrY[0]) * (arrX[1] - arrX[0]) / (arrY[1] - arrY[0]) + arrX[0];
+
             final int x2 = (arrY[0] - arrY[2] == 0) ? arrX[2] :
                     (y - arrY[2]) * (arrX[0] - arrX[2]) / (arrY[0] - arrY[2]) + arrX[2];
-            for (int x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
+
+            final int Ax = Math.min(x1, x2);
+            final int Bx = Math.max(x1, x2);
+
+            if (y < 0){
+                break;
+            }
+
+            for (int x = Ax; x <= Bx; x++) {
+
+                if (x < 0){
+                    break;
+                }
+
                 double[] barizenticCoordinate = barizentricCalculator(x, y, arrX, arrY);
-                pixelWriter.setColor(x, y, getColor(barizenticCoordinate, colors));
+                double z = arrZ[0]*barizenticCoordinate[0] + arrZ[1]*barizenticCoordinate[1] + arrZ[2]*barizenticCoordinate[2];
+
+                if (z <= zBuffer[x][y]) {
+                    zBuffer[x][y] = z;
+                    if ((barizenticCoordinate[0] < 0.01 || barizenticCoordinate[1] < 0.01 || barizenticCoordinate[2] < 0.01)){
+                        pixelWriter.setColor(x, y, Color.BLACK);
+                    } else { pixelWriter.setColor(x, y, getColor(barizenticCoordinate, colors));}
+                }
             }
         }
     }

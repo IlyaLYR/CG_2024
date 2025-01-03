@@ -183,6 +183,7 @@ public class GuiController {
             String fileContent = Files.readString(filePath);
             Model model = ObjReader.read(fileContent);
             model.computeNormals();
+            model.triangulate();
             modelManager.addModel(fileName, model);
             tempFileName.add(fileName);
             fileNameModel.setItems(tempFileName);

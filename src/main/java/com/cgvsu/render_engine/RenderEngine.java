@@ -7,8 +7,10 @@ import com.cgvsu.math.typesMatrix.Matrix4D;
 import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
+import com.cgvsu.rasterization.Rasterization;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import com.cgvsu.rasterization.Rasterization;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,6 +69,12 @@ public class RenderEngine {
                             resultPoints.get(0).getX(),
                             resultPoints.get(0).getY());
                 }
+
+                // Растеризация полигонов
+                int[] arrX = {(int) resultPoints.get(0).getX(), (int) resultPoints.get(1).getX(), (int) resultPoints.get(2).getX()};
+                int[] arrY = {(int) resultPoints.get(0).getY(), (int) resultPoints.get(1).getY(), (int) resultPoints.get(2).getY()};
+                javafx.scene.paint.Color[] colors = {Color.CYAN, Color.CYAN, Color.CYAN};
+                Rasterization.fillTriangle(graphicsContext, arrX, arrY, colors);
             }
         }
     }

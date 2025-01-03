@@ -1,14 +1,14 @@
 package com.cgvsu;
 
 import com.cgvsu.Camera.Camera;
+import com.cgvsu.Controllers.CameraManager;
+import com.cgvsu.Controllers.ModelManager;
 import com.cgvsu.deleteVertexAndPoligon.DeleteVertexAndFace;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.objreader.ObjReaderException;
 import com.cgvsu.objwriter.ObjWriterClass;
-import com.cgvsu.Controllers.CameraManager;
-import com.cgvsu.Controllers.ModelManager;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -18,7 +18,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -71,7 +70,6 @@ public class GuiController {
     public Button buttonApplyModel;
     public TextField fieldWriteCoordinate;
     public Button buttonRemoveVertex;
-    public Button buttonTriangulation;
     public TextField rotateX;
     public TextField rotateY;
     public TextField rotateZ;
@@ -191,6 +189,7 @@ public class GuiController {
             String fileContent = Files.readString(filePath);
             Model model = ObjReader.read(fileContent);
             model.computeNormals();
+            model.triangulate();
             modelManager.addModel(fileName, model);
             tempFileName.add(fileName);
             fileNameModel.setItems(tempFileName);
@@ -525,31 +524,4 @@ public class GuiController {
         }
     }
 
-    @FXML
-    public void triangleModel() {
-
-        String selectedModel = fileNameModel.getSelectionModel().getSelectedItem();
-
-        if (selectedModel == null) {
-            showAlertWindow(anchorPane, Alert.AlertType.WARNING,
-                    "Выберите модель для триангуляции!", ButtonType.CLOSE);
-            return;
-        }
-
-        Model model = modelManager.getTransformedModel(selectedModel);
-
-        if (model == null) {
-            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Модель не найдена!", ButtonType.CLOSE);
-            return;
-        }
-        try {
-            model.triangulate();
-        } catch (Exception e) {
-            showAlertWindow(anchorPane, Alert.AlertType.ERROR,
-                    "Ошибка применения триангуляции: " + e.getMessage(), ButtonType.CLOSE);
-            return;
-        }
-
-        modelManager.setMesh(selectedModel, model);
-    }
 }

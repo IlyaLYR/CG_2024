@@ -50,6 +50,7 @@ public class GuiController {
     final private float TRANSLATION = 0.5F;
     private final double DEFAULT_SENSITIVITY = 30.0;
     private static double[][] zBuffer;
+    private boolean coloring = true;
     private final ObjectProperty<Color> selectedColor = new SimpleObjectProperty<>();
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
     private final ObservableList<String> tempCameraName = FXCollections.observableArrayList("Камера 0");
@@ -98,6 +99,12 @@ public class GuiController {
     private ContextMenu contextMenu;
     @FXML
     private ListView<String> fileNameModel;
+    @FXML
+    private CheckBox checkBoxTexture;
+    @FXML
+    private   CheckBox checkBoxTriangulation;
+    @FXML
+    private   CheckBox checkBoxLightning;
 
     @FXML
     private void initialize() {
@@ -123,7 +130,7 @@ public class GuiController {
             RenderEngine.render(canvas.getGraphicsContext2D(),
                                 cameraManager.getActiveCamera(),
                                 modelManager.getTransformMeshes(),
-                                (int) width, (int) height, selectedColor.get(), zBuffer);
+                                (int) width, (int) height, selectedColor.get(), zBuffer, coloring);
 
         });
 
@@ -165,6 +172,10 @@ public class GuiController {
 
         // Удаление вершин
         buttonRemoveVertex.setOnAction(event -> handleRemoveVertex());
+
+        checkBoxTexture.setOnAction(event -> modelManager.setActiveTexture(checkBoxTexture.isSelected()));
+        checkBoxTriangulation.setOnAction(event -> modelManager.setActivePolyGrid(checkBoxTriangulation.isSelected()));
+        checkBoxLightning.setOnAction(event -> modelManager.setActiveLighting(checkBoxLightning.isSelected()));
 
 
         timeline.getKeyFrames().add(frame);

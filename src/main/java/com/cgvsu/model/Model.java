@@ -17,6 +17,10 @@ public class Model {
     public ArrayList<Vector3C> normals = new ArrayList<>();
     public ArrayList<Polygon> polygons = new ArrayList<>();
 
+    public boolean isActiveTexture = false;
+    public boolean isActiveLighting = false;
+    public boolean isActivePolyGrid = false;
+
     public ArrayList<Vector3C> getVertices() {
         return vertices;
     }

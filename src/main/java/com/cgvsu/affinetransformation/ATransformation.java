@@ -39,9 +39,13 @@ public class ATransformation {
             transformedModel.vertices.add(applyTransformationToVector(vertex));
         }
 
+        transformedModel.nameOfModel = originalModel.nameOfModel;
         transformedModel.textureVertices.addAll(originalModel.textureVertices);
         transformedModel.normals.addAll(originalModel.normals);
         transformedModel.polygons.addAll(originalModel.polygons);
+        transformedModel.setActivePolyGrid(originalModel.isActivePolyGrid());
+        transformedModel.setActiveLighting(originalModel.isActiveLighting());
+        transformedModel.setActiveTexture(originalModel.isActiveTexture());
 
         return transformedModel;
     }

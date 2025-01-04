@@ -397,6 +397,9 @@ public class GuiController {
 
         String selectedModel = fileNameModel.getSelectionModel().getSelectedItem();
 
+        modelManager.setModel(modelManager.getTransformedModel(selectedModel));
+        System.out.println(modelManager.getModel().isActivePolyGrid());
+
         if (selectedModel == null) {
             showAlertWindow(anchorPane, Alert.AlertType.WARNING,
                     "Выберите модель для трансформации!", ButtonType.CLOSE);

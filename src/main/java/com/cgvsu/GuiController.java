@@ -18,6 +18,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -102,9 +104,9 @@ public class GuiController {
     @FXML
     private CheckBox checkBoxTexture;
     @FXML
-    private   CheckBox checkBoxTriangulation;
+    private CheckBox checkBoxTriangulation;
     @FXML
-    private   CheckBox checkBoxLightning;
+    private CheckBox checkBoxLightning;
 
     @FXML
     private void initialize() {
@@ -128,9 +130,9 @@ public class GuiController {
             fileNameCamera.setItems(tempCameraName);
 
             RenderEngine.render(canvas.getGraphicsContext2D(),
-                                cameraManager.getActiveCamera(),
-                                modelManager.getTransformMeshes(),
-                                (int) width, (int) height, selectedColor.get(), zBuffer, coloring);
+                    cameraManager.getActiveCamera(),
+                    modelManager.getTransformMeshes(),
+                    (int) width, (int) height, selectedColor.get(), zBuffer, coloring);
 
         });
 
@@ -535,4 +537,10 @@ public class GuiController {
         }
     }
 
+    @FXML
+    public void touchPolyGrid(ActionEvent event) {
+        modelManager.isActivePolyGrid = !modelManager.isActivePolyGrid;
+
+        checkBoxTriangulation.setSelected(modelManager.isActivePolyGrid);
+    }
 }

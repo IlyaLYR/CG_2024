@@ -186,7 +186,7 @@
                                                         </AnchorPane>
                                                     </TitledPane>
                                                 <CheckBox fx:id="checkBoxTexture" layoutX="14.0" layoutY="115.0" mnemonicParsing="false" text="Текстура" />
-                                                <CheckBox fx:id="checkBoxTriangulation" layoutX="14.0" layoutY="140.0" mnemonicParsing="false" text="Сетка" />
+                                                <CheckBox fx:id="checkBoxTriangulation" layoutX="14.0" layoutY="140.0" mnemonicParsing="false" onAction="#touchPolyGrid" text="Сетка" />
                                                 <CheckBox fx:id="checkBoxLightning" layoutX="14.0" layoutY="166.0" mnemonicParsing="false" text="Освещение" />
                                                 <ColorPicker fx:id="changeColorModel" layoutX="248.0" layoutY="14.0" AnchorPane.topAnchor="14.0">
                                                    <value>

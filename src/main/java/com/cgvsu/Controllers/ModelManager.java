@@ -126,30 +126,6 @@ public class ModelManager extends Model {
         transformMeshes.put(name, model);
     }
 
-    public boolean isActiveTexture() {
-        return isActiveTexture;
-    }
-
-    public void setActiveTexture(boolean activeTexture) {
-        isActiveTexture = activeTexture;
-    }
-
-    public boolean isActiveLighting() {
-        return isActiveLighting;
-    }
-
-    public void setActiveLighting(boolean activeLighting) {
-        isActiveLighting = activeLighting;
-    }
-
-    public boolean isActivePolyGrid() {
-        return isActivePolyGrid;
-    }
-
-    public void setActivePolyGrid(boolean activePolyGrid) {
-        isActivePolyGrid = activePolyGrid;
-    }
-
     public Model getModel() {
         return model;
     }

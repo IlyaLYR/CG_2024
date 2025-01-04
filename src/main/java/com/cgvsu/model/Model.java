@@ -4,6 +4,7 @@ package com.cgvsu.model;
 import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +18,12 @@ public class Model {
     public ArrayList<Vector3C> normals = new ArrayList<>();
     public ArrayList<Polygon> polygons = new ArrayList<>();
 
-    public boolean isActiveTexture = false;
-    public boolean isActiveLighting = false;
-    public boolean isActivePolyGrid = false;
+    private boolean isActiveTexture = false;
+    private boolean isActiveLighting = false;
+    private boolean isActivePolyGrid = false;
+
+//    private Color colorRender = Color.;
+//    private Color colorGrid = Color.BLACK;
 
     public ArrayList<Vector3C> getVertices() {
         return vertices;
@@ -154,4 +158,27 @@ public class Model {
         }
     }
 
+    public boolean isActiveTexture() {
+        return isActiveTexture;
+    }
+
+    public void setActiveTexture(boolean activeTexture) {
+        isActiveTexture = activeTexture;
+    }
+
+    public boolean isActiveLighting() {
+        return isActiveLighting;
+    }
+
+    public void setActiveLighting(boolean activeLighting) {
+        isActiveLighting = activeLighting;
+    }
+
+    public boolean isActivePolyGrid() {
+        return isActivePolyGrid;
+    }
+
+    public void setActivePolyGrid(boolean activePolyGrid) {
+        isActivePolyGrid = activePolyGrid;
+    }
 }

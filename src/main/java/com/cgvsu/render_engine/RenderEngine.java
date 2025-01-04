@@ -2,7 +2,6 @@ package com.cgvsu.render_engine;
 
 
 import com.cgvsu.Camera.Camera;
-import com.cgvsu.Controllers.ModelManager;
 import com.cgvsu.math.core.MatrixUtils;
 import com.cgvsu.math.typesMatrix.Matrix4D;
 import com.cgvsu.math.typesVectors.Vector2C;
@@ -55,24 +54,6 @@ public class RenderEngine {
                     // Преобразуем в координаты экрана
                     Vector2C resultPoint = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertex), width, height);
                     resultPoints.add(resultPoint);
-                }
-
-                // Отрисовываем рёбра полигона
-                for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
-                    graphicsContext.strokeLine(
-                            resultPoints.get(vertexInPolygonInd - 1).getX(),
-                            resultPoints.get(vertexInPolygonInd - 1).getY(),
-                            resultPoints.get(vertexInPolygonInd).getX(),
-                            resultPoints.get(vertexInPolygonInd).getY());
-                }
-
-                // Замыкаем полигон, если это необходимо
-                if (nVerticesInPolygon > 0) {
-                    graphicsContext.strokeLine(
-                            resultPoints.get(nVerticesInPolygon - 1).getX(),
-                            resultPoints.get(nVerticesInPolygon - 1).getY(),
-                            resultPoints.get(0).getX(),
-                            resultPoints.get(0).getY());
                 }
 
                 // Растеризация полигонов

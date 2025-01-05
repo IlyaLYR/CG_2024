@@ -50,6 +50,7 @@ public class GuiController {
     final private float TRANSLATION = 0.5F;
     private final double DEFAULT_SENSITIVITY = 30.0;
     private static double[][] zBuffer;
+    private boolean coloring = true;
     private final ObjectProperty<Color> selectedColor = new SimpleObjectProperty<>();
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
     private final ObservableList<String> tempCameraName = FXCollections.observableArrayList("Камера 0");
@@ -98,6 +99,12 @@ public class GuiController {
     private ContextMenu contextMenu;
     @FXML
     private ListView<String> fileNameModel;
+    @FXML
+    private CheckBox checkBoxTexture;
+    @FXML
+    private CheckBox checkBoxTriangulation;
+    @FXML
+    private CheckBox checkBoxLightning;
 
     @FXML
     private void initialize() {
@@ -121,9 +128,9 @@ public class GuiController {
             fileNameCamera.setItems(tempCameraName);
 
             RenderEngine.render(canvas.getGraphicsContext2D(),
-                                cameraManager.getActiveCamera(),
-                                modelManager.getTransformMeshes(),
-                                (int) width, (int) height, selectedColor.get(), zBuffer);
+                    cameraManager.getActiveCamera(),
+                    modelManager.getTransformMeshes(),
+                    (int) width, (int) height, selectedColor.get(), zBuffer, coloring);
 
         });
 
@@ -152,6 +159,11 @@ public class GuiController {
                 contextMenu.getItems().clear();
                 removeModelFromTheScene(event);
             }
+            if (event.getButton() == MouseButton.PRIMARY) {
+                checkBoxTriangulation.setSelected(modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).isActivePolyGrid());
+                checkBoxLightning.setSelected(modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).isActiveLighting());
+                checkBoxTexture.setSelected(modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).isActiveTexture());
+            }
         });
         fileNameCamera.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
@@ -165,6 +177,10 @@ public class GuiController {
 
         // Удаление вершин
         buttonRemoveVertex.setOnAction(event -> handleRemoveVertex());
+
+        checkBoxTexture.setOnAction(event -> touchTexture());
+        checkBoxTriangulation.setOnAction(event -> touchPolyGrid());
+        checkBoxLightning.setOnAction(event -> touchLightning());
 
 
         timeline.getKeyFrames().add(frame);
@@ -381,6 +397,9 @@ public class GuiController {
 
         String selectedModel = fileNameModel.getSelectionModel().getSelectedItem();
 
+        modelManager.setModel(modelManager.getTransformedModel(selectedModel));
+        System.out.println(modelManager.getModel().isActivePolyGrid());
+
         if (selectedModel == null) {
             showAlertWindow(anchorPane, Alert.AlertType.WARNING,
                     "Выберите модель для трансформации!", ButtonType.CLOSE);
@@ -522,6 +541,39 @@ public class GuiController {
             case UP -> cameraManager.getActiveCamera().movePosition(new Vector3C(0, 0, -TRANSLATION));
             case DOWN -> cameraManager.getActiveCamera().movePosition(new Vector3C(0, 0, TRANSLATION));
         }
+    }
+
+    public void touchPolyGrid() {
+        try {
+            boolean isSelected = checkBoxTriangulation.isSelected(); // Проверка состояния
+            modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).setActivePolyGrid(isSelected);
+        } catch (Exception e) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Выберите модель!", ButtonType.CLOSE);
+            checkBoxTriangulation.setSelected(!checkBoxTriangulation.isSelected());
+        }
+
+    }
+
+    public void touchTexture() {
+        try {
+            boolean isSelected = checkBoxTriangulation.isSelected(); // Проверка состояния
+            modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).setActiveTexture(isSelected);
+        } catch (Exception e) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Выберите модель!", ButtonType.CLOSE);
+            checkBoxTriangulation.setSelected(!checkBoxTexture.isSelected());
+        }
+
+    }
+
+    public void touchLightning() {
+        try {
+            boolean isSelected = checkBoxTriangulation.isSelected(); // Проверка состояния
+            modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).setActiveLighting(isSelected);
+        } catch (Exception e) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Выберите модель!", ButtonType.CLOSE);
+            checkBoxTriangulation.setSelected(!checkBoxLightning.isSelected());
+        }
+
     }
 
 }

@@ -1,5 +1,7 @@
 package com.cgvsu.rasterization;
 
+import com.cgvsu.Controllers.ModelManager;
+import com.cgvsu.model.Model;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
@@ -10,12 +12,54 @@ public class Rasterization {
             final int[] arrX,
             final int[] arrY,
             final double[] arrZ,
+            Model mesh,
             final Color[] colors,
-            double[][] zBuffer) {
+            double[][] zBuffer,
+            boolean coloring) {
 
         final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
 
-        sort(arrX, arrY, colors);
+        sort(arrX, arrY, arrZ, colors);
+
+        for (int y = arrY[0]; y <= arrY[1]; y++) {
+
+            final int x1 = (arrY[1] - arrY[0] == 0) ? arrX[0] :
+                    (y - arrY[0]) * (arrX[1] - arrX[0]) / (arrY[1] - arrY[0]) + arrX[0];
+
+            final int x2 = (arrY[0] - arrY[2] == 0) ? arrX[2] :
+                    (y - arrY[2]) * (arrX[0] - arrX[2]) / (arrY[0] - arrY[2]) + arrX[2];
+
+            final int Ax = Math.min(x1, x2);
+            final int Bx = Math.max(x1, x2);
+
+            if (y < 0){
+                break;
+            }
+
+            for (int x = Ax; x <= Bx; x++) {
+                if (x < 0 || x >= zBuffer.length || y >= zBuffer[0].length){
+                    break;
+                }
+
+                double[] barizenticCoordinate = barizentricCalculator(x, y, arrX, arrY);
+
+                if (!Double.isNaN(barizenticCoordinate[0]) && !Double.isNaN(barizenticCoordinate[1]) && !Double.isNaN(barizenticCoordinate[2]) &&
+                        ((barizenticCoordinate[0] + barizenticCoordinate[1] + barizenticCoordinate[2] - 1) < 1e-7f)) {
+
+                    double z = arrZ[0]*barizenticCoordinate[0] + arrZ[1]*barizenticCoordinate[1] + arrZ[2]*barizenticCoordinate[2];
+
+                    if (z < zBuffer[x][y]) {
+
+                        if ((barizenticCoordinate[0] < 0.01 || barizenticCoordinate[1] < 0.01 || barizenticCoordinate[2] < 0.01) & mesh.isActivePolyGrid()) {
+                            pixelWriter.setColor(x, y, Color.WHITE);
+                        }else if (coloring) {
+                            pixelWriter.setColor(x, y, getColor(barizenticCoordinate, colors));
+                        } else {continue;}
+                        zBuffer[x][y] = z;
+                    }
+                }
+            }
+        }
 
         for (int y = arrY[1]; y <= arrY[2]; y++) {
 
@@ -33,51 +77,26 @@ public class Rasterization {
             }
 
             for (int x = Ax; x <= Bx; x++) {
-
-                if (x < 0){
+                if (x < 0 || x >= zBuffer.length || y >= zBuffer[0].length){
                     break;
                 }
 
                 double[] barizenticCoordinate = barizentricCalculator(x, y, arrX, arrY);
-                double z = arrZ[0]*barizenticCoordinate[0] + arrZ[1]*barizenticCoordinate[1] + arrZ[2]*barizenticCoordinate[2];
+                if (!Double.isNaN(barizenticCoordinate[0]) && !Double.isNaN(barizenticCoordinate[1])
+                        && !Double.isNaN(barizenticCoordinate[2]) &&
+                        ((barizenticCoordinate[0] + barizenticCoordinate[1] + barizenticCoordinate[2] - 1) < 1e-7f)) {
 
-                if (z <= zBuffer[x][y]) {
-                    zBuffer[x][y] = z;
-                    if ((barizenticCoordinate[0] < 0.01 || barizenticCoordinate[1] < 0.01 || barizenticCoordinate[2] < 0.01)){
-                        pixelWriter.setColor(x, y, Color.BLACK);
-                    } else { pixelWriter.setColor(x, y, getColor(barizenticCoordinate, colors));}
-                }
-            }
-        }
+                    double z = arrZ[0] * barizenticCoordinate[0] + arrZ[1] * barizenticCoordinate[1] + arrZ[2] * barizenticCoordinate[2];
 
-        for (int y = arrY[1]; y >= arrY[0]; y--) {
-            final int x1 = (arrY[1] - arrY[0] == 0) ? arrX[0] :
-                    (y - arrY[0]) * (arrX[1] - arrX[0]) / (arrY[1] - arrY[0]) + arrX[0];
+                    if (z < zBuffer[x][y]) {
 
-            final int x2 = (arrY[0] - arrY[2] == 0) ? arrX[2] :
-                    (y - arrY[2]) * (arrX[0] - arrX[2]) / (arrY[0] - arrY[2]) + arrX[2];
-
-            final int Ax = Math.min(x1, x2);
-            final int Bx = Math.max(x1, x2);
-
-            if (y < 0){
-                break;
-            }
-
-            for (int x = Ax; x <= Bx; x++) {
-
-                if (x < 0){
-                    break;
-                }
-
-                double[] barizenticCoordinate = barizentricCalculator(x, y, arrX, arrY);
-                double z = arrZ[0]*barizenticCoordinate[0] + arrZ[1]*barizenticCoordinate[1] + arrZ[2]*barizenticCoordinate[2];
-
-                if (z <= zBuffer[x][y]) {
-                    zBuffer[x][y] = z;
-                    if ((barizenticCoordinate[0] < 0.01 || barizenticCoordinate[1] < 0.01 || barizenticCoordinate[2] < 0.01)){
-                        pixelWriter.setColor(x, y, Color.BLACK);
-                    } else { pixelWriter.setColor(x, y, getColor(barizenticCoordinate, colors));}
+                        if ((barizenticCoordinate[0] < 0.01 || barizenticCoordinate[1] < 0.01 || barizenticCoordinate[2] < 0.01) & mesh.isActivePolyGrid()) {
+                            pixelWriter.setColor(x, y, Color.WHITE);
+                        }else if (coloring) {
+                            pixelWriter.setColor(x, y, getColor(barizenticCoordinate, colors));
+                        } else {continue;}
+                        zBuffer[x][y] = z;
+                    }
                 }
             }
         }
@@ -124,27 +143,30 @@ public class Rasterization {
                 1);
     }
 
-    private static void sort(int[] x, int[] y, Color[] c) {
+    private static void sort(int[] x, int[] y, double[] z, Color[] c) {
         if (y[0] > y[1]) {
-            swap(x, y, c, 0, 1);
+            swap(x, y, z, c, 0, 1);
         }
         if (y[1] > y[2]) {
-            swap(x, y, c, 1, 2);
+            swap(x, y, z, c, 1, 2);
         }
         if (y[0] > y[1]) {
-            swap(x, y, c, 0, 1);
+            swap(x, y, z, c, 0, 1);
         }
     }
 
-    private static void swap(int[] x, int[] y, Color[] c, int i, int j) {
+    private static void swap(int[] x, int[] y, double[] z, Color[] c, int i, int j) {
         int tempY = y[i];
         int tempX = x[i];
+        double tempZ = z[i];
         Color tempC = c[i];
         x[i] = x[j];
         y[i] = y[j];
+        z[i] = z[j];
         c[i] = c[j];
         x[j] = tempX;
         y[j] = tempY;
+        z[j] = tempZ;
         c[j] = tempC;
     }
 }

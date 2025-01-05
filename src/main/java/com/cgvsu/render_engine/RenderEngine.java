@@ -10,7 +10,6 @@ import com.cgvsu.model.Model;
 import com.cgvsu.rasterization.Rasterization;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import com.cgvsu.rasterization.Rasterization;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +26,8 @@ public class RenderEngine {
             final int width,
             final int height,
             Color color,
-            double[][] zBuffer) {
+            double[][] zBuffer,
+            boolean coloring) {
 
         graphicsContext.setStroke(color);
 
@@ -56,30 +56,12 @@ public class RenderEngine {
                     resultPoints.add(resultPoint);
                 }
 
-//                // Отрисовываем рёбра полигона
-//                for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
-//                    graphicsContext.strokeLine(
-//                            resultPoints.get(vertexInPolygonInd - 1).getX(),
-//                            resultPoints.get(vertexInPolygonInd - 1).getY(),
-//                            resultPoints.get(vertexInPolygonInd).getX(),
-//                            resultPoints.get(vertexInPolygonInd).getY());
-//                }
-//
-//                // Замыкаем полигон, если это необходимо
-//                if (nVerticesInPolygon > 0) {
-//                    graphicsContext.strokeLine(
-//                            resultPoints.get(nVerticesInPolygon - 1).getX(),
-//                            resultPoints.get(nVerticesInPolygon - 1).getY(),
-//                            resultPoints.get(0).getX(),
-//                            resultPoints.get(0).getY());
-//                }
-
                 // Растеризация полигонов
                 int[] arrX = {(int) resultPoints.get(0).getX(), (int) resultPoints.get(1).getX(), (int) resultPoints.get(2).getX()};
                 int[] arrY = {(int) resultPoints.get(0).getY(), (int) resultPoints.get(1).getY(), (int) resultPoints.get(2).getY()};
                 double[] arrZ = {arrayZ.get(0), arrayZ.get(1), arrayZ.get(2)};
-                javafx.scene.paint.Color[] colors = {Color.CYAN, Color.CYAN, Color.CYAN};
-                Rasterization.fillTriangle(graphicsContext, arrX, arrY, arrZ, colors, zBuffer);
+                javafx.scene.paint.Color[] colors = {color, color, color};
+                Rasterization.fillTriangle(graphicsContext, arrX, arrY, arrZ, mesh, colors, zBuffer, coloring);
             }
         }
     }

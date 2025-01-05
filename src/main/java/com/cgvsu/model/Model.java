@@ -17,6 +17,21 @@ public class Model {
     public ArrayList<Vector3C> normals = new ArrayList<>();
     public ArrayList<Polygon> polygons = new ArrayList<>();
 
+    private boolean isActiveTexture = false;
+    private boolean isActiveLighting = false;
+    private boolean isActivePolyGrid = false;
+
+//    private Color colorRender = Color.;
+//    private Color colorGrid = Color.BLACK;
+
+
+//    public Model(String nameOfModel, boolean isActiveTexture, boolean isActiveLighting, boolean isActivePolyGrid) {
+//        this.nameOfModel = nameOfModel;
+//        this.isActiveTexture = isActiveTexture;
+//        this.isActiveLighting = isActiveLighting;
+//        this.isActivePolyGrid = isActivePolyGrid;
+//    }
+
     public ArrayList<Vector3C> getVertices() {
         return vertices;
     }
@@ -150,4 +165,27 @@ public class Model {
         }
     }
 
+    public boolean isActiveTexture() {
+        return isActiveTexture;
+    }
+
+    public void setActiveTexture(boolean activeTexture) {
+        isActiveTexture = activeTexture;
+    }
+
+    public boolean isActiveLighting() {
+        return isActiveLighting;
+    }
+
+    public void setActiveLighting(boolean activeLighting) {
+        isActiveLighting = activeLighting;
+    }
+
+    public boolean isActivePolyGrid() {
+        return isActivePolyGrid;
+    }
+
+    public void setActivePolyGrid(boolean activePolyGrid) {
+        isActivePolyGrid = activePolyGrid;
+    }
 }

@@ -8,12 +8,13 @@ import com.cgvsu.render_engine.GraphicConveyor;
 
 import java.util.HashMap;
 
-public class ModelManager {
+public class ModelManager extends Model {
     private final HashMap<String, Model> meshes = new HashMap<>();
     private final HashMap<String, Model> transformMeshes = new HashMap<>();
     private Model model;
     private double mouseX;
     private double mouseY;
+
 
     public ModelManager() {
         mouseX = 0;
@@ -124,4 +125,13 @@ public class ModelManager {
     public void setMesh(String name, Model model) {
         transformMeshes.put(name, model);
     }
+
+    public Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
+    }
+
 }

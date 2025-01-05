@@ -21,17 +21,6 @@ public class Model {
     private boolean isActiveLighting = false;
     private boolean isActivePolyGrid = false;
 
-//    private Color colorRender = Color.;
-//    private Color colorGrid = Color.BLACK;
-
-
-//    public Model(String nameOfModel, boolean isActiveTexture, boolean isActiveLighting, boolean isActivePolyGrid) {
-//        this.nameOfModel = nameOfModel;
-//        this.isActiveTexture = isActiveTexture;
-//        this.isActiveLighting = isActiveLighting;
-//        this.isActivePolyGrid = isActivePolyGrid;
-//    }
-
     public ArrayList<Vector3C> getVertices() {
         return vertices;
     }
@@ -188,4 +177,5 @@ public class Model {
     public void setActivePolyGrid(boolean activePolyGrid) {
         isActivePolyGrid = activePolyGrid;
     }
+
 }

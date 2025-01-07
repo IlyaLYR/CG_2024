@@ -22,8 +22,8 @@ public class Texture {
             height = img.getHeight();
             int[] rgb;
 
-            for(int i = 0; i < img.getWidth(); i++){
-                for(int j = 0; j < img.getHeight(); j++){
+            for (int i = 0; i < img.getWidth(); i++) {
+                for (int j = 0; j < img.getHeight(); j++) {
                     rgb = getPixelData(img, i, j);
                     pixelData[img.getWidth() - 1 - i][img.getHeight() - 1 - j][0] = rgb[0];
                     pixelData[img.getWidth() - 1 - i][img.getHeight() - 1 - j][1] = rgb[1];
@@ -34,13 +34,14 @@ public class Texture {
             e.printStackTrace();
         }
     }
+
     private int[] getPixelData(BufferedImage img, int x, int y) {
         int argb = img.getRGB(x, y);
 
-        return new int[] {
+        return new int[]{
                 (argb >> 16) & 0xff, // красный
-                (argb >>  8) & 0xff, // зеленый
-                (argb      ) & 0xff  // синий
+                (argb >> 8) & 0xff, // зеленый
+                (argb) & 0xff  // синий
         };
     }
 }

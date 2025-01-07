@@ -12,17 +12,16 @@ import java.util.Map;
 
 public class Model {
 
-    public String nameOfModel;
     public final ArrayList<Vector3C> vertices = new ArrayList<>();
     public final ArrayList<Vector2C> textureVertices = new ArrayList<>();
+    public String nameOfModel;
     public ArrayList<Vector3C> normals = new ArrayList<>();
     public ArrayList<Polygon> polygons = new ArrayList<>();
+    public String pathTexture = null;
+    public Texture texture = null;
     private boolean isActiveTexture = false;
     private boolean isActiveLighting = false;
     private boolean isActivePolyGrid = false;
-    public String pathTexture = null;
-
-    public Texture texture = null;
 
     public ArrayList<Vector3C> getVertices() {
         return vertices;

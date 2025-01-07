@@ -29,7 +29,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -45,12 +44,11 @@ import static com.cgvsu.JavaFXUtils.Alert.showAlertWindow;
 import static com.cgvsu.deleteVertexAndPoligon.DeleteVertexAndFace.parseVerticesInput;
 
 
-@SuppressWarnings({"rawtypes"})
 public class GuiController {
 
+    private static double[][] zBuffer;
     final private float TRANSLATION = 0.5F;
     private final double DEFAULT_SENSITIVITY = 30.0;
-    private static double[][] zBuffer;
     private final ObjectProperty<Color> selectedColor = new SimpleObjectProperty<>();
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
     private final ObservableList<String> tempCameraName = FXCollections.observableArrayList("Камера 0");
@@ -549,6 +547,7 @@ public class GuiController {
             checkBoxTriangulation.setSelected(!checkBoxTriangulation.isSelected());
         }
     }
+
     public void touchLightning() {
         try {
             boolean isSelected = checkBoxLightning.isSelected(); // Проверка состояния
@@ -558,6 +557,7 @@ public class GuiController {
             checkBoxLightning.setSelected(!checkBoxLightning.isSelected());
         }
     }
+
     public void touchTexture() {
         try {
             String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
@@ -579,6 +579,7 @@ public class GuiController {
                 // Если текстура отсутствует, загружаем её
                 String texturePath = loadTextureFromFile();
                 if (texturePath == null) {
+                    checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
                     return; // Пользователь отменил выбор
                 }
                 selectedModel.setPathTexture(texturePath);

@@ -3,6 +3,7 @@ package com.cgvsu.model;
 
 import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
+import com.cgvsu.texture.Texture;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,10 +17,12 @@ public class Model {
     public final ArrayList<Vector2C> textureVertices = new ArrayList<>();
     public ArrayList<Vector3C> normals = new ArrayList<>();
     public ArrayList<Polygon> polygons = new ArrayList<>();
-
     private boolean isActiveTexture = false;
     private boolean isActiveLighting = false;
     private boolean isActivePolyGrid = false;
+    public String pathTexture = null;
+
+    public Texture texture = null;
 
     public ArrayList<Vector3C> getVertices() {
         return vertices;
@@ -178,4 +181,11 @@ public class Model {
         isActivePolyGrid = activePolyGrid;
     }
 
+    public String getPathTexture() {
+        return pathTexture;
+    }
+
+    public void setPathTexture(String pathTexture) {
+        this.pathTexture = pathTexture;
+    }
 }

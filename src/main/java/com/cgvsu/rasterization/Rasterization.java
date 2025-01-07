@@ -1,5 +1,6 @@
 package com.cgvsu.rasterization;
 
+import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,11 +17,12 @@ public class Rasterization {
             final Color[] colors,
             double[][] zBuffer,
             double[] light,
-            Vector3C[] normals) {
+            Vector3C[] normals,
+            Vector2C[] textures) {
 
         final PixelWriter pixelWriter = graphicsContext.getPixelWriter();
 
-        sort(arrX, arrY, arrZ, normals, colors);
+        sort(arrX, arrY, arrZ, normals, textures, colors);
 
         for (int y = arrY[0]; y <= arrY[1]; y++) {
 
@@ -55,6 +57,8 @@ public class Rasterization {
                         if ((barizenticCoordinate[0] < 0.01 || barizenticCoordinate[1] < 0.01 || barizenticCoordinate[2] < 0.01) & mesh.isActivePolyGrid()) {
                             pixelWriter.setColor(x, y, Color.WHITE);
                             continue;
+                        } else if (mesh.isActiveTexture()) {
+                            texture(barizenticCoordinate, textures, mesh, rgb);
                         }
                         if (mesh.isActiveLighting()){
                             light(barizenticCoordinate, normals, light, rgb);
@@ -98,6 +102,8 @@ public class Rasterization {
                         if ((barizenticCoordinate[0] < 0.01 || barizenticCoordinate[1] < 0.01 || barizenticCoordinate[2] < 0.01) & mesh.isActivePolyGrid()) {
                             pixelWriter.setColor(x, y, Color.WHITE);
                             continue;
+                        } else if (mesh.isActiveTexture()) {
+                            texture(barizenticCoordinate, textures, mesh, rgb);
                         }
                         if (mesh.isActiveLighting()){
                             light(barizenticCoordinate, normals, light, rgb);
@@ -140,33 +146,36 @@ public class Rasterization {
         return new int[]{r, g, b};
     }
 
-    private static void sort(int[] x, int[] y, double[] z, Vector3C[] n, Color[] c) {
+    private static void sort(int[] x, int[] y, double[] z, Vector3C[] n, Vector2C[] t ,Color[] c) {
         if (y[0] > y[1]) {
-            swap(x, y, z, n, c, 0, 1);
+            swap(x, y, z, n, t, c, 0, 1);
+        }
+        if (y[0] > y[2]) {
+            swap(x, y, z, n, t, c, 0, 2);
         }
         if (y[1] > y[2]) {
-            swap(x, y, z, n, c, 1, 2);
-        }
-        if (y[0] > y[1]) {
-            swap(x, y, z, n, c, 0, 1);
+            swap(x, y, z, n, t, c, 1, 2);
         }
     }
 
-    private static void swap(int[] x, int[] y, double[] z, Vector3C[] n ,Color[] c, int i, int j) {
+    private static void swap(int[] x, int[] y, double[] z, Vector3C[] n , Vector2C[] t, Color[] c, int i, int j) {
         int tempY = y[i];
         int tempX = x[i];
         double tempZ = z[i];
         Vector3C tempN = n[i];
+        Vector2C tempT = t[i];
         Color tempC = c[i];
         x[i] = x[j];
         y[i] = y[j];
         z[i] = z[j];
         n[i] = n[j];
+        t[i] = t[j];
         c[i] = c[j];
         x[j] = tempX;
         y[j] = tempY;
         z[j] = tempZ;
         n[j] = tempN;
+        t[j] = tempT;
         c[j] = tempC;
     }
 
@@ -190,5 +199,20 @@ public class Rasterization {
     public static void light(final double[] barizentric, final Vector3C[] normals, double[] light, int[] rgb){
         Vector3C smooth = smoothingNormal(barizentric, normals);
         calculateLight(rgb, light, smooth);
+    }
+    public static void texture(double[] barizentric, Vector2C[] textures, Model mesh, int[] rgb){
+        double[] texture = getGradientCoordinatesTexture(barizentric, textures);
+        int u = (int) Math.round(texture[0] * (mesh.texture.wight - 1));
+        int v = (int) Math.round(texture[1] * (mesh.texture.height - 1));
+        if (u < mesh.texture.wight && v < mesh.texture.height) {
+            rgb[0] = mesh.texture.pixelData[u][v][0];
+            rgb[1] = mesh.texture.pixelData[u][v][1];
+            rgb[2] = mesh.texture.pixelData[u][v][2];
+        }
+    }
+
+    public static double[] getGradientCoordinatesTexture(double[] barizentric, Vector2C[] texture) {
+        return new double[] {(barizentric[0] * texture[0].getX()) +  (barizentric[1] * texture[1].getX()) +  (barizentric[2] * texture[2].getX()),
+                (barizentric[0] * texture[0].getX()) + (barizentric[1] * texture[1].getY()) + (barizentric[2] * texture[2].getY())};
     }
 }

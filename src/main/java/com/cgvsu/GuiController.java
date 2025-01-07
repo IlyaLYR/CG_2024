@@ -29,6 +29,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -560,12 +561,53 @@ public class GuiController {
     }
     public void touchTexture() {
         try {
-            boolean isSelected = checkBoxTexture.isSelected(); // Проверка состояния
-            modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).setActiveTexture(isSelected);
+            String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+            if (selectedModelName == null) {
+                throw new IllegalArgumentException("Не выбрана модель!");
+            }
+
+            Model selectedModel = modelManager.getTransformedModel(selectedModelName);
+            if (selectedModel == null) {
+                throw new IllegalArgumentException("Модель не найдена!");
+            }
+
+            if (selectedModel.isActiveTexture()) {
+                selectedModel.setActiveTexture(false);
+                return;
+            }
+
+            if (selectedModel.getPathTexture() == null) {
+                // Если текстура отсутствует, загружаем её
+                String texturePath = loadTextureFromFile();
+                if (texturePath == null) {
+                    return; // Пользователь отменил выбор
+                }
+                selectedModel.setPathTexture(texturePath);
+            }
+
+            selectedModel.setActiveTexture(true);
+        } catch (IllegalArgumentException e) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, e.getMessage(), ButtonType.CLOSE);
         } catch (Exception e) {
-            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель!", ButtonType.CLOSE);
-            checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Ошибка при обработке текстуры!", ButtonType.CLOSE);
+            e.printStackTrace();
         }
     }
 
+    /**
+     * Открывает диалог выбора файла для загрузки текстуры.
+     *
+     * @return Путь к выбранному файлу текстуры или null, если пользователь отменил выбор.
+     */
+    private String loadTextureFromFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Загрузка текстуры");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Изображения (*.png, *.jpg)", "*.png", "*.jpg")
+        );
+
+        File file = fileChooser.showOpenDialog(anchorPane.getScene().getWindow());
+        return (file != null) ? file.getAbsolutePath() : null;
+    }
 }

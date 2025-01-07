@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Texture {
-    public int wight;
+    public int width;
     public int height;
     public int[][][] pixelData;
 
@@ -18,7 +18,7 @@ public class Texture {
             img = ImageIO.read(new File(path));
 
             pixelData = new int[img.getWidth()][img.getHeight()][3];
-            wight = img.getWidth();
+            width = img.getWidth();
             height = img.getHeight();
             int[] rgb;
 

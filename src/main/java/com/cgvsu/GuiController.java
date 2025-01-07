@@ -396,7 +396,6 @@ public class GuiController {
         String selectedModel = fileNameModel.getSelectionModel().getSelectedItem();
 
         modelManager.setModel(modelManager.getTransformedModel(selectedModel));
-        System.out.println(modelManager.getModel().isActivePolyGrid());
 
         if (selectedModel == null) {
             showAlertWindow(anchorPane, Alert.AlertType.WARNING,
@@ -588,9 +587,10 @@ public class GuiController {
             selectedModel.setActiveTexture(true);
         } catch (IllegalArgumentException e) {
             showAlertWindow(anchorPane, Alert.AlertType.WARNING, e.getMessage(), ButtonType.CLOSE);
+            checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
         } catch (Exception e) {
             showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Ошибка при обработке текстуры!", ButtonType.CLOSE);
-            e.printStackTrace();
+            checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
         }
     }
 

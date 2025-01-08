@@ -34,20 +34,8 @@ public class ATransformation {
     }
 
     public Model applyTransformationToModel(Model originalModel) {
-        Model transformedModel = new Model();
-        for (Vector3C vertex : originalModel.vertices) {
-            transformedModel.vertices.add(applyTransformationToVector(vertex));
-        }
-
-        transformedModel.nameOfModel = originalModel.nameOfModel;
-        transformedModel.textureVertices.addAll(originalModel.textureVertices);
-        transformedModel.normals.addAll(originalModel.normals);
-        transformedModel.polygons.addAll(originalModel.polygons);
-        transformedModel.setActivePolyGrid(originalModel.isActivePolyGrid());
-        transformedModel.setActiveLighting(originalModel.isActiveLighting());
-        transformedModel.setActiveTexture(originalModel.isActiveTexture());
-
-        return transformedModel;
+        originalModel.vertices.replaceAll(this::applyTransformationToVector);
+        return originalModel;
     }
 
     public Matrix4D getTransformationMatrix() {

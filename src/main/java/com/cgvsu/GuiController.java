@@ -10,6 +10,7 @@ import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.objreader.ObjReaderException;
 import com.cgvsu.objwriter.ObjWriterClass;
 import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.texture.Texture;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -45,7 +46,6 @@ import static com.cgvsu.deleteVertexAndPoligon.DeleteVertexAndFace.parseVertices
 
 
 public class GuiController {
-
     private static double[][] zBuffer;
     final private float TRANSLATION = 0.5F;
     private final double DEFAULT_SENSITIVITY = 30.0;
@@ -69,6 +69,7 @@ public class GuiController {
     public Button buttonApplyModel;
     public TextField fieldWriteCoordinate;
     public Button buttonRemoveVertex;
+    public Button buttonMoveCamera;
     public TextField rotateX;
     public TextField rotateY;
     public TextField rotateZ;
@@ -177,7 +178,8 @@ public class GuiController {
         checkBoxTexture.setOnAction(event -> touchTexture());
         checkBoxTriangulation.setOnAction(event -> touchPolyGrid());
         checkBoxLightning.setOnAction(event -> touchLightning());
-
+        // Вернуть камеру в начальную позицию
+        buttonMoveCamera.setOnAction(event -> MoveCamera());
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
@@ -244,7 +246,6 @@ public class GuiController {
 
     }
 
-
     @FXML
     void save() {
         if (!modelManager.getMeshes().isEmpty()) {
@@ -258,7 +259,6 @@ public class GuiController {
                 return;
             }
 
-            // Устанавливаем имя файла по умолчанию
             fileChooser.setInitialFileName(selectedModelName);
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ files (*.obj)", "*.obj"));
             File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
@@ -267,7 +267,6 @@ public class GuiController {
                 return;
             }
 
-            // расширение(формат) файла, если его нет
             String filePath = file.getAbsolutePath();
             if (!filePath.endsWith(".obj")) {
                 filePath += ".obj";
@@ -285,7 +284,6 @@ public class GuiController {
         }
     }
 
-    // Очистка сцены
     @FXML
     public void clearScene() {
         modelManager.clear();
@@ -298,14 +296,11 @@ public class GuiController {
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
         cameraManager.mouseCameraZoom(scrollEvent.getDeltaY());
     }
-
     @FXML
     public void onMousePressed(MouseEvent mouseEvent) {
         cameraManager.fixPoint(mouseEvent.getX(), mouseEvent.getY());
     }
-
     @FXML
-
     private void onMouseDragged(MouseEvent event) {
         cameraManager.onMouseDragged(event.getX(), event.getY());
     }
@@ -347,7 +342,6 @@ public class GuiController {
         targetZ.setText(String.format(Locale.US, "%.2f", camera.getTarget().getZ()));
 
     }
-
 
     private void removeCameraFromTheScene(MouseEvent event) {
         String selectedItem = fileNameCamera.getSelectionModel().getSelectedItem();
@@ -561,14 +555,7 @@ public class GuiController {
     public void touchTexture() {
         try {
             String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
-            if (selectedModelName == null) {
-                throw new IllegalArgumentException("Не выбрана модель!");
-            }
-
-            Model selectedModel = modelManager.getTransformedModel(selectedModelName);
-            if (selectedModel == null) {
-                throw new IllegalArgumentException("Модель не найдена!");
-            }
+            Model selectedModel = modelManager.getSelectedModel(selectedModelName);
 
             if (selectedModel.isActiveTexture()) {
                 selectedModel.setActiveTexture(false);
@@ -576,39 +563,48 @@ public class GuiController {
             }
 
             if (selectedModel.getPathTexture() == null) {
-                // Если текстура отсутствует, загружаем её
-                String texturePath = loadTextureFromFile();
+                Texture fileManager = new Texture();
+                String texturePath = fileManager.loadTextureFromFile(anchorPane.getScene().getWindow());
                 if (texturePath == null) {
                     checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
-                    return; // Пользователь отменил выбор
+                    return;
                 }
                 selectedModel.setPathTexture(texturePath);
             }
 
             selectedModel.setActiveTexture(true);
-        } catch (IllegalArgumentException e) {
-            showAlertWindow(anchorPane, Alert.AlertType.WARNING, e.getMessage(), ButtonType.CLOSE);
-            checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
         } catch (Exception e) {
-            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Ошибка при обработке текстуры!", ButtonType.CLOSE);
+            handleException(e, Alert.AlertType.ERROR, "Ошибка при обработке текстуры!");
             checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
         }
     }
 
-    /**
-     * Открывает диалог выбора файла для загрузки текстуры.
-     *
-     * @return Путь к выбранному файлу текстуры или null, если пользователь отменил выбор.
-     */
-    private String loadTextureFromFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Загрузка текстуры");
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Изображения (*.png, *.jpg)", "*.png", "*.jpg")
-        );
+    public void MoveCamera() {
+        String selectedItem = fileNameCamera.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) {
+            handleException(new IllegalArgumentException("Камера не выбрана!"), Alert.AlertType.WARNING, null);
+            return;
+        }
 
-        File file = fileChooser.showOpenDialog(anchorPane.getScene().getWindow());
-        return (file != null) ? file.getAbsolutePath() : null;
+        try {
+            Camera camera = cameraManager.getCamera(selectedItem);
+            if (camera == null) {
+                throw new IllegalArgumentException("Камера не найдена!");
+            }
+
+            String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+            Model selectedModel = modelManager.getSelectedModel(selectedModelName);
+
+            cameraManager.MoveCameraToTheOriginPosition();
+            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Камера возвращена в начальное положение.", ButtonType.OK);
+
+        } catch (Exception e) {
+            handleException(e, Alert.AlertType.WARNING, "Ошибка при перемещении камеры!");
+        }
+    }
+
+    public void handleException(Exception e, Alert.AlertType alertType, String defaultMessage) {
+        String message = (e instanceof IllegalArgumentException) ? e.getMessage() : defaultMessage;
+        showAlertWindow(anchorPane, alertType, message, ButtonType.CLOSE);
     }
 }

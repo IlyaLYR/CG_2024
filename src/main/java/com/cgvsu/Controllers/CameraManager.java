@@ -98,7 +98,6 @@ public class CameraManager {
         }
     }
 
-
     public double getSensitivity() {
         return sensitivity;
     }
@@ -121,6 +120,10 @@ public class CameraManager {
 
     public Camera getCamera(String name) {
         return cameras.get(name);
+    }
+
+    public void MoveCameraToTheOriginPosition() {
+        activeCamera.setPosition(new Vector3C(0, 0, 50));
     }
 
 }

@@ -134,4 +134,17 @@ public class ModelManager extends Model {
         this.model = model;
     }
 
+    public Model getSelectedModel(String selectedModelName) {
+        if (selectedModelName == null) {
+            throw new IllegalArgumentException("Модель не выбрана!");
+        }
+
+        Model selectedModel = getTransformedModel(selectedModelName);
+        if (selectedModel == null) {
+            throw new IllegalArgumentException("Модель не найдена!");
+        }
+
+        return selectedModel;
+    }
+
 }

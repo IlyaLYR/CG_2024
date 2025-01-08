@@ -1,5 +1,8 @@
 package com.cgvsu.texture;
 
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -43,5 +46,17 @@ public class Texture {
                 (argb >> 8) & 0xff, // зеленый
                 (argb) & 0xff  // синий
         };
+    }
+
+    public String loadTextureFromFile(Window window) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Загрузка текстуры");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Изображения (*.png, *.jpg)", "*.png", "*.jpg")
+        );
+
+        File file = fileChooser.showOpenDialog(window);
+        return (file != null) ? file.getAbsolutePath() : null;
     }
 }

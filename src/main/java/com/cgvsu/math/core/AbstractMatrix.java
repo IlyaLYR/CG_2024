@@ -550,10 +550,10 @@ public abstract class AbstractMatrix<T extends AbstractMatrix<T>> {
          *                                  <p>
          *                                  Пример:
          *                                  <pre>{@code
-         *                                                                                                                                                                                                                                                                                                                                                                            Matrix m1 = new Matrix(2, 3, new double[] {1, 2, 3, 4, 5, 6});
-         *                                                                                                                                                                                                                                                                                                                                                                            Matrix m2 = new Matrix(3, 2, new double[] {7, 8, 9, 10, 11, 12});
-         *                                                                                                                                                                                                                                                                                                                                                                            Matrix result = m1.multiplied(m2);
-         *                                                                                                                                                                                                                                                                                                                                                                            }</pre>
+         *                                                                                                                                                                                                                                                                                                                                                                                                             Matrix m1 = new Matrix(2, 3, new double[] {1, 2, 3, 4, 5, 6});
+         *                                                                                                                                                                                                                                                                                                                                                                                                             Matrix m2 = new Matrix(3, 2, new double[] {7, 8, 9, 10, 11, 12});
+         *                                                                                                                                                                                                                                                                                                                                                                                                             Matrix result = m1.multiplied(m2);
+         *                                                                                                                                                                                                                                                                                                                                                                                                             }</pre>
          */
         public Matrix multiplied(Matrix matrix) {
             if (getCols() != matrix.getRows()) {
@@ -674,9 +674,9 @@ public abstract class AbstractMatrix<T extends AbstractMatrix<T>> {
          *                                  <p>
          *                                  Пример:
          *                                  <pre>{@code
-         *                                                                            Matrix m = new Matrix(2, 2, new double[] {2, 0, 0, 2});
-         *                                                                            Matrix result = m.pows(3); // Результат: [8, 0; 0, 8]
-         *                                                                            }</pre>
+         *                                                                                                             Matrix m = new Matrix(2, 2, new double[] {2, 0, 0, 2});
+         *                                                                                                             Matrix result = m.pows(3); // Результат: [8, 0; 0, 8]
+         *                                                                                                             }</pre>
          *                                  </p>
          */
         public Matrix pows(int n) {

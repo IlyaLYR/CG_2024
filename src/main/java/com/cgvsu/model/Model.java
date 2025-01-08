@@ -3,6 +3,7 @@ package com.cgvsu.model;
 
 import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
+import com.cgvsu.texture.Texture;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,26 +12,16 @@ import java.util.Map;
 
 public class Model {
 
-    public String nameOfModel;
     public final ArrayList<Vector3C> vertices = new ArrayList<>();
     public final ArrayList<Vector2C> textureVertices = new ArrayList<>();
+    public String nameOfModel;
     public ArrayList<Vector3C> normals = new ArrayList<>();
     public ArrayList<Polygon> polygons = new ArrayList<>();
-
+    public String pathTexture = null;
+    public Texture texture = null;
     private boolean isActiveTexture = false;
     private boolean isActiveLighting = false;
     private boolean isActivePolyGrid = false;
-
-//    private Color colorRender = Color.;
-//    private Color colorGrid = Color.BLACK;
-
-
-//    public Model(String nameOfModel, boolean isActiveTexture, boolean isActiveLighting, boolean isActivePolyGrid) {
-//        this.nameOfModel = nameOfModel;
-//        this.isActiveTexture = isActiveTexture;
-//        this.isActiveLighting = isActiveLighting;
-//        this.isActivePolyGrid = isActivePolyGrid;
-//    }
 
     public ArrayList<Vector3C> getVertices() {
         return vertices;
@@ -187,5 +178,13 @@ public class Model {
 
     public void setActivePolyGrid(boolean activePolyGrid) {
         isActivePolyGrid = activePolyGrid;
+    }
+
+    public String getPathTexture() {
+        return pathTexture;
+    }
+
+    public void setPathTexture(String pathTexture) {
+        this.pathTexture = pathTexture;
     }
 }

@@ -118,6 +118,7 @@ public class CameraManager {
     public void removeCamera(String name) {
         cameras.remove(name);
     }
+
     public Camera getCamera(String name) {
         return cameras.get(name);
     }

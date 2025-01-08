@@ -44,13 +44,11 @@ import static com.cgvsu.JavaFXUtils.Alert.showAlertWindow;
 import static com.cgvsu.deleteVertexAndPoligon.DeleteVertexAndFace.parseVerticesInput;
 
 
-@SuppressWarnings({"rawtypes"})
 public class GuiController {
 
+    private static double[][] zBuffer;
     final private float TRANSLATION = 0.5F;
     private final double DEFAULT_SENSITIVITY = 30.0;
-    private static double[][] zBuffer;
-    private boolean coloring = true;
     private final ObjectProperty<Color> selectedColor = new SimpleObjectProperty<>();
     private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
     private final ObservableList<String> tempCameraName = FXCollections.observableArrayList("Камера 0");
@@ -130,14 +128,12 @@ public class GuiController {
             RenderEngine.render(canvas.getGraphicsContext2D(),
                     cameraManager.getActiveCamera(),
                     modelManager.getTransformMeshes(),
-                    (int) width, (int) height, selectedColor.get(), zBuffer, coloring);
+                    (int) width, (int) height, selectedColor.get(), zBuffer);
 
         });
 
         contextMenu = new ContextMenu();
-
         selectedColor.bind(changeColorModel.valueProperty());
-
         ThemeSwitch themeSwitch = new ThemeSwitch();
         themeSwitch.setLayoutX(20);
         themeSwitch.setLayoutY(20);
@@ -177,7 +173,7 @@ public class GuiController {
 
         // Удаление вершин
         buttonRemoveVertex.setOnAction(event -> handleRemoveVertex());
-
+        // Текстура, сетка, освещение
         checkBoxTexture.setOnAction(event -> touchTexture());
         checkBoxTriangulation.setOnAction(event -> touchPolyGrid());
         checkBoxLightning.setOnAction(event -> touchLightning());
@@ -371,7 +367,7 @@ public class GuiController {
                 return;
             }
             if (cameraManager.getActiveCamera().equals(cameraManager.getCamera(selectedItem))) {
-                showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Невозможно удалить активную камеру! Преключитесь или создайте новую...", ButtonType.CLOSE);
+                showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Невозможно удалить активную камеру! Переключитесь или создайте новую...", ButtonType.CLOSE);
                 return;
             }
             cameraManager.removeCamera(selectedItem);
@@ -398,7 +394,6 @@ public class GuiController {
         String selectedModel = fileNameModel.getSelectionModel().getSelectedItem();
 
         modelManager.setModel(modelManager.getTransformedModel(selectedModel));
-        System.out.println(modelManager.getModel().isActivePolyGrid());
 
         if (selectedModel == null) {
             showAlertWindow(anchorPane, Alert.AlertType.WARNING,
@@ -445,7 +440,7 @@ public class GuiController {
 
         List<Integer> verticesToRemoveIndices = parseVerticesInput(coordinateInput);
         if (verticesToRemoveIndices.isEmpty()) {
-            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Координаты введены некорректно!", ButtonType.CLOSE);
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Координаты введены некорректно!", ButtonType.CLOSE);
             return;
         }
 
@@ -491,7 +486,7 @@ public class GuiController {
         Camera camera = cameraManager.getCamera(selectedItem);
         try {
             if (cameraManager.getCameras().containsKey(nameCamera.getText()) && !Objects.equals(nameCamera.getText(), selectedItem)) {
-                showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Название камеры конфликтует с существующими", ButtonType.CLOSE);
+                showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Название камеры конфликтует с существующими", ButtonType.CLOSE);
                 return;
             }
             camera.setPosition(new Vector3C(
@@ -548,32 +543,72 @@ public class GuiController {
             boolean isSelected = checkBoxTriangulation.isSelected(); // Проверка состояния
             modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).setActivePolyGrid(isSelected);
         } catch (Exception e) {
-            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Выберите модель!", ButtonType.CLOSE);
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель!", ButtonType.CLOSE);
             checkBoxTriangulation.setSelected(!checkBoxTriangulation.isSelected());
         }
-
-    }
-
-    public void touchTexture() {
-        try {
-            boolean isSelected = checkBoxTriangulation.isSelected(); // Проверка состояния
-            modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).setActiveTexture(isSelected);
-        } catch (Exception e) {
-            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Выберите модель!", ButtonType.CLOSE);
-            checkBoxTriangulation.setSelected(!checkBoxTexture.isSelected());
-        }
-
     }
 
     public void touchLightning() {
         try {
-            boolean isSelected = checkBoxTriangulation.isSelected(); // Проверка состояния
+            boolean isSelected = checkBoxLightning.isSelected(); // Проверка состояния
             modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).setActiveLighting(isSelected);
         } catch (Exception e) {
-            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Выберите модель!", ButtonType.CLOSE);
-            checkBoxTriangulation.setSelected(!checkBoxLightning.isSelected());
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель!", ButtonType.CLOSE);
+            checkBoxLightning.setSelected(!checkBoxLightning.isSelected());
         }
-
     }
 
+    public void touchTexture() {
+        try {
+            String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+            if (selectedModelName == null) {
+                throw new IllegalArgumentException("Не выбрана модель!");
+            }
+
+            Model selectedModel = modelManager.getTransformedModel(selectedModelName);
+            if (selectedModel == null) {
+                throw new IllegalArgumentException("Модель не найдена!");
+            }
+
+            if (selectedModel.isActiveTexture()) {
+                selectedModel.setActiveTexture(false);
+                return;
+            }
+
+            if (selectedModel.getPathTexture() == null) {
+                // Если текстура отсутствует, загружаем её
+                String texturePath = loadTextureFromFile();
+                if (texturePath == null) {
+                    checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
+                    return; // Пользователь отменил выбор
+                }
+                selectedModel.setPathTexture(texturePath);
+            }
+
+            selectedModel.setActiveTexture(true);
+        } catch (IllegalArgumentException e) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, e.getMessage(), ButtonType.CLOSE);
+            checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
+        } catch (Exception e) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Ошибка при обработке текстуры!", ButtonType.CLOSE);
+            checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
+        }
+    }
+
+    /**
+     * Открывает диалог выбора файла для загрузки текстуры.
+     *
+     * @return Путь к выбранному файлу текстуры или null, если пользователь отменил выбор.
+     */
+    private String loadTextureFromFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Загрузка текстуры");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Изображения (*.png, *.jpg)", "*.png", "*.jpg")
+        );
+
+        File file = fileChooser.showOpenDialog(anchorPane.getScene().getWindow());
+        return (file != null) ? file.getAbsolutePath() : null;
+    }
 }

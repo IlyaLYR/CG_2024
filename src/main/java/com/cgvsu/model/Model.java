@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class Model {
 
-    public final ArrayList<Vector3C> vertices = new ArrayList<>();
-    public final ArrayList<Vector2C> textureVertices = new ArrayList<>();
+    public ArrayList<Vector3C> vertices = new ArrayList<>();
+    public ArrayList<Vector2C> textureVertices = new ArrayList<>();
     public String nameOfModel;
     public ArrayList<Vector3C> normals = new ArrayList<>();
     public ArrayList<Polygon> polygons = new ArrayList<>();

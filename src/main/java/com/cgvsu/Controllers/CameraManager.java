@@ -125,5 +125,4 @@ public class CameraManager {
     public void MoveCameraToTheOriginPosition() {
         activeCamera.setPosition(new Vector3C(0, 0, 50));
     }
-
 }

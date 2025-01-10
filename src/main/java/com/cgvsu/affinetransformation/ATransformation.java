@@ -35,6 +35,7 @@ public class ATransformation {
 
     public Model applyTransformationToModel(Model originalModel) {
         originalModel.vertices.replaceAll(this::applyTransformationToVector);
+        originalModel.computeNormals();
         return originalModel;
     }
 

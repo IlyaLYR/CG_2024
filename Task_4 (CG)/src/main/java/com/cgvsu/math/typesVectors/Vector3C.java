@@ -30,6 +30,10 @@ public class Vector3C extends VectorWrapperC<Vector3C> {
         super(3, base);
     }
 
+    public Vector3C(double x, double y, double z) {
+        super(3, new double[]{x, y, z});
+    }
+
     /**
      * Вспомогательный метод для создания нового объекта Vector3C.
      * <p>
@@ -42,11 +46,6 @@ public class Vector3C extends VectorWrapperC<Vector3C> {
     public Vector3C newMatrix(VectorC vector) {
         return new Vector3C(vector.getBase());
     }
-
-    public Vector3C(double x, double y, double z) {
-        super(3, new double[]{x, y, z});
-    }
-
 
     public double getX() {
         return get(0);

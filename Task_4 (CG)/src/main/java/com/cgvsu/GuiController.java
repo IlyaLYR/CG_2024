@@ -1,47 +1,63 @@
 package com.cgvsu;
 
+import com.cgvsu.Camera.Camera;
+import com.cgvsu.Controllers.CameraManager;
+import com.cgvsu.Controllers.ModelManager;
+import com.cgvsu.deleteVertexAndPoligon.DeleteVertexAndFace;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.objreader.ObjReaderException;
 import com.cgvsu.objwriter.ObjWriterClass;
-import com.cgvsu.render_engine.*;
+import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.texture.Texture;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
-import com.cgvsu.render_engine.Camera;
+import static com.cgvsu.JavaFXUtils.Alert.showAlertWindow;
+import static com.cgvsu.deleteVertexAndPoligon.DeleteVertexAndFace.parseVerticesInput;
 
 
-@SuppressWarnings({"rawtypes", "DuplicateExpressions"})
 public class GuiController {
-
+    private static double[][] zBuffer;
     final private float TRANSLATION = 0.5F;
+    private final double DEFAULT_SENSITIVITY = 30.0;
+    private final ObjectProperty<Color> selectedColor = new SimpleObjectProperty<>();
+    private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
+    private final ObservableList<String> tempCameraName = FXCollections.observableArrayList("Камера 0");
+    private final ObjWriterClass objWriter = new ObjWriterClass();
+    final private CameraManager cameraManager = new CameraManager();
+    private final ModelManager modelManager = new ModelManager();
     public Button buttonSaveModel;
     public Button addModel;
-    public ListView fileNameCamera;
+    public ListView<String> fileNameCamera;
     public Button buttonApplyCamera;
     public Button buttonAddCamera;
     public TextField positionX;
@@ -52,9 +68,8 @@ public class GuiController {
     public TextField targetZ;
     public Button buttonApplyModel;
     public TextField fieldWriteCoordinate;
-    public ToggleButton buttonRemoveVertex;
-    public ToggleButton buttonRemoveFace;
-    public ToggleButton buttonTriangulation;
+    public Button buttonRemoveVertex;
+    public Button buttonMoveCamera;
     public TextField rotateX;
     public TextField rotateY;
     public TextField rotateZ;
@@ -64,43 +79,34 @@ public class GuiController {
     public TextField translateX;
     public TextField translateY;
     public TextField translateZ;
-
+    public AnchorPane cameraPane;
+    public Text positionText;
+    public TextField nameCamera;
+    public Text nameCameraText;
     @FXML
-    AnchorPane anchorPane;
-
+    private AnchorPane anchorPane;
     @FXML
-    Label labelPercent;
-
+    private Label labelPercent;
     @FXML
-    Slider sliderMouseSensitivity;
-
+    private Slider sliderMouseSensitivity;
     @FXML
     private Canvas canvas;
-
     @FXML
     private CheckBox checkBoxTransform;
-
-    private final HashMap<String, Model> meshes = new HashMap<>();
-    private final HashMap<String, Model> transformMeshes = new HashMap<>();
-
+    @FXML
+    private ColorPicker changeColorModel;
     private ContextMenu contextMenu;
-
     @FXML
     private ListView<String> fileNameModel;
-    private final ObservableList<String> tempFileName = FXCollections.observableArrayList();
-
-    private final ObjWriterClass objWriter = new ObjWriterClass();
-    private final Camera camera = new Camera(new Vector3C(0, 0, 100), new Vector3C(0, 0, 0), 1.0F, 1, 0.01F, 100);
-
-    final private TransferManagerCamera transfer = new TransferManagerCamera(camera);
-    private final TransferManagerModel transferModel = new TransferManagerModel();
-
-    private final boolean isCtrlPressed = false;
-
+    @FXML
+    private CheckBox checkBoxTexture;
+    @FXML
+    private CheckBox checkBoxTriangulation;
+    @FXML
+    private CheckBox checkBoxLightning;
 
     @FXML
     private void initialize() {
-        contextMenu = new ContextMenu();
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
@@ -111,18 +117,36 @@ public class GuiController {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
-            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-            camera.setAspectRatio((float) (width / height));
+            zBuffer = new double[(int) width][(int) height];
+            for (double[] doubles : zBuffer) {
+                Arrays.fill(doubles, Double.POSITIVE_INFINITY);
+            }
 
-            //TODO Убрали if()
-            canvas.getGraphicsContext2D().setStroke(Color.BLUE);
-            RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformMeshes, (int) width, (int) height);
+            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+            cameraManager.getActiveCamera().setAspectRatio((float) (width / height));
+            fileNameCamera.setItems(tempCameraName);
+
+            RenderEngine.render(canvas.getGraphicsContext2D(),
+                    cameraManager.getActiveCamera(),
+                    modelManager.getTransformMeshes(),
+                    (int) width, (int) height, selectedColor.get(), zBuffer);
 
         });
 
+        contextMenu = new ContextMenu();
+        selectedColor.bind(changeColorModel.valueProperty());
+        ThemeSwitch themeSwitch = new ThemeSwitch();
+        themeSwitch.setLayoutX(20);
+        themeSwitch.setLayoutY(20);
+        anchorPane.getChildren().add(themeSwitch);
+        themeSwitch.darkButton.setOnAction(event -> setTheme(true));
+        themeSwitch.lightButton.setOnAction(event -> setTheme(false));
+
         // начальное значение чувствительности камеры
-        double initialSensitivity = 10 / 10000.0;
-        transfer.setSensitivity(initialSensitivity);
+        double initialSensitivity = DEFAULT_SENSITIVITY / 10000.0;
+        cameraManager.setSensitivity(initialSensitivity);
+        labelPercent.setText(String.format("%.0f%%", DEFAULT_SENSITIVITY));
+        sliderMouseSensitivity.setValue(DEFAULT_SENSITIVITY);
 
         sliderMouseSensitivity.valueProperty().addListener(
                 (observable, oldValue, newValue) -> MouseSensitivity(newValue.doubleValue()));
@@ -132,18 +156,33 @@ public class GuiController {
                 contextMenu.getItems().clear();
                 removeModelFromTheScene(event);
             }
+            if (event.getButton() == MouseButton.PRIMARY) {
+                checkBoxTriangulation.setSelected(modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).isActivePolyGrid());
+                checkBoxLightning.setSelected(modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).isActiveLighting());
+                checkBoxTexture.setSelected(modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).isActiveTexture());
+            }
+        });
+        fileNameCamera.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.SECONDARY) {
+                contextMenu.getItems().clear();
+                removeCameraFromTheScene(event);
+            }
+            if (event.getButton() == MouseButton.PRIMARY) {
+                getParamsCamera();
+            }
         });
 
+        // Удаление вершин
+        buttonRemoveVertex.setOnAction(event -> handleRemoveVertex());
+        // Текстура, сетка, освещение
+        checkBoxTexture.setOnAction(event -> touchTexture());
+        checkBoxTriangulation.setOnAction(event -> touchPolyGrid());
+        checkBoxLightning.setOnAction(event -> touchLightning());
+        // Вернуть камеру в начальную позицию
+        buttonMoveCamera.setOnAction(event -> MoveCamera());
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
-    }
-
-    public void showAlertWindow(AnchorPane anchorPane, Alert.AlertType alertType, String message, ButtonType buttonType) {
-        Stage mainStage = (Stage) anchorPane.getScene().getWindow();
-        Alert alert = new Alert(alertType, message, buttonType);
-        alert.initOwner(mainStage);
-        alert.showAndWait();
     }
 
     @FXML
@@ -163,12 +202,11 @@ public class GuiController {
         try {
             String fileContent = Files.readString(filePath);
             Model model = ObjReader.read(fileContent);
-            meshes.put(fileName, model);
-            transformMeshes.put(fileName, GraphicConveyor.rotateScaleTranslate(model, model.getModelCenter()));
+            model.computeNormals();
+            model.triangulate();
+            modelManager.addModel(fileName, model);
             tempFileName.add(fileName);
             fileNameModel.setItems(tempFileName);
-
-            // todo: обработка ошибок
 
         } catch (IOException exception) {
             showAlertWindow(anchorPane, Alert.AlertType.ERROR, exception.getMessage(), ButtonType.CLOSE);
@@ -178,8 +216,39 @@ public class GuiController {
     }
 
     @FXML
-    void save(MouseEvent event) {
-        if (!meshes.isEmpty()) {
+    private void buttonAddCamera() {
+        String cameraName = nameCamera.getText();
+        if (cameraName == null) {
+            cameraName = "Unnamed";
+        }
+        if (cameraManager.getCameras().containsKey(cameraName)) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Для изменение параметров существующей камеры нажмите \"Применить\"", ButtonType.CLOSE);
+            return;
+        }
+        try {
+
+            Camera camera = new Camera(
+                    new Vector3C(
+                            Float.parseFloat(positionX.getText()),
+                            Float.parseFloat(positionY.getText()),
+                            Float.parseFloat(positionZ.getText())),
+                    new Vector3C(
+                            Float.parseFloat(targetX.getText()),
+                            Float.parseFloat(targetY.getText()),
+                            Float.parseFloat(targetZ.getText())),
+                    1.0F, 1, 0.01F, 100);
+            cameraManager.addCamera(cameraName, camera);
+            tempCameraName.add(cameraName);
+            fileNameCamera.setItems(tempCameraName);
+        } catch (Exception exception) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, exception.getMessage(), ButtonType.CLOSE);
+        }
+
+    }
+
+    @FXML
+    void save() {
+        if (!modelManager.getMeshes().isEmpty()) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Model");
 
@@ -190,25 +259,23 @@ public class GuiController {
                 return;
             }
 
-            // Устанавливаем имя файла по умолчанию
             fileChooser.setInitialFileName(selectedModelName);
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("OBJ files (*.obj)", "*.obj"));
-            File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+            File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
 
             if (file == null) {
                 return;
             }
 
-            // расширение(формат) файла, если его нет
             String filePath = file.getAbsolutePath();
             if (!filePath.endsWith(".obj")) {
                 filePath += ".obj";
             }
 
             if (checkBoxTransform.isSelected()) {
-                objWriter.write(transformMeshes.get(selectedModelName), filePath);
+                objWriter.write(modelManager.getTransformedModel(selectedModelName), filePath);
             } else {
-                objWriter.write(meshes.get(selectedModelName), filePath);
+                objWriter.write(modelManager.getModel(selectedModelName), filePath);
             }
 
             showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Модель успешно сохранена!", ButtonType.CLOSE);
@@ -217,65 +284,28 @@ public class GuiController {
         }
     }
 
-    // Очистка сцены
     @FXML
     public void clearScene() {
-        meshes.clear();
-        transformMeshes.clear();
+        modelManager.clear();
         tempFileName.clear();
         fileNameModel.setItems(tempFileName);
+        resetItemInGrid();
     }
 
-    @FXML
-    public void handleCameraForward(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3C(0, 0, -TRANSLATION));
-    }
-
-    @FXML
-    public void handleCameraBackward(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3C(0, 0, TRANSLATION));
-    }
-
-    @FXML
-    public void handleCameraLeft(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3C(TRANSLATION, 0, 0));
-    }
-
-    @FXML
-    public void handleCameraRight(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3C(-TRANSLATION, 0, 0));
-    }
-
-    @FXML
-    public void handleCameraUp(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3C(0, TRANSLATION, 0));
-    }
-
-    @FXML
-    public void handleCameraDown(ActionEvent actionEvent) {
-        camera.movePosition(new Vector3C(0, -TRANSLATION, 0));
-    }
-
-
-    //Управление камерой мышкой
     @FXML
     public void mouseCameraZoom(ScrollEvent scrollEvent) {
-        transfer.mouseCameraZoom(scrollEvent.getDeltaY());
+        cameraManager.mouseCameraZoom(scrollEvent.getDeltaY());
     }
-
     @FXML
     public void onMousePressed(MouseEvent mouseEvent) {
-        transfer.fixPoint(mouseEvent.getX(), mouseEvent.getY());
+        cameraManager.fixPoint(mouseEvent.getX(), mouseEvent.getY());
+    }
+    @FXML
+    private void onMouseDragged(MouseEvent event) {
+        cameraManager.onMouseDragged(event.getX(), event.getY());
     }
 
     @FXML
-
-    public void onMouseDragged(MouseEvent event) {
-        transfer.onMouseDragged(event.getX(), event.getY());
-    }
-
-
-    // Удаление моделей в Active Models по клику на модель
     private void removeModelFromTheScene(MouseEvent event) {
         String selectedItem = fileNameModel.getSelectionModel().getSelectedItem();
 
@@ -287,27 +317,294 @@ public class GuiController {
         deleteItem.textProperty().bind(Bindings.format("Delete \"%s\"", selectedItem));
 
         deleteItem.setOnAction(deleteEvent -> {
-            transformMeshes.remove(selectedItem);
-            meshes.remove(selectedItem);
+            modelManager.removeModel(selectedItem);
             tempFileName.remove(selectedItem);
             fileNameModel.setItems(tempFileName);
+            resetItemInGrid();
         });
 
         contextMenu.getItems().setAll(deleteItem);
         contextMenu.show(fileNameModel, event.getScreenX(), event.getScreenY() + 10.5);
     }
 
-    private void MouseSensitivity(double newValue) {
-        double sensitivity = newValue / 10000.0;
-        transfer.setSensitivity(sensitivity);
-        labelPercent.setText(String.format("%.0f%%", newValue));
-    }
-    @FXML
-    public void buttonApplyModel() {
-        //TODO обработка ошибок null-model
-        transferModel.setModel(transformMeshes.get(fileNameModel.getSelectionModel().getSelectedItem()));
-        Model model = transferModel.applyModel(rotateX.getText(), rotateY.getText(), rotateZ.getText(), scaleX.getText(), scaleY.getText(), scaleZ.getText(), translateX.getText(), translateY.getText(), translateZ.getText());
-        transformMeshes.put(fileNameModel.getSelectionModel().getSelectedItem(), model);
+    private void getParamsCamera() {
+        String selectedItem = fileNameCamera.getSelectionModel().getSelectedItem();
+        Camera camera = cameraManager.getCamera(selectedItem);
+        if (selectedItem == null) {
+            return;
+        }
+        nameCamera.setText(selectedItem);
+        positionX.setText(String.format(Locale.US, "%.2f", camera.getPosition().getX()));
+        positionY.setText(String.format(Locale.US, "%.2f", camera.getPosition().getY()));
+        positionZ.setText(String.format(Locale.US, "%.2f", camera.getPosition().getZ()));
+        targetX.setText(String.format(Locale.US, "%.2f", camera.getTarget().getX()));
+        targetY.setText(String.format(Locale.US, "%.2f", camera.getTarget().getY()));
+        targetZ.setText(String.format(Locale.US, "%.2f", camera.getTarget().getZ()));
+
     }
 
+    private void removeCameraFromTheScene(MouseEvent event) {
+        String selectedItem = fileNameCamera.getSelectionModel().getSelectedItem();
+
+        if (selectedItem == null) {
+            return;
+        }
+
+        MenuItem deleteItem = new MenuItem();
+        deleteItem.textProperty().bind(Bindings.format("Delete \"%s\"", selectedItem));
+        MenuItem setItem = new MenuItem();
+        setItem.textProperty().bind(Bindings.format("Set Active \"%s\"", selectedItem));
+
+        deleteItem.setOnAction(deleteEvent -> {
+            if (cameraManager.getCameras().size() == 1) {
+                showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Невозможно удалить единственную камеру!!", ButtonType.CLOSE);
+                return;
+            }
+            if (cameraManager.getActiveCamera().equals(cameraManager.getCamera(selectedItem))) {
+                showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Невозможно удалить активную камеру! Переключитесь или создайте новую...", ButtonType.CLOSE);
+                return;
+            }
+            cameraManager.removeCamera(selectedItem);
+            tempCameraName.remove(selectedItem);
+            fileNameCamera.setItems(tempCameraName);
+
+
+        });
+        setItem.setOnAction(setEvent -> cameraManager.setActiveCamera(selectedItem));
+
+        contextMenu.getItems().setAll(deleteItem, setItem);
+        contextMenu.show(fileNameModel, event.getScreenX(), event.getScreenY() + 10.5);
+    }
+
+    private void MouseSensitivity(double newValue) {
+        double sensitivity = newValue / 10000.0;
+        cameraManager.setSensitivity(sensitivity);
+        labelPercent.setText(String.format("%.0f%%", newValue));
+    }
+
+    @FXML
+    public void buttonApplyModel() {
+
+        String selectedModel = fileNameModel.getSelectionModel().getSelectedItem();
+
+        modelManager.setModel(modelManager.getTransformedModel(selectedModel));
+
+        if (selectedModel == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING,
+                    "Выберите модель для трансформации!", ButtonType.CLOSE);
+            return;
+        }
+
+        Model model = modelManager.getTransformedModel(selectedModel);
+
+        if (model == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Модель не найдена!", ButtonType.CLOSE);
+            return;
+        }
+
+        if (!checkScaleValues()) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR,
+                    "Значения масштабирования не могут быть меньше 1!", ButtonType.CLOSE);
+            return;
+        }
+        try {
+            modelManager.applyModel(rotateX.getText(), rotateY.getText(),
+                    rotateZ.getText(), scaleX.getText(),
+                    scaleY.getText(), scaleZ.getText(),
+                    translateX.getText(), translateY.getText(), translateZ.getText(), selectedModel);
+        } catch (Exception e) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR,
+                    "Ошибка применения трансформаций: " + e.getMessage(), ButtonType.CLOSE);
+        }
+    }
+
+    @FXML
+    public void handleRemoveVertex() {
+        String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+        if (selectedModelName == null || selectedModelName.isEmpty()) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель для удаления вершин!", ButtonType.CLOSE);
+            return;
+        }
+
+        String coordinateInput = fieldWriteCoordinate.getText();
+        if (coordinateInput == null || coordinateInput.isEmpty()) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Введите координаты вершин для удаления!", ButtonType.CLOSE);
+            return;
+        }
+
+        List<Integer> verticesToRemoveIndices = parseVerticesInput(coordinateInput);
+        if (verticesToRemoveIndices.isEmpty()) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Координаты введены некорректно!", ButtonType.CLOSE);
+            return;
+        }
+
+        Model selectedModel = modelManager.getTransformedModel(selectedModelName);
+        if (selectedModel == null) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Модель не найдена!", ButtonType.CLOSE);
+            return;
+        }
+
+        Model updatedModel = DeleteVertexAndFace.changeModel(selectedModel, verticesToRemoveIndices);
+        modelManager.setMesh(selectedModelName, updatedModel);
+
+        showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Вершины успешно удалены!", ButtonType.CLOSE);
+        fieldWriteCoordinate.clear();
+    }
+
+    private void setTheme(boolean isDarkTheme) {
+        anchorPane.getScene().getStylesheets().clear();
+        String theme = isDarkTheme ? "/dark-theme.css" : "/light-theme.css";
+        anchorPane.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource(theme)).toExternalForm());
+    }
+
+    @FXML
+    private void resetItemInGrid() {
+        scaleX.setText("1");
+        scaleY.setText("1");
+        scaleZ.setText("1");
+        rotateX.setText("0");
+        rotateY.setText("0");
+        rotateZ.setText("0");
+        translateX.setText("0");
+        translateY.setText("0");
+        translateZ.setText("0");
+    }
+
+    @FXML
+    public void ApplyCamera() {
+        String selectedItem = fileNameCamera.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) {
+            return;
+        }
+
+        Camera camera = cameraManager.getCamera(selectedItem);
+        try {
+            if (cameraManager.getCameras().containsKey(nameCamera.getText()) && !Objects.equals(nameCamera.getText(), selectedItem)) {
+                showAlertWindow(anchorPane, Alert.AlertType.ERROR, "Название камеры конфликтует с существующими", ButtonType.CLOSE);
+                return;
+            }
+            camera.setPosition(new Vector3C(
+                            Float.parseFloat(positionX.getText()),
+                            Float.parseFloat(positionY.getText()),
+                            Float.parseFloat(positionZ.getText())
+                    )
+            );
+            camera.setTarget(new Vector3C(
+                    Float.parseFloat(targetX.getText()),
+                    Float.parseFloat(targetY.getText()),
+                    Float.parseFloat(targetZ.getText())
+            ));
+
+            cameraManager.removeCamera(selectedItem);
+            tempCameraName.remove(selectedItem);
+            tempCameraName.add(nameCamera.getText());
+            fileNameCamera.setItems(tempCameraName);
+            cameraManager.addCamera(nameCamera.getText(), camera);
+        } catch (NumberFormatException e) {
+            showAlertWindow(anchorPane, Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
+        }
+
+    }
+
+    @FXML
+    private boolean checkScaleValues() {
+        try {
+            double scaleXValue = Double.parseDouble(scaleX.getText());
+            double scaleYValue = Double.parseDouble(scaleY.getText());
+            double scaleZValue = Double.parseDouble(scaleZ.getText());
+
+            return scaleXValue >= 1 && scaleYValue >= 1 && scaleZValue >= 1;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+    }
+
+    @FXML
+    public void handleKeyPressed(KeyEvent event) {
+        switch (event.getCode()) {
+            case W -> cameraManager.getActiveCamera().movePosition(new Vector3C(0, TRANSLATION, 0));
+            case S -> cameraManager.getActiveCamera().movePosition(new Vector3C(0, -TRANSLATION, 0));
+            case LEFT -> cameraManager.getActiveCamera().movePosition(new Vector3C(TRANSLATION, 0, 0));
+            case RIGHT -> cameraManager.getActiveCamera().movePosition(new Vector3C(-TRANSLATION, 0, 0));
+            case UP -> cameraManager.getActiveCamera().movePosition(new Vector3C(0, 0, -TRANSLATION));
+            case DOWN -> cameraManager.getActiveCamera().movePosition(new Vector3C(0, 0, TRANSLATION));
+        }
+    }
+
+    public void touchPolyGrid() {
+        try {
+            boolean isSelected = checkBoxTriangulation.isSelected(); // Проверка состояния
+            modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).setActivePolyGrid(isSelected);
+        } catch (Exception e) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель!", ButtonType.CLOSE);
+            checkBoxTriangulation.setSelected(!checkBoxTriangulation.isSelected());
+        }
+    }
+
+    public void touchLightning() {
+        try {
+            boolean isSelected = checkBoxLightning.isSelected(); // Проверка состояния
+            modelManager.getTransformedModel(fileNameModel.getSelectionModel().getSelectedItem()).setActiveLighting(isSelected);
+        } catch (Exception e) {
+            showAlertWindow(anchorPane, Alert.AlertType.WARNING, "Выберите модель!", ButtonType.CLOSE);
+            checkBoxLightning.setSelected(!checkBoxLightning.isSelected());
+        }
+    }
+
+    public void touchTexture() {
+        try {
+            String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+            Model selectedModel = modelManager.getSelectedModel(selectedModelName);
+
+            if (selectedModel.isActiveTexture()) {
+                selectedModel.setActiveTexture(false);
+                return;
+            }
+
+            if (selectedModel.getPathTexture() == null) {
+                Texture fileManager = new Texture();
+                String texturePath = fileManager.loadTextureFromFile(anchorPane.getScene().getWindow());
+                if (texturePath == null) {
+                    checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
+                    return;
+                }
+                selectedModel.setPathTexture(texturePath);
+            }
+
+            selectedModel.setActiveTexture(true);
+        } catch (Exception e) {
+            handleException(e, Alert.AlertType.ERROR, "Ошибка при обработке текстуры!");
+            checkBoxTexture.setSelected(!checkBoxTexture.isSelected());
+        }
+    }
+
+    public void MoveCamera() {
+        String selectedItem = fileNameCamera.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) {
+            handleException(new IllegalArgumentException("Камера не выбрана!"), Alert.AlertType.WARNING, null);
+            return;
+        }
+
+        try {
+            Camera camera = cameraManager.getCamera(selectedItem);
+            if (camera == null) {
+                throw new IllegalArgumentException("Камера не найдена!");
+            }
+
+            String selectedModelName = fileNameModel.getSelectionModel().getSelectedItem();
+            Model selectedModel = modelManager.getSelectedModel(selectedModelName);
+
+            cameraManager.MoveCameraToTheOriginPosition();
+            showAlertWindow(anchorPane, Alert.AlertType.INFORMATION, "Камера возвращена в начальное положение.", ButtonType.OK);
+
+        } catch (Exception e) {
+            handleException(e, Alert.AlertType.WARNING, "Ошибка при перемещении камеры!");
+        }
+    }
+
+    public void handleException(Exception e, Alert.AlertType alertType, String defaultMessage) {
+        String message = (e instanceof IllegalArgumentException) ? e.getMessage() : defaultMessage;
+        showAlertWindow(anchorPane, alertType, message, ButtonType.CLOSE);
+    }
 }

@@ -1,29 +1,36 @@
-package com.cgvsu.render_engine;
+package com.cgvsu.Controllers;
 
 import com.cgvsu.affinetransformation.ATransformation;
 import com.cgvsu.affinetransformation.STransformation;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
+import com.cgvsu.render_engine.GraphicConveyor;
 
-public class TransferManagerModel {
+import java.util.HashMap;
+
+public class ModelManager extends Model {
+    private final HashMap<String, Model> meshes = new HashMap<>();
+    private final HashMap<String, Model> transformMeshes = new HashMap<>();
     private Model model;
     private double mouseX;
     private double mouseY;
 
-    public TransferManagerModel() {
+
+    public ModelManager() {
         mouseX = 0;
         mouseY = 0;
     }
 
-    public Model applyModel(String rotateX,
-                            String rotateY,
-                            String rotateZ,
-                            String scaleX,
-                            String scaleY,
-                            String scaleZ,
-                            String translateX,
-                            String translateY,
-                            String translateZ
+    public void applyModel(String rotateX,
+                           String rotateY,
+                           String rotateZ,
+                           String scaleX,
+                           String scaleY,
+                           String scaleZ,
+                           String translateX,
+                           String translateY,
+                           String translateZ,
+                           String name
     ) {
         double doubleRotateX = Math.toRadians(Float.parseFloat(rotateX));
         double doubleRotateY = Math.toRadians(Float.parseFloat(rotateY));
@@ -44,15 +51,7 @@ public class TransferManagerModel {
                 .scaleByCoordinates(doubleScaleX, doubleScaleY, doubleScaleZ)
                 .build();
 
-        return transformation.applyTransformationToModel(model);
-    }
-
-    public Model getModel() {
-        return model;
-    }
-
-    public void setModel(Model model) {
-        this.model = model;
+        setMesh(name, transformation.applyTransformationToModel(model));
     }
 
     // Метод для фиксации положения мыши (используется при старте перетаскивания)
@@ -60,7 +59,6 @@ public class TransferManagerModel {
         mouseX = detX;
         mouseY = detY;
     }
-
 
 
     public void onMouseDragged(double x, double y, double smoothFactor) {
@@ -85,5 +83,68 @@ public class TransferManagerModel {
         mouseY = y;
     }
 
+    public void addModel(String name, Model model) {
+        meshes.put(name, model);
+        transformMeshes.put(name, GraphicConveyor.rotateScaleTranslate(model, model.getModelCenter()));
+    }
+
+    public void removeModel(String name) {
+        meshes.remove(name);
+        transformMeshes.remove(name);
+    }
+
+    public Model getModel(String name) {
+        return meshes.get(name);
+    }
+
+    public Model getTransformedModel(String name) {
+        return transformMeshes.get(name);
+    }
+
+    public void clear() {
+        meshes.clear();
+        transformMeshes.clear();
+    }
+
+    public HashMap<String, Model> getMeshes() {
+        return meshes;
+    }
+
+    public HashMap<String, Model> getTransformMeshes() {
+        return transformMeshes;
+    }
+
+    public double getMouseX() {
+        return mouseX;
+    }
+
+    public double getMouseY() {
+        return mouseY;
+    }
+
+    public void setMesh(String name, Model model) {
+        transformMeshes.put(name, model);
+    }
+
+    public Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
+    }
+
+    public Model getSelectedModel(String selectedModelName) {
+        if (selectedModelName == null) {
+            throw new IllegalArgumentException("Модель не выбрана!");
+        }
+
+        Model selectedModel = getTransformedModel(selectedModelName);
+        if (selectedModel == null) {
+            throw new IllegalArgumentException("Модель не найдена!");
+        }
+
+        return selectedModel;
+    }
 
 }

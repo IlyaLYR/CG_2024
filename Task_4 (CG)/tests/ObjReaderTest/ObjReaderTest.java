@@ -108,8 +108,8 @@ class ObjReaderTest extends ObjReader {
     @Test
     void testParseTextureVertex01() throws ObjReaderException {
         ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02"));
-        Vector3C result = ObjReader.parseTextureVertex(wordsInLineWithoutToken, 5);
-        Vector3C expectedResult = new Vector3C(1.01f, 1.02f, 0);
+        Vector2C result = ObjReader.parseTextureVertex(wordsInLineWithoutToken, 5);
+        Vector2C expectedResult = new Vector2C(1.01f, 1.02f);
         assertEquals(result, expectedResult);
     }
 

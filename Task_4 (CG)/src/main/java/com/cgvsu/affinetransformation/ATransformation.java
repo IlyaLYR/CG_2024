@@ -34,20 +34,22 @@ public class ATransformation {
     }
 
     public Model applyTransformationToModel(Model originalModel) {
-        Model transformedModel = new Model();
-        for (Vector3C vertex : originalModel.vertices) {
-            transformedModel.vertices.add(applyTransformationToVector(vertex));
-        }
-
-        transformedModel.textureVertices.addAll(originalModel.textureVertices);
-        transformedModel.normals.addAll(originalModel.normals);
-        transformedModel.polygons.addAll(originalModel.polygons);
-
-        return transformedModel;
+        originalModel.vertices.replaceAll(this::applyTransformationToVector);
+        originalModel.computeNormals();
+        return originalModel;
     }
 
     public Matrix4D getTransformationMatrix() {
         return transformationMatrix;
+    }
+
+    @Override
+    public String toString() {
+        return transformationMatrix.toString();
+    }
+
+    public void clean() {
+        this.transformationMatrix = new Matrix4D(true);
     }
 
     public static class ATBuilder {
@@ -177,15 +179,5 @@ public class ATransformation {
         public ATransformation build() {
             return new ATransformation(currentMatrix);
         }
-    }
-
-
-    @Override
-    public String toString() {
-        return transformationMatrix.toString();
-    }
-
-    public void clean() {
-        this.transformationMatrix = new Matrix4D(true);
     }
 }

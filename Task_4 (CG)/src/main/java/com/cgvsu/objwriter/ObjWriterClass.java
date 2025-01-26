@@ -1,5 +1,6 @@
 package com.cgvsu.objwriter;
 
+import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
@@ -54,8 +55,8 @@ public class ObjWriterClass implements ObjWriter {
         return OBJ_VERTEX_TOKEN + " " + vector.getX() + " " + vector.getY() + " " + vector.getZ();
     }
 
-    public String textureVertexToString(Vector3C vector) {
-        return OBJ_TEXTURE_TOKEN + " " + (float)vector.getX() + " " + (float)vector.getY();
+    public String textureVertexToString(Vector2C vector) {
+        return OBJ_TEXTURE_TOKEN + " " + (float) vector.getX() + " " + (float) vector.getY();
     }
 
     public String normalToString(Vector3C vector) {

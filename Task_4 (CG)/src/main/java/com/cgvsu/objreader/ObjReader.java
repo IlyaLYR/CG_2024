@@ -1,4 +1,6 @@
 package com.cgvsu.objreader;
+
+import com.cgvsu.math.typesVectors.Vector2C;
 import com.cgvsu.math.typesVectors.Vector3C;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
@@ -39,14 +41,14 @@ public class ObjReader {
                 case OBJ_TEXTURE_TOKEN -> result.textureVertices.add(parseTextureVertex(wordsInLine, lineInd));
                 case OBJ_NORMAL_TOKEN -> result.normals.add(parseNormal(wordsInLine, lineInd));
                 case OBJ_FACE_TOKEN -> result.polygons.add(parseFace(wordsInLine, lineInd));
-                default -> {  }
+                default -> {
+                }
             }
         }
 
         return result;
     }
 
-    // throw new ObjReaderException("The token is incorrect: " + token, lineInd);
     protected static String parseNameOfModel(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
         if (wordsInLineWithoutToken.isEmpty()) {
             return "";
@@ -67,33 +69,32 @@ public class ObjReader {
                     Float.parseFloat(wordsInLineWithoutToken.get(1)),
                     Float.parseFloat(wordsInLineWithoutToken.get(2)));
 
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new ObjReaderException("Failed to parse float value.", lineInd);
 
-        } catch(IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             throw new ObjReaderException("Too few vertex arguments.", lineInd);
         }
     }
 
-    protected static Vector3C parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
+    protected static Vector2C parseTextureVertex(final ArrayList<String> wordsInLineWithoutToken, int lineInd) throws ObjReaderException {
         if (wordsInLineWithoutToken.size() > 3) {
             throw new ObjReaderException("Too many texture vertex arguments.", lineInd);
         }
         try {
-            return new Vector3C(
+            return new Vector2C(
                     Float.parseFloat(wordsInLineWithoutToken.get(0)),
-                    Float.parseFloat(wordsInLineWithoutToken.get(1)),
-                    Float.parseFloat(wordsInLineWithoutToken.get(2)));
+                    Float.parseFloat(wordsInLineWithoutToken.get(1)));
 
         } catch (NumberFormatException e) {
             throw new ObjReaderException("Failed to parse float value.", lineInd);
 
         } catch (IndexOutOfBoundsException e) {
             try {
-                return new Vector3C(
+                return new Vector2C(
                         Float.parseFloat(wordsInLineWithoutToken.get(0)),
-                        Float.parseFloat(wordsInLineWithoutToken.get(1)),
-                        0);
+                        Float.parseFloat(wordsInLineWithoutToken.get(1)));
+
             } catch (IndexOutOfBoundsException e1) {
                 throw new ObjReaderException("Too few texture vertex arguments.", lineInd);
             }
@@ -111,10 +112,10 @@ public class ObjReader {
                     Float.parseFloat(wordsInLineWithoutToken.get(1)),
                     Float.parseFloat(wordsInLineWithoutToken.get(2)));
 
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new ObjReaderException("Failed to parse float value.", lineInd);
 
-        } catch(IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             throw new ObjReaderException("Too few normal arguments.", lineInd);
         }
     }
@@ -196,10 +197,10 @@ public class ObjReader {
                 default -> throw new ObjReaderException("Invalid element size.", lineInd);
             }
 
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new ObjReaderException("Failed to parse int value.", lineInd);
 
-        } catch(IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             throw new ObjReaderException("Too few arguments.", lineInd);
         }
     }
